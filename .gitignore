@@ -1,0 +1,17 @@
+# ---- Gowin IDE 构建产物（无需版本管理）----
+impl/
+*.fs
+*.bit
+*.bin
+*.sdf
+*.log
+
+# ---- Gowin IDE 用户本地配置 ----
+*.gprj.user
+
+# ---- 系统 / 编辑器 ----
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+__pycache__/
