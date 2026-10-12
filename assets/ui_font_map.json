@@ -1,0 +1,6936 @@
+{
+  "schema_version": 1,
+  "font": {
+    "hanzi": {
+      "path": "C:\\Windows\\Fonts\\simhei.ttf",
+      "family": [
+        "SimHei",
+        "Regular"
+      ],
+      "size_px": 16,
+      "sha256": "9b1959db3b3abeb7efdaec26edf7dfe871a6039de8d614af7248575207be629e"
+    },
+    "ascii": {
+      "path": "C:\\Windows\\Fonts\\consola.ttf",
+      "family": [
+        "Consolas",
+        "Regular"
+      ],
+      "size_px": 14,
+      "sha256": "cf00b507b3286870cc5064ebd0633c303f70b491a4af25eec2d32df413db0179"
+    },
+    "raster_mode": "1-bit monochrome, native size, no scaling or antialiasing",
+    "pillow_version": "12.3.0"
+  },
+  "cell_width": 8,
+  "cell_height": 16,
+  "hanzi_width": 16,
+  "hanzi": {
+    "多": [
+      128,
+      129
+    ],
+    "音": [
+      130,
+      131
+    ],
+    "色": [
+      132,
+      133
+    ],
+    "乐": [
+      134,
+      135
+    ],
+    "器": [
+      136,
+      137
+    ],
+    "自": [
+      138,
+      139
+    ],
+    "由": [
+      140,
+      141
+    ],
+    "演": [
+      142,
+      143
+    ],
+    "奏": [
+      144,
+      145
+    ],
+    "小": [
+      146,
+      147
+    ],
+    "星": [
+      148,
+      149
+    ],
+    "跟": [
+      150,
+      151
+    ],
+    "弹": [
+      152,
+      153
+    ],
+    "练": [
+      154,
+      155
+    ],
+    "习": [
+      156,
+      157
+    ],
+    "完": [
+      158,
+      159
+    ],
+    "成": [
+      160,
+      161
+    ],
+    "当": [
+      162,
+      163
+    ],
+    "前": [
+      164,
+      165
+    ],
+    "量": [
+      166,
+      167
+    ],
+    "峰": [
+      168,
+      169
+    ],
+    "值": [
+      170,
+      171
+    ],
+    "声": [
+      172,
+      173
+    ],
+    "部": [
+      174,
+      175
+    ],
+    "鼓": [
+      176,
+      177
+    ],
+    "移": [
+      178,
+      179
+    ],
+    "调": [
+      180,
+      181
+    ],
+    "符": [
+      182,
+      183
+    ],
+    "为": [
+      184,
+      185
+    ],
+    "最": [
+      186,
+      187
+    ],
+    "低": [
+      188,
+      189
+    ],
+    "按": [
+      190,
+      191
+    ],
+    "住": [
+      192,
+      193
+    ],
+    "键": [
+      194,
+      195
+    ],
+    "的": [
+      196,
+      197
+    ],
+    "设": [
+      198,
+      199
+    ],
+    "定": [
+      200,
+      201
+    ],
+    "波": [
+      202,
+      203
+    ],
+    "形": [
+      204,
+      205
+    ],
+    "状": [
+      206,
+      207
+    ],
+    "态": [
+      208,
+      209
+    ],
+    "削": [
+      210,
+      211
+    ],
+    "鬼": [
+      212,
+      213
+    ],
+    "过": [
+      214,
+      215
+    ],
+    "期": [
+      216,
+      217
+    ],
+    "故": [
+      218,
+      219
+    ],
+    "障": [
+      220,
+      221
+    ],
+    "滤": [
+      222,
+      223
+    ],
+    "远": [
+      224,
+      225
+    ],
+    "控": [
+      226,
+      227
+    ],
+    "静": [
+      228,
+      229
+    ],
+    "盘": [
+      230,
+      231
+    ],
+    "节": [
+      232,
+      233
+    ],
+    "拍": [
+      234,
+      235
+    ],
+    "错": [
+      236,
+      237
+    ],
+    "误": [
+      238,
+      239
+    ],
+    "保": [
+      240,
+      241
+    ],
+    "持": [
+      242,
+      243
+    ],
+    "等": [
+      244,
+      245
+    ],
+    "待": [
+      246,
+      247
+    ],
+    "下": [
+      248,
+      249
+    ],
+    "一": [
+      250,
+      251
+    ],
+    "个": [
+      252,
+      253
+    ],
+    "黄": [
+      254,
+      255
+    ],
+    "提": [
+      256,
+      257
+    ],
+    "示": [
+      258,
+      259
+    ],
+    "绿": [
+      260,
+      261
+    ],
+    "正": [
+      262,
+      263
+    ],
+    "确": [
+      264,
+      265
+    ],
+    "红": [
+      266,
+      267
+    ],
+    "青": [
+      268,
+      269
+    ],
+    "角": [
+      270,
+      271
+    ],
+    "标": [
+      272,
+      273
+    ],
+    "重": [
+      274,
+      275
+    ],
+    "开": [
+      276,
+      277
+    ],
+    "数": [
+      278,
+      279
+    ],
+    "字": [
+      280,
+      281
+    ],
+    "采": [
+      282,
+      283
+    ],
+    "样": [
+      284,
+      285
+    ],
+    "率": [
+      286,
+      287
+    ],
+    "验": [
+      288,
+      289
+    ],
+    "证": [
+      290,
+      291
+    ],
+    "模": [
+      292,
+      293
+    ],
+    "式": [
+      294,
+      295
+    ],
+    "切": [
+      296,
+      297
+    ],
+    "换": [
+      298,
+      299
+    ],
+    "中": [
+      300,
+      301
+    ],
+    "请": [
+      302,
+      303
+    ],
+    "求": [
+      304,
+      305
+    ],
+    "活": [
+      306,
+      307
+    ],
+    "跃": [
+      308,
+      309
+    ],
+    "逐": [
+      310,
+      311
+    ],
+    "路": [
+      312,
+      313
+    ],
+    "固": [
+      314,
+      315
+    ],
+    "频": [
+      316,
+      317
+    ],
+    "配": [
+      318,
+      319
+    ],
+    "置": [
+      320,
+      321
+    ],
+    "实": [
+      322,
+      323
+    ],
+    "际": [
+      324,
+      325
+    ],
+    "度": [
+      326,
+      327
+    ],
+    "异": [
+      328,
+      329
+    ],
+    "常": [
+      330,
+      331
+    ],
+    "扫": [
+      332,
+      333
+    ],
+    "序": [
+      334,
+      335
+    ],
+    "号": [
+      336,
+      337
+    ],
+    "无": [
+      338,
+      339
+    ],
+    "超": [
+      340,
+      341
+    ],
+    "时": [
+      342,
+      343
+    ],
+    "越": [
+      344,
+      345
+    ],
+    "界": [
+      346,
+      347
+    ],
+    "索": [
+      348,
+      349
+    ],
+    "引": [
+      350,
+      351
+    ],
+    "门": [
+      352,
+      353
+    ],
+    "释": [
+      354,
+      355
+    ],
+    "放": [
+      356,
+      357
+    ],
+    "忙": [
+      358,
+      359
+    ],
+    "电": [
+      360,
+      361
+    ],
+    "脑": [
+      362,
+      363
+    ],
+    "谱": [
+      364,
+      365
+    ],
+    "检": [
+      366,
+      367
+    ],
+    "查": [
+      368,
+      369
+    ],
+    "同": [
+      370,
+      371
+    ],
+    "独": [
+      372,
+      373
+    ],
+    "立": [
+      374,
+      375
+    ],
+    "弦": [
+      376,
+      377
+    ],
+    "柔": [
+      378,
+      379
+    ],
+    "和": [
+      380,
+      381
+    ],
+    "长": [
+      382,
+      383
+    ],
+    "笛": [
+      384,
+      385
+    ],
+    "木": [
+      386,
+      387
+    ],
+    "管": [
+      388,
+      389
+    ],
+    "暖": [
+      390,
+      391
+    ],
+    "风": [
+      392,
+      393
+    ],
+    "琴": [
+      394,
+      395
+    ],
+    "空": [
+      396,
+      397
+    ],
+    "心": [
+      398,
+      399
+    ],
+    "铜": [
+      400,
+      401
+    ],
+    "拨": [
+      402,
+      403
+    ],
+    "簧": [
+      404,
+      405
+    ],
+    "片": [
+      406,
+      407
+    ],
+    "明": [
+      408,
+      409
+    ],
+    "亮": [
+      410,
+      411
+    ],
+    "钟": [
+      412,
+      413
+    ],
+    "口": [
+      414,
+      415
+    ],
+    "厚": [
+      416,
+      417
+    ],
+    "合": [
+      418,
+      419
+    ],
+    "金": [
+      420,
+      421
+    ],
+    "属": [
+      422,
+      423
+    ],
+    "振": [
+      424,
+      425
+    ],
+    "荡": [
+      426,
+      427
+    ],
+    "输": [
+      428,
+      429
+    ],
+    "出": [
+      430,
+      431
+    ],
+    "退": [
+      432,
+      433
+    ],
+    "监": [
+      434,
+      435
+    ],
+    "测": [
+      436,
+      437
+    ],
+    "进": [
+      438,
+      439
+    ],
+    "与": [
+      440,
+      441
+    ],
+    "曲": [
+      442,
+      443
+    ],
+    "库": [
+      444,
+      445
+    ],
+    "欢": [
+      446,
+      447
+    ],
+    "颂": [
+      448,
+      449
+    ],
+    "两": [
+      450,
+      451
+    ],
+    "只": [
+      452,
+      453
+    ],
+    "老": [
+      454,
+      455
+    ],
+    "虎": [
+      456,
+      457
+    ],
+    "面": [
+      458,
+      459
+    ],
+    "项": [
+      460,
+      461
+    ],
+    "认": [
+      462,
+      463
+    ],
+    "始": [
+      464,
+      465
+    ],
+    "操": [
+      466,
+      467
+    ],
+    "作": [
+      468,
+      469
+    ],
+    "说": [
+      470,
+      471
+    ],
+    "接": [
+      472,
+      473
+    ],
+    "线": [
+      474,
+      475
+    ],
+    "诊": [
+      476,
+      477
+    ],
+    "断": [
+      478,
+      479
+    ],
+    "触": [
+      480,
+      481
+    ],
+    "主": [
+      482,
+      483
+    ],
+    "机": [
+      484,
+      485
+    ],
+    "未": [
+      486,
+      487
+    ],
+    "启": [
+      488,
+      489
+    ],
+    "用": [
+      490,
+      491
+    ],
+    "浏": [
+      492,
+      493
+    ],
+    "览": [
+      494,
+      495
+    ],
+    "上": [
+      496,
+      497
+    ],
+    "总": [
+      498,
+      499
+    ],
+    "供": [
+      500,
+      501
+    ],
+    "页": [
+      502,
+      503
+    ],
+    "选": [
+      504,
+      505
+    ],
+    "择": [
+      506,
+      507
+    ],
+    "代": [
+      508,
+      509
+    ],
+    "码": [
+      510,
+      511
+    ]
+  },
+  "hanzi_order": "多音色乐器自由演奏小星跟弹练习完成当前量峰值声部鼓移调符为最低按住键的设定波形状态削鬼过期故障滤远控静盘节拍错误保持等待下一个黄提示绿正确红青角标重开数字采样率验证模式切换中请求活跃逐路固频配置实际度异常扫序号无超时越界索引门释放忙电脑谱检查同独立弦柔和长笛木管暖风琴空心铜拨簧片明亮钟口厚合金属振荡输出退监测进与曲库欢颂两只老虎面项认始操作说接线诊断触主机未启用浏览上总供页选择代码",
+  "vocab_original": "多音色乐器自由演奏小星星跟弹练习完成当前音量峰值声部鼓移调符为最低按住键的设定波形状态削鬼过期故障滤远控静键盘节拍错误保持等待下一个黄提示绿正确红青角标重开数字采样率验证模式切换中请求活跃逐路固定频率配置实际调度异常正常扫序号无超时越界索引门释放忙电脑频谱检查同时独立正弦柔和长笛木管暖风琴空心铜拨簧片明亮钟口厚合成金属",
+  "vocab_append": [
+    "振荡输出退出监测",
+    "进",
+    "与",
+    "曲库欢乐颂两只老虎界面项确认开始操作说明接线诊断触控主机未启用浏览上总供电页选择",
+    "代码"
+  ],
+  "vocab": "多音色乐器自由演奏小星星跟弹练习完成当前音量峰值声部鼓移调符为最低按住键的设定波形状态削鬼过期故障滤远控静键盘节拍错误保持等待下一个黄提示绿正确红青角标重开数字采样率验证模式切换中请求活跃逐路固定频率配置实际调度异常正常扫序号无超时越界索引门释放忙电脑频谱检查同时独立正弦柔和长笛木管暖风琴空心铜拨簧片明亮钟口厚合成金属振荡输出退出监测进与曲库欢乐颂两只老虎界面项确认开始操作说明接线诊断触控主机未启用浏览上总供电页选择代码",
+  "unique_hanzi_count": 192,
+  "original_unique_hanzi_count": 148,
+  "appended_unique_hanzi": "振荡输出退监测进与曲库欢颂两只老虎面项认始操作说接线诊断触主机未启用浏览上总供页选择代码",
+  "max_hanzi_count": 192,
+  "glyph_bits": 9,
+  "row_bits": 4,
+  "address_bits": 13,
+  "address": "{glyph[8:0],row[3:0]}",
+  "address_formula": "(glyph << 4) | row",
+  "pixel_order": "row_bits[7] is leftmost; row 0 is top; 1 is foreground",
+  "ascii": {
+    "code_range": [
+      0,
+      127
+    ],
+    "code_rule": "unchanged ASCII ord(character)",
+    "printable_range": [
+      32,
+      126
+    ],
+    "blank_codes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      127
+    ],
+    "case_preserved": true
+  },
+  "hanzi_code_range": [
+    128,
+    511
+  ],
+  "reserved_or_assigned_code_count": 512,
+  "unused_code_range": [
+    512,
+    511
+  ],
+  "unused_codes_are_zero": true,
+  "rom": {
+    "path": "src/ui_font.hex",
+    "depth": 8192,
+    "width_bits": 8,
+    "lines": 8192,
+    "format": "two uppercase hex digits per line",
+    "sha256": "307e173dfd2a42be58006327d203327c84d877bf78b85efcd18a6dda0fab5501"
+  },
+  "module": {
+    "path": "src/hdmi_ui_font.v",
+    "name": "hdmi_ui_font",
+    "synchronous_read_cycles": 1,
+    "output_reset": false,
+    "rom_style": "block_rom"
+  },
+  "adjustments": {
+    "hanzi": "Center complete native 16px ink in 16x16; no scaling or stroke removal",
+    "ascii": "Common native y+1 baseline; horizontal bearing correction only if needed",
+    "ascii_shifted_horizontally": {
+      "~": [
+        1,
+        1
+      ]
+    },
+    "clipped_pixels_total": 0
+  },
+  "placement_evidence": {
+    "hanzi": {
+      "多": {
+        "source_ink_bbox": [
+          2,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          14,
+          15
+        ],
+        "translation_xy": [
+          -1,
+          0
+        ],
+        "source_pixels": 61,
+        "cell_pixels": 61,
+        "clipped_pixels": 0
+      },
+      "音": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 84,
+        "cell_pixels": 84,
+        "clipped_pixels": 0
+      },
+      "色": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 64,
+        "cell_pixels": 64,
+        "clipped_pixels": 0
+      },
+      "乐": {
+        "source_ink_bbox": [
+          2,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          14,
+          15
+        ],
+        "translation_xy": [
+          -1,
+          -1
+        ],
+        "source_pixels": 56,
+        "cell_pixels": 56,
+        "clipped_pixels": 0
+      },
+      "器": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 96,
+        "cell_pixels": 96,
+        "clipped_pixels": 0
+      },
+      "自": {
+        "source_ink_bbox": [
+          3,
+          0,
+          13,
+          14
+        ],
+        "cell_ink_bbox": [
+          3,
+          1,
+          13,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 68,
+        "cell_pixels": 68,
+        "clipped_pixels": 0
+      },
+      "由": {
+        "source_ink_bbox": [
+          2,
+          1,
+          14,
+          15
+        ],
+        "cell_ink_bbox": [
+          2,
+          1,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 80,
+        "cell_pixels": 80,
+        "clipped_pixels": 0
+      },
+      "演": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 78,
+        "cell_pixels": 78,
+        "clipped_pixels": 0
+      },
+      "奏": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 88,
+        "cell_pixels": 88,
+        "clipped_pixels": 0
+      },
+      "小": {
+        "source_ink_bbox": [
+          1,
+          1,
+          14,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 48,
+        "cell_pixels": 48,
+        "clipped_pixels": 0
+      },
+      "星": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 96,
+        "cell_pixels": 96,
+        "clipped_pixels": 0
+      },
+      "跟": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 95,
+        "cell_pixels": 95,
+        "clipped_pixels": 0
+      },
+      "弹": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 83,
+        "cell_pixels": 83,
+        "clipped_pixels": 0
+      },
+      "练": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 87,
+        "cell_pixels": 87,
+        "clipped_pixels": 0
+      },
+      "习": {
+        "source_ink_bbox": [
+          3,
+          2,
+          14,
+          15
+        ],
+        "cell_ink_bbox": [
+          2,
+          1,
+          13,
+          14
+        ],
+        "translation_xy": [
+          -1,
+          -1
+        ],
+        "source_pixels": 47,
+        "cell_pixels": 47,
+        "clipped_pixels": 0
+      },
+      "完": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 71,
+        "cell_pixels": 71,
+        "clipped_pixels": 0
+      },
+      "成": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 75,
+        "cell_pixels": 75,
+        "clipped_pixels": 0
+      },
+      "当": {
+        "source_ink_bbox": [
+          2,
+          1,
+          14,
+          16
+        ],
+        "cell_ink_bbox": [
+          2,
+          0,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 65,
+        "cell_pixels": 65,
+        "clipped_pixels": 0
+      },
+      "前": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 80,
+        "cell_pixels": 80,
+        "clipped_pixels": 0
+      },
+      "量": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 107,
+        "cell_pixels": 107,
+        "clipped_pixels": 0
+      },
+      "峰": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 90,
+        "cell_pixels": 90,
+        "clipped_pixels": 0
+      },
+      "值": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 87,
+        "cell_pixels": 87,
+        "clipped_pixels": 0
+      },
+      "声": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 65,
+        "cell_pixels": 65,
+        "clipped_pixels": 0
+      },
+      "部": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 77,
+        "cell_pixels": 77,
+        "clipped_pixels": 0
+      },
+      "鼓": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 79,
+        "cell_pixels": 79,
+        "clipped_pixels": 0
+      },
+      "移": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 77,
+        "cell_pixels": 77,
+        "clipped_pixels": 0
+      },
+      "调": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 80,
+        "cell_pixels": 80,
+        "clipped_pixels": 0
+      },
+      "符": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 75,
+        "cell_pixels": 75,
+        "clipped_pixels": 0
+      },
+      "为": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 53,
+        "cell_pixels": 53,
+        "clipped_pixels": 0
+      },
+      "最": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 90,
+        "cell_pixels": 90,
+        "clipped_pixels": 0
+      },
+      "低": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 70,
+        "cell_pixels": 70,
+        "clipped_pixels": 0
+      },
+      "按": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 77,
+        "cell_pixels": 77,
+        "clipped_pixels": 0
+      },
+      "住": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 69,
+        "cell_pixels": 69,
+        "clipped_pixels": 0
+      },
+      "键": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 103,
+        "cell_pixels": 103,
+        "clipped_pixels": 0
+      },
+      "的": {
+        "source_ink_bbox": [
+          2,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          14,
+          15
+        ],
+        "translation_xy": [
+          -1,
+          0
+        ],
+        "source_pixels": 71,
+        "cell_pixels": 71,
+        "clipped_pixels": 0
+      },
+      "设": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 67,
+        "cell_pixels": 67,
+        "clipped_pixels": 0
+      },
+      "定": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 63,
+        "cell_pixels": 63,
+        "clipped_pixels": 0
+      },
+      "波": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 74,
+        "cell_pixels": 74,
+        "clipped_pixels": 0
+      },
+      "形": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 64,
+        "cell_pixels": 64,
+        "clipped_pixels": 0
+      },
+      "状": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 81,
+        "cell_pixels": 81,
+        "clipped_pixels": 0
+      },
+      "态": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 61,
+        "cell_pixels": 61,
+        "clipped_pixels": 0
+      },
+      "削": {
+        "source_ink_bbox": [
+          1,
+          1,
+          14,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 71,
+        "cell_pixels": 71,
+        "clipped_pixels": 0
+      },
+      "鬼": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 74,
+        "cell_pixels": 74,
+        "clipped_pixels": 0
+      },
+      "过": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 65,
+        "cell_pixels": 65,
+        "clipped_pixels": 0
+      },
+      "期": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 100,
+        "cell_pixels": 100,
+        "clipped_pixels": 0
+      },
+      "故": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 75,
+        "cell_pixels": 75,
+        "clipped_pixels": 0
+      },
+      "障": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 86,
+        "cell_pixels": 86,
+        "clipped_pixels": 0
+      },
+      "滤": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 75,
+        "cell_pixels": 75,
+        "clipped_pixels": 0
+      },
+      "远": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 68,
+        "cell_pixels": 68,
+        "clipped_pixels": 0
+      },
+      "控": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 71,
+        "cell_pixels": 71,
+        "clipped_pixels": 0
+      },
+      "静": {
+        "source_ink_bbox": [
+          1,
+          0,
+          16,
+          14
+        ],
+        "cell_ink_bbox": [
+          0,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          -1,
+          1
+        ],
+        "source_pixels": 101,
+        "cell_pixels": 101,
+        "clipped_pixels": 0
+      },
+      "盘": {
+        "source_ink_bbox": [
+          0,
+          0,
+          16,
+          14
+        ],
+        "cell_ink_bbox": [
+          0,
+          1,
+          16,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 106,
+        "cell_pixels": 106,
+        "clipped_pixels": 0
+      },
+      "节": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 56,
+        "cell_pixels": 56,
+        "clipped_pixels": 0
+      },
+      "拍": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 95,
+        "cell_pixels": 95,
+        "clipped_pixels": 0
+      },
+      "错": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 88,
+        "cell_pixels": 88,
+        "clipped_pixels": 0
+      },
+      "误": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 76,
+        "cell_pixels": 76,
+        "clipped_pixels": 0
+      },
+      "保": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 80,
+        "cell_pixels": 80,
+        "clipped_pixels": 0
+      },
+      "持": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 72,
+        "cell_pixels": 72,
+        "clipped_pixels": 0
+      },
+      "等": {
+        "source_ink_bbox": [
+          0,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          0,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 80,
+        "cell_pixels": 80,
+        "clipped_pixels": 0
+      },
+      "待": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 70,
+        "cell_pixels": 70,
+        "clipped_pixels": 0
+      },
+      "下": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 34,
+        "cell_pixels": 34,
+        "clipped_pixels": 0
+      },
+      "一": {
+        "source_ink_bbox": [
+          1,
+          7,
+          15,
+          9
+        ],
+        "cell_ink_bbox": [
+          1,
+          7,
+          15,
+          9
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 28,
+        "cell_pixels": 28,
+        "clipped_pixels": 0
+      },
+      "个": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 46,
+        "cell_pixels": 46,
+        "clipped_pixels": 0
+      },
+      "黄": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 88,
+        "cell_pixels": 88,
+        "clipped_pixels": 0
+      },
+      "提": {
+        "source_ink_bbox": [
+          0,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          0,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 89,
+        "cell_pixels": 89,
+        "clipped_pixels": 0
+      },
+      "示": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 51,
+        "cell_pixels": 51,
+        "clipped_pixels": 0
+      },
+      "绿": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 83,
+        "cell_pixels": 83,
+        "clipped_pixels": 0
+      },
+      "正": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 74,
+        "cell_pixels": 74,
+        "clipped_pixels": 0
+      },
+      "确": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 95,
+        "cell_pixels": 95,
+        "clipped_pixels": 0
+      },
+      "红": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 68,
+        "cell_pixels": 68,
+        "clipped_pixels": 0
+      },
+      "青": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 83,
+        "cell_pixels": 83,
+        "clipped_pixels": 0
+      },
+      "角": {
+        "source_ink_bbox": [
+          1,
+          0,
+          14,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 74,
+        "cell_pixels": 74,
+        "clipped_pixels": 0
+      },
+      "标": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 71,
+        "cell_pixels": 71,
+        "clipped_pixels": 0
+      },
+      "重": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 97,
+        "cell_pixels": 97,
+        "clipped_pixels": 0
+      },
+      "开": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 69,
+        "cell_pixels": 69,
+        "clipped_pixels": 0
+      },
+      "数": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 89,
+        "cell_pixels": 89,
+        "clipped_pixels": 0
+      },
+      "字": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 56,
+        "cell_pixels": 56,
+        "clipped_pixels": 0
+      },
+      "采": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 82,
+        "cell_pixels": 82,
+        "clipped_pixels": 0
+      },
+      "样": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 79,
+        "cell_pixels": 79,
+        "clipped_pixels": 0
+      },
+      "率": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 74,
+        "cell_pixels": 74,
+        "clipped_pixels": 0
+      },
+      "验": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 85,
+        "cell_pixels": 85,
+        "clipped_pixels": 0
+      },
+      "证": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 65,
+        "cell_pixels": 65,
+        "clipped_pixels": 0
+      },
+      "模": {
+        "source_ink_bbox": [
+          1,
+          0,
+          16,
+          15
+        ],
+        "cell_ink_bbox": [
+          0,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          -1,
+          0
+        ],
+        "source_pixels": 90,
+        "cell_pixels": 90,
+        "clipped_pixels": 0
+      },
+      "式": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 64,
+        "cell_pixels": 64,
+        "clipped_pixels": 0
+      },
+      "切": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 67,
+        "cell_pixels": 67,
+        "clipped_pixels": 0
+      },
+      "换": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 81,
+        "cell_pixels": 81,
+        "clipped_pixels": 0
+      },
+      "中": {
+        "source_ink_bbox": [
+          2,
+          1,
+          14,
+          16
+        ],
+        "cell_ink_bbox": [
+          2,
+          0,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 60,
+        "cell_pixels": 60,
+        "clipped_pixels": 0
+      },
+      "请": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 77,
+        "cell_pixels": 77,
+        "clipped_pixels": 0
+      },
+      "求": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 59,
+        "cell_pixels": 59,
+        "clipped_pixels": 0
+      },
+      "活": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 70,
+        "cell_pixels": 70,
+        "clipped_pixels": 0
+      },
+      "跃": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 73,
+        "cell_pixels": 73,
+        "clipped_pixels": 0
+      },
+      "逐": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 78,
+        "cell_pixels": 78,
+        "clipped_pixels": 0
+      },
+      "路": {
+        "source_ink_bbox": [
+          1,
+          0,
+          16,
+          14
+        ],
+        "cell_ink_bbox": [
+          0,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          -1,
+          1
+        ],
+        "source_pixels": 90,
+        "cell_pixels": 90,
+        "clipped_pixels": 0
+      },
+      "固": {
+        "source_ink_bbox": [
+          1,
+          1,
+          14,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 116,
+        "cell_pixels": 116,
+        "clipped_pixels": 0
+      },
+      "频": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 87,
+        "cell_pixels": 87,
+        "clipped_pixels": 0
+      },
+      "配": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 95,
+        "cell_pixels": 95,
+        "clipped_pixels": 0
+      },
+      "置": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 96,
+        "cell_pixels": 96,
+        "clipped_pixels": 0
+      },
+      "实": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 60,
+        "cell_pixels": 60,
+        "clipped_pixels": 0
+      },
+      "际": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 83,
+        "cell_pixels": 83,
+        "clipped_pixels": 0
+      },
+      "度": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 75,
+        "cell_pixels": 75,
+        "clipped_pixels": 0
+      },
+      "异": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 66,
+        "cell_pixels": 66,
+        "clipped_pixels": 0
+      },
+      "常": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 93,
+        "cell_pixels": 93,
+        "clipped_pixels": 0
+      },
+      "扫": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 88,
+        "cell_pixels": 88,
+        "clipped_pixels": 0
+      },
+      "序": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 64,
+        "cell_pixels": 64,
+        "clipped_pixels": 0
+      },
+      "号": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 59,
+        "cell_pixels": 59,
+        "clipped_pixels": 0
+      },
+      "无": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 55,
+        "cell_pixels": 55,
+        "clipped_pixels": 0
+      },
+      "超": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 87,
+        "cell_pixels": 87,
+        "clipped_pixels": 0
+      },
+      "时": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 72,
+        "cell_pixels": 72,
+        "clipped_pixels": 0
+      },
+      "越": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 79,
+        "cell_pixels": 79,
+        "clipped_pixels": 0
+      },
+      "界": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 79,
+        "cell_pixels": 79,
+        "clipped_pixels": 0
+      },
+      "索": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 87,
+        "cell_pixels": 87,
+        "clipped_pixels": 0
+      },
+      "引": {
+        "source_ink_bbox": [
+          2,
+          1,
+          14,
+          16
+        ],
+        "cell_ink_bbox": [
+          2,
+          0,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 66,
+        "cell_pixels": 66,
+        "clipped_pixels": 0
+      },
+      "门": {
+        "source_ink_bbox": [
+          2,
+          0,
+          14,
+          14
+        ],
+        "cell_ink_bbox": [
+          2,
+          1,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 36,
+        "cell_pixels": 36,
+        "clipped_pixels": 0
+      },
+      "释": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 88,
+        "cell_pixels": 88,
+        "clipped_pixels": 0
+      },
+      "放": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 73,
+        "cell_pixels": 73,
+        "clipped_pixels": 0
+      },
+      "忙": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 60,
+        "cell_pixels": 60,
+        "clipped_pixels": 0
+      },
+      "电": {
+        "source_ink_bbox": [
+          2,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          14,
+          15
+        ],
+        "translation_xy": [
+          -1,
+          0
+        ],
+        "source_pixels": 71,
+        "cell_pixels": 71,
+        "clipped_pixels": 0
+      },
+      "脑": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 94,
+        "cell_pixels": 94,
+        "clipped_pixels": 0
+      },
+      "谱": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 90,
+        "cell_pixels": 90,
+        "clipped_pixels": 0
+      },
+      "检": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 79,
+        "cell_pixels": 79,
+        "clipped_pixels": 0
+      },
+      "查": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 85,
+        "cell_pixels": 85,
+        "clipped_pixels": 0
+      },
+      "同": {
+        "source_ink_bbox": [
+          1,
+          1,
+          14,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 63,
+        "cell_pixels": 63,
+        "clipped_pixels": 0
+      },
+      "独": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 78,
+        "cell_pixels": 78,
+        "clipped_pixels": 0
+      },
+      "立": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 50,
+        "cell_pixels": 50,
+        "clipped_pixels": 0
+      },
+      "弦": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 66,
+        "cell_pixels": 66,
+        "clipped_pixels": 0
+      },
+      "柔": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 76,
+        "cell_pixels": 76,
+        "clipped_pixels": 0
+      },
+      "和": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 90,
+        "cell_pixels": 90,
+        "clipped_pixels": 0
+      },
+      "长": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 65,
+        "cell_pixels": 65,
+        "clipped_pixels": 0
+      },
+      "笛": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 84,
+        "cell_pixels": 84,
+        "clipped_pixels": 0
+      },
+      "木": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 65,
+        "cell_pixels": 65,
+        "clipped_pixels": 0
+      },
+      "管": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 92,
+        "cell_pixels": 92,
+        "clipped_pixels": 0
+      },
+      "暖": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 102,
+        "cell_pixels": 102,
+        "clipped_pixels": 0
+      },
+      "风": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 64,
+        "cell_pixels": 64,
+        "clipped_pixels": 0
+      },
+      "琴": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 74,
+        "cell_pixels": 74,
+        "clipped_pixels": 0
+      },
+      "空": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 69,
+        "cell_pixels": 69,
+        "clipped_pixels": 0
+      },
+      "心": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 47,
+        "cell_pixels": 47,
+        "clipped_pixels": 0
+      },
+      "铜": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 88,
+        "cell_pixels": 88,
+        "clipped_pixels": 0
+      },
+      "拨": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 84,
+        "cell_pixels": 84,
+        "clipped_pixels": 0
+      },
+      "簧": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 96,
+        "cell_pixels": 96,
+        "clipped_pixels": 0
+      },
+      "片": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 52,
+        "cell_pixels": 52,
+        "clipped_pixels": 0
+      },
+      "明": {
+        "source_ink_bbox": [
+          1,
+          1,
+          14,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          14,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 84,
+        "cell_pixels": 84,
+        "clipped_pixels": 0
+      },
+      "亮": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 87,
+        "cell_pixels": 87,
+        "clipped_pixels": 0
+      },
+      "钟": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 78,
+        "cell_pixels": 78,
+        "clipped_pixels": 0
+      },
+      "口": {
+        "source_ink_bbox": [
+          3,
+          3,
+          14,
+          15
+        ],
+        "cell_ink_bbox": [
+          2,
+          2,
+          13,
+          14
+        ],
+        "translation_xy": [
+          -1,
+          -1
+        ],
+        "source_pixels": 52,
+        "cell_pixels": 52,
+        "clipped_pixels": 0
+      },
+      "厚": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 91,
+        "cell_pixels": 91,
+        "clipped_pixels": 0
+      },
+      "合": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 70,
+        "cell_pixels": 70,
+        "clipped_pixels": 0
+      },
+      "金": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 87,
+        "cell_pixels": 87,
+        "clipped_pixels": 0
+      },
+      "属": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 114,
+        "cell_pixels": 114,
+        "clipped_pixels": 0
+      },
+      "振": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 86,
+        "cell_pixels": 86,
+        "clipped_pixels": 0
+      },
+      "荡": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 79,
+        "cell_pixels": 79,
+        "clipped_pixels": 0
+      },
+      "输": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 87,
+        "cell_pixels": 87,
+        "clipped_pixels": 0
+      },
+      "出": {
+        "source_ink_bbox": [
+          2,
+          1,
+          14,
+          16
+        ],
+        "cell_ink_bbox": [
+          2,
+          0,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 78,
+        "cell_pixels": 78,
+        "clipped_pixels": 0
+      },
+      "退": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 85,
+        "cell_pixels": 85,
+        "clipped_pixels": 0
+      },
+      "监": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 81,
+        "cell_pixels": 81,
+        "clipped_pixels": 0
+      },
+      "测": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 90,
+        "cell_pixels": 90,
+        "clipped_pixels": 0
+      },
+      "进": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 69,
+        "cell_pixels": 69,
+        "clipped_pixels": 0
+      },
+      "与": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 52,
+        "cell_pixels": 52,
+        "clipped_pixels": 0
+      },
+      "曲": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 114,
+        "cell_pixels": 114,
+        "clipped_pixels": 0
+      },
+      "库": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 70,
+        "cell_pixels": 70,
+        "clipped_pixels": 0
+      },
+      "欢": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 63,
+        "cell_pixels": 63,
+        "clipped_pixels": 0
+      },
+      "颂": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 71,
+        "cell_pixels": 71,
+        "clipped_pixels": 0
+      },
+      "两": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 72,
+        "cell_pixels": 72,
+        "clipped_pixels": 0
+      },
+      "只": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 53,
+        "cell_pixels": 53,
+        "clipped_pixels": 0
+      },
+      "老": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 75,
+        "cell_pixels": 75,
+        "clipped_pixels": 0
+      },
+      "虎": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 73,
+        "cell_pixels": 73,
+        "clipped_pixels": 0
+      },
+      "面": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 82,
+        "cell_pixels": 82,
+        "clipped_pixels": 0
+      },
+      "项": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 64,
+        "cell_pixels": 64,
+        "clipped_pixels": 0
+      },
+      "认": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 55,
+        "cell_pixels": 55,
+        "clipped_pixels": 0
+      },
+      "始": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 76,
+        "cell_pixels": 76,
+        "clipped_pixels": 0
+      },
+      "操": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 88,
+        "cell_pixels": 88,
+        "clipped_pixels": 0
+      },
+      "作": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 58,
+        "cell_pixels": 58,
+        "clipped_pixels": 0
+      },
+      "说": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 67,
+        "cell_pixels": 67,
+        "clipped_pixels": 0
+      },
+      "接": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 81,
+        "cell_pixels": 81,
+        "clipped_pixels": 0
+      },
+      "线": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 79,
+        "cell_pixels": 79,
+        "clipped_pixels": 0
+      },
+      "诊": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 67,
+        "cell_pixels": 67,
+        "clipped_pixels": 0
+      },
+      "断": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 90,
+        "cell_pixels": 90,
+        "clipped_pixels": 0
+      },
+      "触": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 91,
+        "cell_pixels": 91,
+        "clipped_pixels": 0
+      },
+      "主": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 57,
+        "cell_pixels": 57,
+        "clipped_pixels": 0
+      },
+      "机": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 86,
+        "cell_pixels": 86,
+        "clipped_pixels": 0
+      },
+      "未": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 59,
+        "cell_pixels": 59,
+        "clipped_pixels": 0
+      },
+      "启": {
+        "source_ink_bbox": [
+          1,
+          0,
+          14,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          14,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 84,
+        "cell_pixels": 84,
+        "clipped_pixels": 0
+      },
+      "用": {
+        "source_ink_bbox": [
+          1,
+          1,
+          14,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          14,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 86,
+        "cell_pixels": 86,
+        "clipped_pixels": 0
+      },
+      "浏": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 67,
+        "cell_pixels": 67,
+        "clipped_pixels": 0
+      },
+      "览": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 71,
+        "cell_pixels": 71,
+        "clipped_pixels": 0
+      },
+      "上": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 46,
+        "cell_pixels": 46,
+        "clipped_pixels": 0
+      },
+      "总": {
+        "source_ink_bbox": [
+          1,
+          2,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 61,
+        "cell_pixels": 61,
+        "clipped_pixels": 0
+      },
+      "供": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 80,
+        "cell_pixels": 80,
+        "clipped_pixels": 0
+      },
+      "页": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          14
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 65,
+        "cell_pixels": 65,
+        "clipped_pixels": 0
+      },
+      "选": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 80,
+        "cell_pixels": 80,
+        "clipped_pixels": 0
+      },
+      "择": {
+        "source_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 80,
+        "cell_pixels": 80,
+        "clipped_pixels": 0
+      },
+      "代": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          16
+        ],
+        "cell_ink_bbox": [
+          1,
+          0,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          -1
+        ],
+        "source_pixels": 53,
+        "cell_pixels": 53,
+        "clipped_pixels": 0
+      },
+      "码": {
+        "source_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "cell_ink_bbox": [
+          1,
+          1,
+          15,
+          15
+        ],
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 78,
+        "cell_pixels": 78,
+        "clipped_pixels": 0
+      }
+    },
+    "ascii": {
+      " ": {
+        "source_ink_bbox": null,
+        "cell_ink_bbox": null,
+        "translation_xy": [
+          0,
+          0
+        ],
+        "source_pixels": 0,
+        "cell_pixels": 0,
+        "clipped_pixels": 0
+      },
+      "!": {
+        "source_ink_bbox": [
+          3,
+          1,
+          5,
+          11
+        ],
+        "cell_ink_bbox": [
+          3,
+          2,
+          5,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 11,
+        "cell_pixels": 11,
+        "clipped_pixels": 0
+      },
+      "\"": {
+        "source_ink_bbox": [
+          1,
+          1,
+          6,
+          4
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          6,
+          5
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 12,
+        "cell_pixels": 12,
+        "clipped_pixels": 0
+      },
+      "#": {
+        "source_ink_bbox": [
+          0,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 28,
+        "cell_pixels": 28,
+        "clipped_pixels": 0
+      },
+      "$": {
+        "source_ink_bbox": [
+          1,
+          1,
+          7,
+          13
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          7,
+          14
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 29,
+        "cell_pixels": 29,
+        "clipped_pixels": 0
+      },
+      "%": {
+        "source_ink_bbox": [
+          0,
+          1,
+          8,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          2,
+          8,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 28,
+        "cell_pixels": 28,
+        "clipped_pixels": 0
+      },
+      "&": {
+        "source_ink_bbox": [
+          0,
+          1,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          2,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 30,
+        "cell_pixels": 30,
+        "clipped_pixels": 0
+      },
+      "'": {
+        "source_ink_bbox": [
+          3,
+          1,
+          5,
+          4
+        ],
+        "cell_ink_bbox": [
+          3,
+          2,
+          5,
+          5
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 6,
+        "cell_pixels": 6,
+        "clipped_pixels": 0
+      },
+      "(": {
+        "source_ink_bbox": [
+          2,
+          1,
+          6,
+          14
+        ],
+        "cell_ink_bbox": [
+          2,
+          2,
+          6,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 13,
+        "cell_pixels": 13,
+        "clipped_pixels": 0
+      },
+      ")": {
+        "source_ink_bbox": [
+          1,
+          1,
+          5,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          5,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 13,
+        "cell_pixels": 13,
+        "clipped_pixels": 0
+      },
+      "*": {
+        "source_ink_bbox": [
+          2,
+          1,
+          7,
+          7
+        ],
+        "cell_ink_bbox": [
+          2,
+          2,
+          7,
+          8
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 14,
+        "cell_pixels": 14,
+        "clipped_pixels": 0
+      },
+      "+": {
+        "source_ink_bbox": [
+          0,
+          4,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          5,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 13,
+        "cell_pixels": 13,
+        "clipped_pixels": 0
+      },
+      ",": {
+        "source_ink_bbox": [
+          2,
+          9,
+          5,
+          13
+        ],
+        "cell_ink_bbox": [
+          2,
+          10,
+          5,
+          14
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 7,
+        "cell_pixels": 7,
+        "clipped_pixels": 0
+      },
+      "-": {
+        "source_ink_bbox": [
+          2,
+          7,
+          6,
+          8
+        ],
+        "cell_ink_bbox": [
+          2,
+          8,
+          6,
+          9
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 4,
+        "cell_pixels": 4,
+        "clipped_pixels": 0
+      },
+      ".": {
+        "source_ink_bbox": [
+          3,
+          9,
+          5,
+          11
+        ],
+        "cell_ink_bbox": [
+          3,
+          10,
+          5,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 4,
+        "cell_pixels": 4,
+        "clipped_pixels": 0
+      },
+      "/": {
+        "source_ink_bbox": [
+          1,
+          1,
+          7,
+          12
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          7,
+          13
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 13,
+        "cell_pixels": 13,
+        "clipped_pixels": 0
+      },
+      "0": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 26,
+        "cell_pixels": 26,
+        "clipped_pixels": 0
+      },
+      "1": {
+        "source_ink_bbox": [
+          2,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          2,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 15,
+        "cell_pixels": 15,
+        "clipped_pixels": 0
+      },
+      "2": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 21,
+        "cell_pixels": 21,
+        "clipped_pixels": 0
+      },
+      "3": {
+        "source_ink_bbox": [
+          1,
+          2,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 17,
+        "cell_pixels": 17,
+        "clipped_pixels": 0
+      },
+      "4": {
+        "source_ink_bbox": [
+          0,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 22,
+        "cell_pixels": 22,
+        "clipped_pixels": 0
+      },
+      "5": {
+        "source_ink_bbox": [
+          1,
+          2,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 20,
+        "cell_pixels": 20,
+        "clipped_pixels": 0
+      },
+      "6": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 24,
+        "cell_pixels": 24,
+        "clipped_pixels": 0
+      },
+      "7": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 15,
+        "cell_pixels": 15,
+        "clipped_pixels": 0
+      },
+      "8": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 26,
+        "cell_pixels": 26,
+        "clipped_pixels": 0
+      },
+      "9": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 24,
+        "cell_pixels": 24,
+        "clipped_pixels": 0
+      },
+      ":": {
+        "source_ink_bbox": [
+          3,
+          4,
+          5,
+          11
+        ],
+        "cell_ink_bbox": [
+          3,
+          5,
+          5,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 8,
+        "cell_pixels": 8,
+        "clipped_pixels": 0
+      },
+      ";": {
+        "source_ink_bbox": [
+          2,
+          4,
+          5,
+          13
+        ],
+        "cell_ink_bbox": [
+          2,
+          5,
+          5,
+          14
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 11,
+        "cell_pixels": 11,
+        "clipped_pixels": 0
+      },
+      "<": {
+        "source_ink_bbox": [
+          1,
+          3,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          4,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 9,
+        "cell_pixels": 9,
+        "clipped_pixels": 0
+      },
+      "=": {
+        "source_ink_bbox": [
+          1,
+          6,
+          7,
+          9
+        ],
+        "cell_ink_bbox": [
+          1,
+          7,
+          7,
+          10
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 12,
+        "cell_pixels": 12,
+        "clipped_pixels": 0
+      },
+      ">": {
+        "source_ink_bbox": [
+          1,
+          3,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          4,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 9,
+        "cell_pixels": 9,
+        "clipped_pixels": 0
+      },
+      "?": {
+        "source_ink_bbox": [
+          2,
+          1,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          2,
+          2,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 14,
+        "cell_pixels": 14,
+        "clipped_pixels": 0
+      },
+      "@": {
+        "source_ink_bbox": [
+          0,
+          1,
+          8,
+          14
+        ],
+        "cell_ink_bbox": [
+          0,
+          2,
+          8,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 43,
+        "cell_pixels": 43,
+        "clipped_pixels": 0
+      },
+      "A": {
+        "source_ink_bbox": [
+          0,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 25,
+        "cell_pixels": 25,
+        "clipped_pixels": 0
+      },
+      "B": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 28,
+        "cell_pixels": 28,
+        "clipped_pixels": 0
+      },
+      "C": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 15,
+        "cell_pixels": 15,
+        "clipped_pixels": 0
+      },
+      "D": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 22,
+        "cell_pixels": 22,
+        "clipped_pixels": 0
+      },
+      "E": {
+        "source_ink_bbox": [
+          1,
+          2,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 21,
+        "cell_pixels": 21,
+        "clipped_pixels": 0
+      },
+      "F": {
+        "source_ink_bbox": [
+          1,
+          2,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 17,
+        "cell_pixels": 17,
+        "clipped_pixels": 0
+      },
+      "G": {
+        "source_ink_bbox": [
+          0,
+          2,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          3,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 21,
+        "cell_pixels": 21,
+        "clipped_pixels": 0
+      },
+      "H": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 22,
+        "cell_pixels": 22,
+        "clipped_pixels": 0
+      },
+      "I": {
+        "source_ink_bbox": [
+          1,
+          2,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 17,
+        "cell_pixels": 17,
+        "clipped_pixels": 0
+      },
+      "J": {
+        "source_ink_bbox": [
+          1,
+          2,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 16,
+        "cell_pixels": 16,
+        "clipped_pixels": 0
+      },
+      "K": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 18,
+        "cell_pixels": 18,
+        "clipped_pixels": 0
+      },
+      "L": {
+        "source_ink_bbox": [
+          2,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          2,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 13,
+        "cell_pixels": 13,
+        "clipped_pixels": 0
+      },
+      "M": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 28,
+        "cell_pixels": 28,
+        "clipped_pixels": 0
+      },
+      "N": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 27,
+        "cell_pixels": 27,
+        "clipped_pixels": 0
+      },
+      "O": {
+        "source_ink_bbox": [
+          0,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 20,
+        "cell_pixels": 20,
+        "clipped_pixels": 0
+      },
+      "P": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 22,
+        "cell_pixels": 22,
+        "clipped_pixels": 0
+      },
+      "Q": {
+        "source_ink_bbox": [
+          0,
+          2,
+          7,
+          13
+        ],
+        "cell_ink_bbox": [
+          0,
+          3,
+          7,
+          14
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 25,
+        "cell_pixels": 25,
+        "clipped_pixels": 0
+      },
+      "R": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 24,
+        "cell_pixels": 24,
+        "clipped_pixels": 0
+      },
+      "S": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 20,
+        "cell_pixels": 20,
+        "clipped_pixels": 0
+      },
+      "T": {
+        "source_ink_bbox": [
+          0,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 15,
+        "cell_pixels": 15,
+        "clipped_pixels": 0
+      },
+      "U": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 21,
+        "cell_pixels": 21,
+        "clipped_pixels": 0
+      },
+      "V": {
+        "source_ink_bbox": [
+          1,
+          2,
+          8,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          8,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 22,
+        "cell_pixels": 22,
+        "clipped_pixels": 0
+      },
+      "W": {
+        "source_ink_bbox": [
+          1,
+          2,
+          8,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          8,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 30,
+        "cell_pixels": 30,
+        "clipped_pixels": 0
+      },
+      "X": {
+        "source_ink_bbox": [
+          0,
+          2,
+          8,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          3,
+          8,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 25,
+        "cell_pixels": 25,
+        "clipped_pixels": 0
+      },
+      "Y": {
+        "source_ink_bbox": [
+          0,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 14,
+        "cell_pixels": 14,
+        "clipped_pixels": 0
+      },
+      "Z": {
+        "source_ink_bbox": [
+          1,
+          2,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 20,
+        "cell_pixels": 20,
+        "clipped_pixels": 0
+      },
+      "[": {
+        "source_ink_bbox": [
+          3,
+          1,
+          6,
+          14
+        ],
+        "cell_ink_bbox": [
+          3,
+          2,
+          6,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 17,
+        "cell_pixels": 17,
+        "clipped_pixels": 0
+      },
+      "\\": {
+        "source_ink_bbox": [
+          1,
+          1,
+          7,
+          12
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          7,
+          13
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 13,
+        "cell_pixels": 13,
+        "clipped_pixels": 0
+      },
+      "]": {
+        "source_ink_bbox": [
+          2,
+          1,
+          5,
+          14
+        ],
+        "cell_ink_bbox": [
+          2,
+          2,
+          5,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 17,
+        "cell_pixels": 17,
+        "clipped_pixels": 0
+      },
+      "^": {
+        "source_ink_bbox": [
+          1,
+          2,
+          6,
+          6
+        ],
+        "cell_ink_bbox": [
+          1,
+          3,
+          6,
+          7
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 7,
+        "cell_pixels": 7,
+        "clipped_pixels": 0
+      },
+      "_": {
+        "source_ink_bbox": [
+          0,
+          13,
+          8,
+          14
+        ],
+        "cell_ink_bbox": [
+          0,
+          14,
+          8,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 8,
+        "cell_pixels": 8,
+        "clipped_pixels": 0
+      },
+      "`": {
+        "source_ink_bbox": [
+          1,
+          1,
+          4,
+          3
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          4,
+          4
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 4,
+        "cell_pixels": 4,
+        "clipped_pixels": 0
+      },
+      "a": {
+        "source_ink_bbox": [
+          1,
+          4,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 18,
+        "cell_pixels": 18,
+        "clipped_pixels": 0
+      },
+      "b": {
+        "source_ink_bbox": [
+          1,
+          1,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 23,
+        "cell_pixels": 23,
+        "clipped_pixels": 0
+      },
+      "c": {
+        "source_ink_bbox": [
+          1,
+          4,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 14,
+        "cell_pixels": 14,
+        "clipped_pixels": 0
+      },
+      "d": {
+        "source_ink_bbox": [
+          1,
+          1,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 23,
+        "cell_pixels": 23,
+        "clipped_pixels": 0
+      },
+      "e": {
+        "source_ink_bbox": [
+          1,
+          4,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 24,
+        "cell_pixels": 24,
+        "clipped_pixels": 0
+      },
+      "f": {
+        "source_ink_bbox": [
+          1,
+          1,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 16,
+        "cell_pixels": 16,
+        "clipped_pixels": 0
+      },
+      "g": {
+        "source_ink_bbox": [
+          1,
+          4,
+          7,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          7,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 29,
+        "cell_pixels": 29,
+        "clipped_pixels": 0
+      },
+      "h": {
+        "source_ink_bbox": [
+          1,
+          1,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 19,
+        "cell_pixels": 19,
+        "clipped_pixels": 0
+      },
+      "i": {
+        "source_ink_bbox": [
+          1,
+          1,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 18,
+        "cell_pixels": 18,
+        "clipped_pixels": 0
+      },
+      "j": {
+        "source_ink_bbox": [
+          1,
+          1,
+          6,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          6,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 22,
+        "cell_pixels": 22,
+        "clipped_pixels": 0
+      },
+      "k": {
+        "source_ink_bbox": [
+          1,
+          1,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 17,
+        "cell_pixels": 17,
+        "clipped_pixels": 0
+      },
+      "l": {
+        "source_ink_bbox": [
+          1,
+          1,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 17,
+        "cell_pixels": 17,
+        "clipped_pixels": 0
+      },
+      "m": {
+        "source_ink_bbox": [
+          0,
+          4,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          5,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 27,
+        "cell_pixels": 27,
+        "clipped_pixels": 0
+      },
+      "n": {
+        "source_ink_bbox": [
+          1,
+          4,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 16,
+        "cell_pixels": 16,
+        "clipped_pixels": 0
+      },
+      "o": {
+        "source_ink_bbox": [
+          1,
+          4,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 22,
+        "cell_pixels": 22,
+        "clipped_pixels": 0
+      },
+      "p": {
+        "source_ink_bbox": [
+          1,
+          4,
+          7,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          7,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 23,
+        "cell_pixels": 23,
+        "clipped_pixels": 0
+      },
+      "q": {
+        "source_ink_bbox": [
+          1,
+          4,
+          7,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          7,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 23,
+        "cell_pixels": 23,
+        "clipped_pixels": 0
+      },
+      "r": {
+        "source_ink_bbox": [
+          1,
+          4,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 12,
+        "cell_pixels": 12,
+        "clipped_pixels": 0
+      },
+      "s": {
+        "source_ink_bbox": [
+          1,
+          4,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 15,
+        "cell_pixels": 15,
+        "clipped_pixels": 0
+      },
+      "t": {
+        "source_ink_bbox": [
+          0,
+          2,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          3,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 16,
+        "cell_pixels": 16,
+        "clipped_pixels": 0
+      },
+      "u": {
+        "source_ink_bbox": [
+          1,
+          4,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 16,
+        "cell_pixels": 16,
+        "clipped_pixels": 0
+      },
+      "v": {
+        "source_ink_bbox": [
+          2,
+          4,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          2,
+          5,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 14,
+        "cell_pixels": 14,
+        "clipped_pixels": 0
+      },
+      "w": {
+        "source_ink_bbox": [
+          0,
+          4,
+          7,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          5,
+          7,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 21,
+        "cell_pixels": 21,
+        "clipped_pixels": 0
+      },
+      "x": {
+        "source_ink_bbox": [
+          0,
+          4,
+          8,
+          11
+        ],
+        "cell_ink_bbox": [
+          0,
+          5,
+          8,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 20,
+        "cell_pixels": 20,
+        "clipped_pixels": 0
+      },
+      "y": {
+        "source_ink_bbox": [
+          1,
+          4,
+          7,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          7,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 20,
+        "cell_pixels": 20,
+        "clipped_pixels": 0
+      },
+      "z": {
+        "source_ink_bbox": [
+          1,
+          4,
+          6,
+          11
+        ],
+        "cell_ink_bbox": [
+          1,
+          5,
+          6,
+          12
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 15,
+        "cell_pixels": 15,
+        "clipped_pixels": 0
+      },
+      "{": {
+        "source_ink_bbox": [
+          1,
+          1,
+          6,
+          14
+        ],
+        "cell_ink_bbox": [
+          1,
+          2,
+          6,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 16,
+        "cell_pixels": 16,
+        "clipped_pixels": 0
+      },
+      "|": {
+        "source_ink_bbox": [
+          3,
+          0,
+          4,
+          14
+        ],
+        "cell_ink_bbox": [
+          3,
+          1,
+          4,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 14,
+        "cell_pixels": 14,
+        "clipped_pixels": 0
+      },
+      "}": {
+        "source_ink_bbox": [
+          2,
+          1,
+          7,
+          14
+        ],
+        "cell_ink_bbox": [
+          2,
+          2,
+          7,
+          15
+        ],
+        "translation_xy": [
+          0,
+          1
+        ],
+        "source_pixels": 16,
+        "cell_pixels": 16,
+        "clipped_pixels": 0
+      },
+      "~": {
+        "source_ink_bbox": [
+          -1,
+          6,
+          6,
+          9
+        ],
+        "cell_ink_bbox": [
+          0,
+          7,
+          7,
+          10
+        ],
+        "translation_xy": [
+          1,
+          1
+        ],
+        "source_pixels": 9,
+        "cell_pixels": 9,
+        "clipped_pixels": 0
+      }
+    }
+  },
+  "validation": {
+    "vocab_coverage": "complete",
+    "original_order_preserved": true,
+    "all_native_ink_pixels_preserved": true,
+    "pack_unpack_pixel_equality": true,
+    "unused_rom_zero": true,
+    "atlas_source": "decoded ROM bytes",
+    "project_compiled": false,
+    "hardware_accessed": false,
+    "bram_inference": "requested by HDL style; synthesis not run"
+  }
+}

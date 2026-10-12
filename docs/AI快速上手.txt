@@ -1,0 +1,98 @@
+Tang Primer 20K 项目 AI 快速上手
+代码基线 V015  文档修订 2026-10-12 23:05 北京时间
+开发根目录 D:/Gowin_project/instrument_handoff_20261012
+生产工程 instrument_handoff.gprj  顶层 src/top.v
+
+一 项目现状与阅读顺序
+已实现16音色、32旋律声部、独立底鼓/军鼓、滑杆音量/弯音、四页中文界面、三首跟弹与32路验证模式。生产输出PT8211右对齐；amp_*固定0，USB Host/触控未实现。代码构建及软件回归已完成，实机反馈未确认。
+先读top.v → instrument_audio_top.v → instrument_inputs.v及instrument_audio.v → oscillator_test_control.v → hdmi_live_display.v。再按需求进入具体算法模块。不要从历史工程或旧英文golden推断当前接口。
+
+二 架构与控制归属
+top
+  instrument_audio_top：复位、input_hub、test_control、audio、status
+    instrument_inputs：实体/虚拟来源 → key/ADC → 音符/击打/滑杆
+    instrument_audio：allocator → synth + 双鼓 → mix/DC/LPF/controls → PT8211
+  instrument_telemetry：只读PCM统计与代表音符
+  instrument_ui_control + song_guide：菜单状态与跟弹提示
+  hdmi_live_display：状态CDC + wave_scope → dashboard/font → TMDS
+声音处理不依赖HDMI刷新/锁定。ui/guide在源时钟域；显示是旁路。32test音源复用synth，不使用预录混合波形。
+
+三 全部生产模块索引
+
+系统入口
+src/top.v | 整合音频、统计、菜单、教学和显示。 重点：主要负责连接与暂停条件；显示监视分支不反向控制声音。
+src/instrument_audio_top.v | 音频子系统入口，连接输入、测试控制、声音及LED。 重点：产生256周期上电复位；生产参数与测试模式交接在这里落到实例。
+
+输入层
+src/instrument_inputs.v | 统一实体与UART虚拟输入，发布音符、击打和滑杆值。 重点：A0/A1压力、A2音量、A3弯音；来源切换仅重置控制状态，不清整个合成器。
+src/matrix_keypad.v | 扫描4×4矩阵，消抖、鬼键检测并串行发布按下和松开。 重点：位0至15固定对应S1至S16；鬼键或来源切换取消音色候选，全松后恢复。
+src/remote_debug_link.v | 接收16字节虚拟输入帧，校验后原子提交，并回传ACK。 重点：协议版本08；1秒有效命令超时回退实体输入。ACK字段与monitor_flags不可混解。
+src/ads1115_reader.v | 调度单次转换，拼接完整读数并附通道标签。 重点：生产顺序0 1 2 0 1 3；最终STOP成功才发布sample_valid，错误整次丢弃。
+src/i2c_byte_master.v | 执行START、STOP、字节读写及ACK/NACK。 重点：done须与error一起判断；开漏、时钟延展和命令超时都在本层。
+src/i2c_bus_recovery.v | 在故障恢复阶段产生九个SCL脉冲并验证STOP。 重点：只尝试释放总线，不复位外部ADC；与字节引擎互斥占用总线。
+src/slider_controls.v | A2映射总音量，A3映射旋律连续弯音，带平滑及新鲜度跟踪。 重点：volume 0至255；pitch输出负128至127，非半音编号；过期保留最近完整值。
+src/pressure_adaptive.v | 为两路压力独立学习基线，识别击打与力度并重新武装。 重点：hit为单拍；持续重压只触发一次。calibrated与armed含义不同，门槛以ADC码计。
+src/headphone_mute_guard.v | 产生有时限的数字纯零参考请求。 重点：只输出mute_active；长按与最大窗口分开计时，释放后才可重新武装。
+
+音频层
+src/instrument_audio.v | 连接旋律、双鼓、处理链与PT8211，选择普通或测试PCM。 重点：输入准入与输出所有权分开；quiet等尾音结束，test_clear仅清局部声音状态。
+src/voice_allocator.v | 选择声部槽，锁存音符、力度和音色，输出gate及retrigger。 重点：gate是持续按键，busy含释放尾音；新音色不重写已分配声部。生产32槽。
+src/wavetable_synth.v | 共享运算链生成32声部波表旋律与测试正弦。 重点：每声部独立24位相位及ADSR；32路约261clk，必须赶上288clk采样周期。
+src/note_table.v | 将音符编号转换为24位DDS相位增量。 重点：纯组合表；按93750Hz生成，未列编号返回0，不负责关闭包络。
+src/drum_voice.v | 三角形DDS、下滑音高和包络生成电子底鼓。 重点：两次采样间缓存击打；同沿hit优先当前力度，clear优先于触发。
+src/snare_voice.v | LFSR噪声与三角形主体合成军鼓。 重点：击打缓存及复触发增益过渡独立管理，避免把单拍hit直接当采样门控。
+src/audio_mix.v | 组合相加旋律、底鼓、军鼓并饱和到16位PCM。 重点：先扩符号位到18位再加，防止16位回绕；不承担音量或均分。
+src/dc_blocker.v | 以差分与带泄漏反馈去除数字直流。 重点：Q8历史状态，tick接frame_done；quiet复位此级，定点取整不能随意替换。
+src/audio_cleanup.v | 可旁路的一阶数字低通。 重点：Q8保存小数；运行开关与编译参数共同决定滤波，quiet优先清历史。
+src/audio_controls.v | 平滑音量和弯音目标，缩放PCM。 重点：控制按fs_tick更新；音量目标是volume×255，不能直接改成左移8位。
+src/pt8211_driver.v | 复制单声道到左右声道并串行输出。 重点：16位右对齐、3MHz BCK；fs_tick每288clk一次，不能当MAX98357标准I2S驱动。
+
+交互与状态
+src/instrument_status.v | 管理LED状态和低通组合键。 重点：只处理提示及filter_enable，不参与PCM计算；测试时LED选择由父层覆盖。
+src/oscillator_test_control.v | 控制32路验证的模式、门控、扫路和增益交接。 重点：owned含整个交接；normal_input_ready在NORMAL及FADE_NORMAL_IN为真。
+src/oscillator_test_frequencies.v | 由0至31索引返回固定测试DDS增量。 重点：目标400+97×index Hz；没有相位状态或音频数据，状态在合成器。
+src/instrument_telemetry.v | 统计数字PCM的峰值、RMS和dBFS，并推算代表音符频率。 重点：只读；Hz是最低按住键的设定频率，不是混音FFT；voices是置位计数。
+src/instrument_ui_control.v | 源时钟域维护页、游标、曲目及教学命令。 重点：松开提交单键动作；组合、鬼键或来源切换取消候选；长按计数随参数定宽。
+src/song_guide.v | 维护三首练习序列和当前、下一音、错误提示。 重点：只输出跟弹状态；正确键松开即推进，拍长是提示，不强制按满；pause仅冻结教学。
+
+显示层
+src/hdmi_live_display.v | 封装显示时钟、整包状态、波形采集、渲染和输出。 重点：UI=1载荷252位，UI=0为242位；RGB与DE/HS/VS共延迟三拍。
+src/hdmi_clocks.v | rPLL与CLKDIV生成126MHz串行及25.2MHz像素时钟。 重点：使用专用时钟资源；锁定后在各自时钟域同步释放复位，实例名受SDC约束。
+src/video_timing.v | 生成640×480光栅、消隐及行场同步。 重点：总时序800×525；frame_start是帧边界使能，不是另一时钟。
+src/hdmi_status_cdc.v | 用请求应答握手跨域传递一致的状态快照。 重点：源端held_status保持稳定，像素端pending_status只在帧边界发布，不逐字段同步。
+src/wave_scope.v | 采集PCM到双银行BRAM，给显示提供256个点对。 重点：4比1抽取；波形与capture_gain同银行切换，不能写当前显示银行。
+src/hdmi_instrument_dashboard.v | 渲染四页中文界面和优先的32路测试页。 重点：纯显示；诊断合并12个旋律键与4个控制键；不得重复交换第二第三行。
+src/hdmi_ui_font.v | 同步读取8192×8字模ROM。 重点：ASCII占一单元，汉字占两单元；读延迟一拍，码128至511已被192汉字用满。
+src/hdmi_tx.v | 颜色编码后经OSER10和差分缓冲输出TMDS。 重点：位0先发；串行器在自身时钟域释放复位，时钟通道与数据通道流水匹配。
+src/tmds_encoder.v | 将8位颜色及消隐控制编码成10位符号。 重点：维护有符号运行差异；四个控制码与翻转规则必须一致，输出寄存一拍。
+
+四 必须保持的接口与时序
+1 时钟：输入/音频27MHz；fs_tick/sample_tick为每288clk一次的93750Hz使能，frame_done为完整合成结果事件。不要变成always @(posedge tick)。像素25.2MHz、串行126MHz，各域异步复位断言/同步释放。
+2 音频：16bit二补码位图；PCM端口未声明signed也按有符号处理。32个声部独立24bit phase/ADSR，8时隙/路及有效流水约261clk。TABLE_BITS当前10，test表固定1024点，参数改动不可只改一个数。gate/retrigger/busy分别表示保持请求/重新起音/包络忙。
+3 packed bus：note_bus[i*7+:7]、vel_bus[i*8+:8]、timbre_bus[i*4+:4]；key_state[0..15]=S1..S16，低12位旋律。monitor_adc[i*16+:16]低到高A0压力/A1压力/A2音量/A3弯音。物理行修正在CST，逻辑位序和虚拟键不再重排。
+4 事件：note_on/off、hit0/1、adc_valid均为单clk事件；数据在有效事件时消费。beat/ADC/scan的采样节奏不同，不能互换。ADC优先序0,1,2,0,1,3，虚拟每63390clk一个结果；monitor_ready不代表pressure_adaptive.calibrated。
+5 32test：test_owned=(state!=NORMAL)，包含所有渐变；test_mode仅音源选择；normal_input_ready=(NORMAL或FADE_NORMAL_IN)。生产TRANSITION_INPUT_ENABLE=1，独立audio默认0兼容旧调用。准入同时覆盖note_on/off、hit0/1和quiet事件检测，首次gain=0的采样边沿也要收事件。
+6 模式交接：clear_audio仅在零增益边界清声音，PT串行时钟不停；等待全松后普通渐入。菜单/教学继续用owned互斥，不能因恢复普通事件就提前释放所有权。saved_volume/pitch保持测试前控制，测试频率不被滑杆调制。
+7 键盘：生产DEBOUNCE_FRAMES=3、PERFORMANCE_MODE=1、SELECT_ON_RELEASE=1、TWO_BUTTON_SELECT=1；组件默认值不同。selector_wait_release在ghost/source边沿锁存，raw_keys和key_state都0才解锁，不复位reported来取消候选。
+8 UI：UI_ENABLE=1、song EXTERNAL_UI=1；page 0/1/2/3=演奏/曲库/帮助/诊断。ui命令单拍、ghost/组合/source变化取消候选；HOLD非正值归1、计数宽度自适应。诊断S16 release回LIVE且不发教学命令。
+9 教学：曲目0/1/2长度42/32/32；BEAT_SAMPLES=46875。正确键匹配后松开即推进，不要求进度到255，拍长当前是提示；不自动输出曲谱PCM。外部start/restart/toggle优先于pause；页面暂停只冻结教学。
+10 显示：252bit生产包，高10bit={page2,cursor2,song2,controls4}，旧信息在[241:0]；UI_ENABLE=0明确242bit。测试布局[77]active,[76:71]requested,[70:39]busy,[38:7]gate,[6]sweep,[5:1]index,[0]overrun。打包解包同改；整包握手源数据稳定，不逐位同步。
+11 显示流水：scope BRAM读1拍 + font读1拍 + RGB寄存1拍；DE/HS/VS也3拍。wave_scope请求应答独立，front bank不可写，capture_gain绑定同一银行。PLL失锁仅重置显示相关状态。
+12 flags：monitor_flags[7:0]=overrun/ghost/input_ready/adc_stale/adc_fault/filter_enable/remote_active/digital_zero；dashboard bit7还OR数字clip。UART ACK低三bit定义不同，禁止直接复用解码。
+13 UART模块边界：16byte原子命令，A5 5A seq flags keysLE velocity A0..A3LE XOR(bytes2..14)；ACK头5A A5 08。协议08不是固件身份。remote_debug_link负责协议，instrument_inputs负责实际来源/暂停I2C等动作；保持一致。
+
+五 工程资产与电脑辅助
+src/*.hex：timbre_soft为16×1024×16bit音色层，test_sine为1024点正弦，ui_font为8192×8字模。synth/font保持block_rom属性和同步读时序。
+assets/ui_texts.json → scripts/generate_ui_text.py → src/hdmi_ui_text.vh：136项，其中135原编码保留hex迁移校验。改原文案须同步处理hex字段，新增汉字须先看ui_font_map；192汉字已用满128..511码。menu_layout.json是独立测试期望。
+src/multi_tone.cst与matrix_clock.sdc绑定生产top、PLL/CLKDIV及CDC层级。保持req/ack同步首级例外、held→pending整包max_delay、银行gain跨域及各reset_sync约束；禁止扩大false path掩盖新逻辑。
+scripts/build.py协调文本一致性检查与Gowin；run_tests.py分组core/ui/keypad/song/boundaries/host/all；menu_tests/keypad_tests/song_tests生成独立期望与变体；analyze_rtl_pcm检查数字仿真PCM。这里列归属，不展开使用教程。
+tools/remote_control.py是主机协议/保持/释放层；oscillator_test.py与launch_oscillator_test.py编排32路验证；run_remote_capture.py和run_test_suite.py编排普通采集及判定；evaluate_capture.py和analyze_oscillators.py为离线分析；verify_firmware.py只核对当前固件；support中的audio_devices/record_wav/analyze_wav为底层采集与分析。设备检查脚本属于辅助，不进入综合。
+
+六 修改定位与当前重点
+音色/混音 → wavetable_synth/audio_mix/audio_controls → synth_equivalence、oscillator_audio、audio_hdmi_equivalence；守帧预算、有符号饱和、retrigger。
+压力/滑杆 → pressure_adaptive/slider_controls/instrument_inputs → reliable_controls、reliable_cadence；守ready/calibrated/armed、来源切换和过期行为。
+键盘/控制边界 → matrix_keypad/ui_control/oscillator_test_control/audio_top → keypad_physical_map、handoff_boundaries、menu_top；守取消候选及退出恢复首次采样事件。
+教学 → song_guide + top/menu连线 → song_library/song_pause；当前不是强制节拍判分或自动伴奏。
+显示 → dashboard/live_display/字体资产 → menu_preview、menu_cdc、hdmi_link；守252/242一致、三拍对齐、不可变银行与独立金标准。旧英文golden_dashboard及旧remote_top是历史夹具。
+V015已有核心、边界、键盘、曲库、菜单及主机模拟回归。逻辑/寄存器/CLS/BSRAM/DSP=14873/6638/9357/23/11.5；Setup/Hold0，像素Fmax25.640MHz。CLS约90.25%，显示时序仅0.44MHz余量；新增组合渲染逻辑和增加声部前先评估容量与期限。
+统计和屏幕波形来自数字PCM，Hz为代表按键设定频率，busy计数不是可闻声部鉴定。这是现有模块能力边界，不能把它们写成已实现的音频识别、实际底噪测量或触控。

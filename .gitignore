@@ -1,17 +1,20 @@
-# ---- Gowin IDE 构建产物（无需版本管理）----
+# Generated files and machine-specific configuration
 impl/
-*.fs
-*.bit
-*.bin
-*.sdf
-*.log
-
-# ---- Gowin IDE 用户本地配置 ----
+validation/
+measurements/
 *.gprj.user
-
-# ---- 系统 / 编辑器 ----
-Thumbs.db
-Desktop.ini
-.DS_Store
-*.swp
 __pycache__/
+*.py[cod]
+*.log
+*.jou
+*.wdb
+*.fs
+!/instrument_handoff.fs
+device_config.json
+.env*
+# Release archives and conversation/session data do not belong in this repository
+乐器版本/
+.claude/
+.codex/
+conversations/
+transcripts/

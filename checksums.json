@@ -1,0 +1,474 @@
+{
+  ".gitattributes": {
+    "sha256": "f77daf0961763f7d91816a566e5b9cb309507a5a02cd46f42fee9084c829226a",
+    "bytes": 104
+  },
+  ".gitignore": {
+    "sha256": "6a449b212e35caca89a798fbb4a4c59e8dd54829a1de1cf87bce269ce0685012",
+    "bytes": 353
+  },
+  "README.md": {
+    "sha256": "faccc9201b87c078daacb2ec17b686a3dbd59bdf17f024776eb851542e494fe1",
+    "bytes": 2464
+  },
+  "assets/menu_layout.json": {
+    "sha256": "f1fe1eda254ea538ab3d6dff0355dea75036fa49d6b423439a73181fbd0aeaa8",
+    "bytes": 17885
+  },
+  "assets/ui_font_map.json": {
+    "sha256": "6dd1c641445999aa402b8d980eb47f9b0bce385b0c783a8d32cd9f76fe070fad",
+    "bytes": 114635
+  },
+  "assets/ui_texts.json": {
+    "sha256": "d0323c7d03348cc7eec7d41303bbc1584e6a8ea56b090e76e91601fa083015bd",
+    "bytes": 22236
+  },
+  "build.tcl": {
+    "sha256": "aada2f5b98808a545dff33596949324358a1395ad58fe8e1665f3376eae731cc",
+    "bytes": 189
+  },
+  "docs/AI快速上手.txt": {
+    "sha256": "4b0b8a88a35690efa046e06f31d35a761cd35ac89d32fa6a05e7409ad3caeee1",
+    "bytes": 14409
+  },
+  "docs/项目架构与模块说明.docx": {
+    "sha256": "46eb7098b913e1449130a3534b3d23939bfe4a091e93a2cb46ae58414c91aa64",
+    "bytes": 46139
+  },
+  "instrument_handoff.fs": {
+    "sha256": "20dbffca8677a5ce6091a6189f30489d0d019914f64e61ed178776ebde29d30c",
+    "bytes": 7264153
+  },
+  "instrument_handoff.gprj": {
+    "sha256": "4a725ff5aadf404a088f8477049653fefa37373002276b0dd53c553cc7e3994d",
+    "bytes": 2821
+  },
+  "manifest.json": {
+    "sha256": "66861bea72126c6e50a8ec5db8db5a437e2a70abda91e299e49cfe0773e317fa",
+    "bytes": 6882
+  },
+  "requirements.txt": {
+    "sha256": "0d8591fbb38d29c9457b1ecb01e415c737b258eecfbf01eade0e7d4b21f73eb3",
+    "bytes": 30
+  },
+  "scripts/analyze_rtl_pcm.py": {
+    "sha256": "3267cdc322e1bd4a4ff22cbd8a42f1f60d06dfbbec19e8f16c14ba5806fc73ee",
+    "bytes": 4817
+  },
+  "scripts/build.py": {
+    "sha256": "22820ca890f8a21ecb16cd312faebf9a1a2f1ee52209280073d651b6e19ef98f",
+    "bytes": 1743
+  },
+  "scripts/generate_ui_text.py": {
+    "sha256": "2fccec2ff7264ae877474a3b0e4314a47d1bebc84b402cd9665d1768957add99",
+    "bytes": 1606
+  },
+  "scripts/keypad_tests.py": {
+    "sha256": "0f9f97c5a72c2de4874f123429755af78cc923dafe7fcfe39d55e13be5e21e23",
+    "bytes": 11062
+  },
+  "scripts/menu_tests.py": {
+    "sha256": "bff794cebbf7399006b68cd94d2423e02b44611a46257732f06a85b54db2a7d6",
+    "bytes": 16011
+  },
+  "scripts/run_tests.py": {
+    "sha256": "46d9c57ad089f6852f96002ff1b748ab8e78f508d40b508b691a19364170afb8",
+    "bytes": 6268
+  },
+  "scripts/song_tests.py": {
+    "sha256": "8cbfcfbb35eb01782f307694f5f0baf079ab30394f995f87ae242560bde22429",
+    "bytes": 10162
+  },
+  "src/ads1115_reader.v": {
+    "sha256": "33d975aba2ea83018877efdf8abbdd64cc7be8761cac81d39a2fe08f8a932d20",
+    "bytes": 10101
+  },
+  "src/audio_cleanup.v": {
+    "sha256": "ed7a263a0ae96a060108a58a836c536115b2c4da2b5b9b66042ef20e9f9858b9",
+    "bytes": 3174
+  },
+  "src/audio_controls.v": {
+    "sha256": "00b5054606645d861a07e416e9b81b3430b8f647a5cd12846335d330a7e41040",
+    "bytes": 2563
+  },
+  "src/audio_mix.v": {
+    "sha256": "d2db0747ecf1f5488dd9f0a2b66b0bbc8e745d6fdfec4a34969210ed3192c546",
+    "bytes": 1625
+  },
+  "src/dc_blocker.v": {
+    "sha256": "746d834986dcec68e28de5e65d29c9c11f066fd20b406998cb8bbe351534c13f",
+    "bytes": 2866
+  },
+  "src/drum_voice.v": {
+    "sha256": "f8d81a9da85d9994ecb77513031a46f91697a60e2cafe1d063a7d750a6040dc2",
+    "bytes": 11010
+  },
+  "src/hdmi_clocks.v": {
+    "sha256": "510836bce77b742ad55ff83621e1647b579d065ea48ffef03a6a830268f6eac8",
+    "bytes": 2021
+  },
+  "src/hdmi_instrument_dashboard.v": {
+    "sha256": "d919f78a06253b102235f236785eb55b69051064486d3dca5583e9f79bbba44f",
+    "bytes": 60201
+  },
+  "src/hdmi_live_display.v": {
+    "sha256": "2543a1b363e7dc0ce7e5ee8c28034818889993dba265c44a2a89c6ff57c49019",
+    "bytes": 8636
+  },
+  "src/hdmi_status_cdc.v": {
+    "sha256": "44810dff14ae283b5fa8ac826c4283fafca4ab33ab59928586886095d6bef0e9",
+    "bytes": 2130
+  },
+  "src/hdmi_tx.v": {
+    "sha256": "0e5cf6a3aa2e5e982579733a4edb741433fc8986099182a6b8052705f7f2aefa",
+    "bytes": 2553
+  },
+  "src/hdmi_ui_font.v": {
+    "sha256": "5c75e9674d78fee13f0a6685078a18c82c58d185a4f40e635f50e991de6129e6",
+    "bytes": 1117
+  },
+  "src/hdmi_ui_text.vh": {
+    "sha256": "4071ac93351d727831aee63f21f524ed3363613ea995414937e5bac2b6ec6b1d",
+    "bytes": 17550
+  },
+  "src/headphone_mute_guard.v": {
+    "sha256": "fe5321a6f92279f96c2705c17f4ba49242b6e8e76f14873e519fa21d00fbb1ba",
+    "bytes": 2805
+  },
+  "src/i2c_bus_recovery.v": {
+    "sha256": "1fd96800ef2df4b107ae8b2a89fe6921058ea22c310972bb067939e41dc1bd5a",
+    "bytes": 5833
+  },
+  "src/i2c_byte_master.v": {
+    "sha256": "11d015102204336f51575053e34ef878ad9f8e399234e15902f6ab27e4f59164",
+    "bytes": 7452
+  },
+  "src/instrument_audio.v": {
+    "sha256": "f29d0acc5e100e76d5bb2c579e828bfc85c92cd6086be2d90d63bc50fd179562",
+    "bytes": 8376
+  },
+  "src/instrument_audio_top.v": {
+    "sha256": "7a726045b99be7be3019821cfbf7498dfc228931e23d39867ae8ccbb28e5d471",
+    "bytes": 7841
+  },
+  "src/instrument_inputs.v": {
+    "sha256": "1ab26b86ee3ddcbe3fe97e34a5f3b26e2f6f922266723d1e65592d6e8341a491",
+    "bytes": 8956
+  },
+  "src/instrument_status.v": {
+    "sha256": "57b05d8134a300af440c8fc9e24f39478bbb213cc7e27808a82767dea6900d61",
+    "bytes": 2749
+  },
+  "src/instrument_telemetry.v": {
+    "sha256": "ef88864180eefac17058ec69ee1ad1213826d12a4e7aa4b1158e7f6a06c6f77c",
+    "bytes": 9535
+  },
+  "src/instrument_ui_control.v": {
+    "sha256": "bec52aa9f49d822ac09a5a7c507de4147196a3b34852802e41c767ff97e1afda",
+    "bytes": 3684
+  },
+  "src/matrix_clock.sdc": {
+    "sha256": "9d8fa713eb26f64580fb167c33531e7d9aaedb481164e1b449434f0d032dfba9",
+    "bytes": 1428
+  },
+  "src/matrix_keypad.v": {
+    "sha256": "14b7858128e9639d2e2f6d462c4310e0ae80be81f6f38def81c5f6e399697af5",
+    "bytes": 15107
+  },
+  "src/multi_tone.cst": {
+    "sha256": "08b730a144e6e457ec5741f4b82ca7752e5d1e764f83bf965a783fc382c01354",
+    "bytes": 3647
+  },
+  "src/note_table.v": {
+    "sha256": "6597f860e7119b0996317ad3da524787efc4328aa4e887338c7aa2f0aaf21541",
+    "bytes": 4264
+  },
+  "src/oscillator_test_control.v": {
+    "sha256": "00e9d6aa6fc28742711cfa955e58406ba6a14e90c1ec66e01529c7e3afdc6c0f",
+    "bytes": 17451
+  },
+  "src/oscillator_test_frequencies.v": {
+    "sha256": "7b751337ab88d4b30a97db7d5e5e7b81212eb61d591ca9991e0eac30c23d56e0",
+    "bytes": 2362
+  },
+  "src/pressure_adaptive.v": {
+    "sha256": "46a76129ac7c26a065ef1890d5b78c2f0a1d76af464b0897841c8e09d6308c7b",
+    "bytes": 8710
+  },
+  "src/pt8211_driver.v": {
+    "sha256": "167e6619b3c7cbdb5fbd2b8e8e5c8f8415bac8d552d6717aedbbeb118ef19922",
+    "bytes": 3360
+  },
+  "src/remote_debug_link.v": {
+    "sha256": "8efb9138a09395b20a276cbb449b36e52fe7fdb195505e86a062a598871b9f9a",
+    "bytes": 13341
+  },
+  "src/slider_controls.v": {
+    "sha256": "940c248c053894c6bcfc24fb8051d16f3315d49e88830937265ef8558a3822a9",
+    "bytes": 4429
+  },
+  "src/snare_voice.v": {
+    "sha256": "b4680c709dd84e32218299d1cff151507c20920379c4a37524b95405bcf81ed5",
+    "bytes": 16097
+  },
+  "src/song_guide.v": {
+    "sha256": "7cb3c5572ab20218d14b81dc2895fed1cc9ce5210b945d4959234a5f0430f8fe",
+    "bytes": 13785
+  },
+  "src/test_sine.hex": {
+    "sha256": "99a7d0a335cd1fe5a62ade4188773927f226e86149a7cc1d923230c53ffc40a4",
+    "bytes": 6144
+  },
+  "src/timbre_soft.hex": {
+    "sha256": "9d003d4551c86f6b13fe45f2cd48d727bf716962feb6de29eed81ae39e19f253",
+    "bytes": 98304
+  },
+  "src/tmds_encoder.v": {
+    "sha256": "1b62664ef8aded769c8513c903ce7275501f2a19e6449a55b79bd10f6a5685b8",
+    "bytes": 2179
+  },
+  "src/top.v": {
+    "sha256": "83d82ec4084aa589814513e5ef7ac835da2c799bf9bd6829c93182a7955248a2",
+    "bytes": 6190
+  },
+  "src/ui_font.hex": {
+    "sha256": "307e173dfd2a42be58006327d203327c84d877bf78b85efcd18a6dda0fab5501",
+    "bytes": 24576
+  },
+  "src/video_timing.v": {
+    "sha256": "eeca51b4d70088a4356d7e08d48d7219c77a68bf4a865c6863ab234c42620eb9",
+    "bytes": 1246
+  },
+  "src/voice_allocator.v": {
+    "sha256": "cb948797b44b88ebc87d2316c2d8141900f664d676b5bc104dac1ca36ac5b507",
+    "bytes": 7663
+  },
+  "src/wave_scope.v": {
+    "sha256": "a5d4acdeaca9da3c1f351c24a1203db399dbca6dccc669ae98c51e45c35257bb",
+    "bytes": 4494
+  },
+  "src/wavetable_synth.v": {
+    "sha256": "c3f7381523a2f30e1083f5d25aab7f4f3e597259e60409d696d3a1486d156301",
+    "bytes": 13308
+  },
+  "tests/Python/test_analyze_oscillators.py": {
+    "sha256": "e0b7687c763c3828f7cc389f638b377fc9464ac79800dd990b1e554ce556336a",
+    "bytes": 8548
+  },
+  "tests/Python/test_capture_pipeline.py": {
+    "sha256": "afaefadb26dd8182cde43ae869bc2eea536ed9c14f494a1d4ee89fd0d67c7cfb",
+    "bytes": 5179
+  },
+  "tests/Python/test_evaluate_capture.py": {
+    "sha256": "8c2a98fb940162982785f212af0d551f1d22793c752d42b3f74fb45660ccb596",
+    "bytes": 19467
+  },
+  "tests/Python/test_launch_oscillator_test.py": {
+    "sha256": "83039c1ffeb63ddb7d57d6373a9fa13d8a5cedfd70e480c308725a186117a9ec",
+    "bytes": 8425
+  },
+  "tests/Python/test_oscillator_test.py": {
+    "sha256": "679e573242d54a007083051e1de7f9667f4f077bd9943ebd2fb48c59d60a791d",
+    "bytes": 22978
+  },
+  "tests/Python/test_remote_control.py": {
+    "sha256": "27c0896dc8fd742d6fcf1d2bb4ffaa6b988b42afb558fb7f06f3086c74599608",
+    "bytes": 19966
+  },
+  "tests/Python/test_verify_firmware_handoff.py": {
+    "sha256": "042061277b227c5e213a739d3cc74578008825c1483a3aa986d42d369b972d59",
+    "bytes": 2154
+  },
+  "tests/baseline_audio_top.v": {
+    "sha256": "7dd9af1466886d050b560b529a96f7a0f666a9ad4673cfb5c41a35df3020d2c9",
+    "bytes": 3175
+  },
+  "tests/baseline_instrument_audio.v": {
+    "sha256": "b71165c29d222ac2a6971c2ad0ed0a240e0fda65bb052b38b2b853c4b0cb38b4",
+    "bytes": 4344
+  },
+  "tests/fixtures/pressure_wave.hex": {
+    "sha256": "8a817630ef1bb5c89a01e15972e647ec777cc12fb71725c8139897a49848d924",
+    "bytes": 196608
+  },
+  "tests/legacy_diagnostic_frequency.v": {
+    "sha256": "86d784f959cd6c8b03888b582ce8bd385c97a03e931c76d784d368d75bccdaaf",
+    "bytes": 1845
+  },
+  "tests/legacy_shared_synth.v": {
+    "sha256": "3f5403e5e13e2034dbae26acc1a4344a4a31faa2f02948e5dd3cdc4ca73fb779",
+    "bytes": 9785
+  },
+  "tests/mock_ads1115.v": {
+    "sha256": "80553d7e2cda04dc8daa1931e6711c90befc01cdba69c6eeeb3db41601d9f26c",
+    "bytes": 2068
+  },
+  "tests/tb_audio_hdmi_equivalence.v": {
+    "sha256": "4d4f88ad1894efbbf11e2c9f4abcd4418fbe2730056bd2de647be4089daef357",
+    "bytes": 3202
+  },
+  "tests/tb_handoff_boundaries.v": {
+    "sha256": "7e9550d8def4b38172dc08a9f382e305a86e7f7b6ccfffbcd62654fb126b55a5",
+    "bytes": 26763
+  },
+  "tests/tb_hdmi_link.v": {
+    "sha256": "b431692b5f2f336d78d1c80b23dd57a31237d37e4627f37fcf5a19dc2069b8e3",
+    "bytes": 2208
+  },
+  "tests/tb_hdmi_live_preview.v": {
+    "sha256": "1ffe2719245b2b966d3f4a160d1c40961347a1d2033a380b94cf218d4a82db31",
+    "bytes": 24831
+  },
+  "tests/tb_hdmi_test_preview.v": {
+    "sha256": "3cb32bae294942ca4e654ee93fc82d998bf881c6ec7fae60fcf2c38afe13f5e0",
+    "bytes": 33817
+  },
+  "tests/tb_hdmi_zh_pipeline.v": {
+    "sha256": "c2c39f8a674ecf5c15fa12b8f7a7ae7ab5876bf03e88163d152248ae1bb0c455",
+    "bytes": 27654
+  },
+  "tests/tb_instrument_telemetry.v": {
+    "sha256": "a7357f3f1a75de6055e60519028b4926993591b7288b1998eff147ec78a080ef",
+    "bytes": 2747
+  },
+  "tests/tb_instrument_ui_control.v": {
+    "sha256": "f3f20adfd52a6c0af65c156a56852fb293cc7fa0cbc27616d75f58a52adb0186",
+    "bytes": 8513
+  },
+  "tests/tb_keypad_physical_map.v": {
+    "sha256": "ae4d7f0ac89f2ef0b63976a9cf0cf9fc399e6c459186b5251b32d10097647949",
+    "bytes": 18436
+  },
+  "tests/tb_menu_cdc.v": {
+    "sha256": "c0f7f50f16d0ffbcbb57bfabcdc7c3bc0ab4d8cdf016c743960ef3c0e5334b42",
+    "bytes": 9287
+  },
+  "tests/tb_menu_preview.v": {
+    "sha256": "d50caf6fdf3ea77ea1027f19def78ac38e87c70bba16977631d1cc787d195be2",
+    "bytes": 8044
+  },
+  "tests/tb_menu_top.v": {
+    "sha256": "56c1d9f6df515714ff4bd379d706ef4788275b99bd98d9364d2b20f66a8c202b",
+    "bytes": 3883
+  },
+  "tests/tb_noise_selectors.v": {
+    "sha256": "4e6e177d66b6657bd95169a59ba1b568c8e22eb971042c40af872d07393b049c",
+    "bytes": 3385
+  },
+  "tests/tb_oscillator_audio.v": {
+    "sha256": "9716f11fbde7c072bd34f52ffaf056a969d8805ac73f529dfc55866e81e46d70",
+    "bytes": 3771
+  },
+  "tests/tb_oscillator_integration.v": {
+    "sha256": "cfde3735a8bec5dc2405aca368b130a584db68d49fb3e58478cf91b9138ba13d",
+    "bytes": 3537
+  },
+  "tests/tb_oscillator_test_control.v": {
+    "sha256": "80226c7aaa52e97c651947885326f84113a231468b1adf8601f8c1e0476a47f0",
+    "bytes": 25799
+  },
+  "tests/tb_performance_keys.v": {
+    "sha256": "92c3e4f6789fbf067e0deaf2a731408202bdb86a2ef35ac2fd4b384c871936ca",
+    "bytes": 4535
+  },
+  "tests/tb_reliable_cadence.v": {
+    "sha256": "d3c21134de4561156df59eb58a5d8522a212e897fa6654c5643eece6fca9a63d",
+    "bytes": 1974
+  },
+  "tests/tb_reliable_controls.v": {
+    "sha256": "28d638d6bc3ed7a98d2631d169f8db86ac684721e772d9ecf698676b9dbcb8a7",
+    "bytes": 3528
+  },
+  "tests/tb_remote_link.v": {
+    "sha256": "f33d70cc25761c2523b977ea65f328fca2227b95686148e24909d6353d32dcd8",
+    "bytes": 23406
+  },
+  "tests/tb_song_guide.v": {
+    "sha256": "7f6c2727673870d9e76d058872c094aeac7a8de6b943487e232ee120fc96b8d5",
+    "bytes": 13417
+  },
+  "tests/tb_song_library.v": {
+    "sha256": "b2a70f9afb71c9eeadafccf6d4f815eaa4431d9dfce120ef40a9b3b7474e349c",
+    "bytes": 20800
+  },
+  "tests/tb_song_pause.v": {
+    "sha256": "0d8a1b3c55201c3fc8472fc8943adc04b36bf9222faea7d5ae3fd8a1ddeb9d05",
+    "bytes": 1550
+  },
+  "tests/tb_synth_equivalence.v": {
+    "sha256": "14fbdc7dc6cc3ecfd471c8a431268b519928243d5a4d91764f3787e48ef9ad50",
+    "bytes": 18701
+  },
+  "tests/tb_tmds_encoder.v": {
+    "sha256": "dd58fafd08024697a923af1486588f462595f782fac0ad5f98e3cba0e36ec188",
+    "bytes": 687
+  },
+  "tests/tb_video_timing.v": {
+    "sha256": "f4dc8f8b2334e72a644e77479db0aad637dc4f82ae0aacd9f71b01186023b97c",
+    "bytes": 1051
+  },
+  "tests/tb_wave_scope.v": {
+    "sha256": "db06f91c03e44cdebf1fa0d3fa3d64175cd82ba4b4695356999d9d44bedbf840",
+    "bytes": 2456
+  },
+  "tests/tmds_vectors.hex": {
+    "sha256": "b4477ed3ba8399c7d4606882b9366c232962f73e7215a9c750ebb9f1aa99170e",
+    "bytes": 32864
+  },
+  "tools/analyze_oscillators.py": {
+    "sha256": "6936c9750f3b4ebe8a1ed45dd947a3ee01388dc32f9677d9e81a9408b02e26bd",
+    "bytes": 15269
+  },
+  "tools/evaluate_capture.py": {
+    "sha256": "b999263a6b7eadd6f80b21b31f0408d83bc16dbc665ef086cf5a5469a4a91ba4",
+    "bytes": 38267
+  },
+  "tools/inspect_touch.py": {
+    "sha256": "ef3a10bfb9e23b2f5ab4b100b39f61a224814ee3322d19d2fa8324b05f2a6913",
+    "bytes": 1887
+  },
+  "tools/launch_oscillator_test.py": {
+    "sha256": "d3d569bc5c5f17035e4f513eadc2742b7617d7962b62b7c67802864780be09ac",
+    "bytes": 2865
+  },
+  "tools/list_audio_inputs.py": {
+    "sha256": "90a8a91bb8aef39dcf8bfcadffda01e6aed1a6b3f956f7c9b4c2e17b7b295777",
+    "bytes": 287
+  },
+  "tools/oscillator_test.py": {
+    "sha256": "738dc9a022f2996335a0e4b7baa1474dde423597300d5784622e43181d58cd84",
+    "bytes": 24844
+  },
+  "tools/remote_control.py": {
+    "sha256": "874027b687141c1fadd12904d82746d3760680a1853febef51aa8f5ffc42e39c",
+    "bytes": 25172
+  },
+  "tools/run_remote_capture.py": {
+    "sha256": "ffd8e5cd03e2e129c33bc735beef5c16740a1ebe7380495b2544768e0514fcb7",
+    "bytes": 8573
+  },
+  "tools/run_test_suite.py": {
+    "sha256": "b86e0487bf713e5fcdddcd3c7b4b8cd782f96e2fe4b55b42c1db1267978cf914",
+    "bytes": 6056
+  },
+  "tools/support/analyze_wav.py": {
+    "sha256": "a42f887130044fd14a77196ff05fac221eafedfa73f1237aaf3448c8a9b0e226",
+    "bytes": 4436
+  },
+  "tools/support/audio_devices.py": {
+    "sha256": "ee31838d951e869ecdaeadc4dd0be49630cc8e44251bab8217f71ff412843ad5",
+    "bytes": 1447
+  },
+  "tools/support/record_wav.py": {
+    "sha256": "1c6f5e9c6bcf5078d4a4df5a15493e60e2c9f188dad5c1232430b0378e367940",
+    "bytes": 11426
+  },
+  "tools/verify_firmware.py": {
+    "sha256": "47f72e550f11cc873624ceb5c495036959fee066f14d32b69908de019b03eec0",
+    "bytes": 3552
+  },
+  "verification/software_summary.json": {
+    "sha256": "55f41385a06e55cb1d78f56e7769d82ec7f77ad686c35a7898566c8f7a6a3c44",
+    "bytes": 1207
+  }
+}

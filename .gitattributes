@@ -1,0 +1,4 @@
+# Preserve exact V015 source and firmware bytes for build hashes.
+* -text
+*.docx binary
+*.fs binary
