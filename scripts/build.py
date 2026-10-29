@@ -8,6 +8,13 @@ def main():
     a=ap.parse_args();exe=a.gowin_home/'IDE/bin/gw_sh.exe'
     if not exe.exists():ap.error('找不到 gw_sh.exe；使用 --gowin-home 或 GOWIN_HOME 指定安装根目录')
     subprocess.run([os.sys.executable,str(ROOT/'scripts/generate_ui_text.py'),'--check'],check=True,cwd=ROOT)
+    # V016以短文本ID译码。两份生成资产必须与同一份中文文案一致。
+    subprocess.run([os.sys.executable,str(ROOT/'scripts/generate_ui_lookup.py'),'--check'],check=True,cwd=ROOT)
+    # 半表资产必须逐样本可逆；不允许音色更新后悄悄使用旧压缩表。
+    subprocess.run([os.sys.executable,str(ROOT/'scripts/generate_odd_half_rom.py'),'--check'],check=True,cwd=ROOT)
+    # V017仅综合长笛/拨弦两组；资产挑选与奇对称折叠都要可追溯到冻结原表。
+    subprocess.run([os.sys.executable,str(ROOT/'scripts/generate_dual_timbres.py'),'--check'],check=True,cwd=ROOT)
+    subprocess.run([os.sys.executable,str(ROOT/'scripts/generate_touch_centers.py'),'--check'],check=True,cwd=ROOT)
     val=ROOT/'validation';val.mkdir(exist_ok=True)
     inputs=[p for p in (ROOT/'src').glob('*') if p.is_file()]+[ROOT/'instrument_handoff.gprj',ROOT/'build.tcl']
     def hashes():return {str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}

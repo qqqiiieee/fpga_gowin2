@@ -11,14 +11,18 @@
 // flags语义继承audio_top；ghost不代表确定的真实按键，组合键先按后松确认。
 
 // V009 refactored audio/remote path plus passive telemetry and onboard HDMI UI.
-module top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_CYCLES=63390,
+module top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_ENABLE=1,
+ parameter MIDI_ENABLE=1,parameter OPTICAL_ENABLE=1,parameter MIDI_CHANNEL=0,parameter PHASE_RAM=1,
+ parameter PRESSURE_EXPRESSION_ENABLE=1,
  parameter TEST_HOLD_SAMPLES=187500,parameter TEST_MAX_SAMPLES=5625000,
  parameter TEST_SWEEP_HALF_SAMPLES=46875,parameter TEST_RAMP_DIV=8,parameter UI_HOLD_SAMPLES=75000)(
  input clk,output [3:0] matrix_rows,input [3:0] matrix_cols,
  output hp_bck,hp_ws,hp_din,pa_en,output amp_bck,amp_lrc,amp_din,
  inout adc_scl,adc_sda,output [3:0] timbre_led_n,
  input uart_rx,output uart_tx,
- output tmds_clk_p,tmds_clk_n,output [2:0] tmds_data_p,tmds_data_n);
+ output tmds_clk_p,tmds_clk_n,output [2:0] tmds_data_p,tmds_data_n,
+ output touch_cs_n,touch_sclk,touch_mosi,input touch_miso,
+ input midi_rx,input [1:0] optical_beams);
  wire rst_n,sample_tick;
  wire [15:0] pcm,keys;
  wire [3:0] timbre;
@@ -30,7 +34,14 @@ module top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_CYCLES=63390,
  wire [31:0] test_gate,test_busy;
  wire [5:0] test_requested;
  wire [4:0] test_index;
- instrument_audio_top #(.LOWPASS_ENABLE(LOWPASS_ENABLE),.VIRTUAL_ADC_CYCLES(VIRTUAL_ADC_CYCLES),
+ wire [11:0] performance_keys;
+ wire [6:0] external_note;
+ wire external_note_valid;
+ wire [7:0] expression0,expression1;
+ wire [1:0] pressure_calibrated;
+ instrument_audio_top #(.LOWPASS_ENABLE(LOWPASS_ENABLE),.VIRTUAL_ADC_CYCLES(VIRTUAL_ADC_CYCLES),.TOUCH_ENABLE(TOUCH_ENABLE),
+  .MIDI_ENABLE(MIDI_ENABLE),.OPTICAL_ENABLE(OPTICAL_ENABLE),.MIDI_CHANNEL(MIDI_CHANNEL),.PHASE_RAM(PHASE_RAM),
+  .PRESSURE_EXPRESSION_ENABLE(PRESSURE_EXPRESSION_ENABLE),
   .TEST_HOLD_SAMPLES(TEST_HOLD_SAMPLES),.TEST_MAX_SAMPLES(TEST_MAX_SAMPLES),
   .TEST_SWEEP_HALF_SAMPLES(TEST_SWEEP_HALF_SAMPLES),.TEST_RAMP_DIV(TEST_RAMP_DIV)) u_audio(
   .clk(clk),.matrix_rows(matrix_rows),.matrix_cols(matrix_cols),
@@ -43,18 +54,24 @@ module top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_CYCLES=63390,
   .monitor_pitch(pitch),.monitor_busy(busy),.monitor_flags(flags),.monitor_adc(adc_values),
   .monitor_test_owned(test_owned),.monitor_test_mode(test_mode),
   .monitor_test_gate(test_gate),.monitor_test_busy(test_busy),
-  .monitor_test_requested(test_requested),.monitor_test_sweep(test_sweep),.monitor_test_index(test_index));
+  .monitor_test_requested(test_requested),.monitor_test_sweep(test_sweep),.monitor_test_index(test_index),
+  .touch_cs_n(touch_cs_n),.touch_sclk(touch_sclk),.touch_mosi(touch_mosi),.touch_miso(touch_miso),
+  .midi_rx(midi_rx),.optical_beams(optical_beams),.monitor_performance_keys(performance_keys),
+  .monitor_external_note(external_note),.monitor_external_note_valid(external_note_valid),
+  .monitor_expression0(expression0),.monitor_expression1(expression1),
+  .monitor_pressure_calibrated(pressure_calibrated));
  wire [15:0] peak,rms,hz,freq_bcd;
  wire signed [7:0] level_dbfs;
  wire [7:0] peak_percent,volume_percent;
  wire [5:0] voices;
  wire [6:0] note;
  wire note_valid,clip;
- instrument_telemetry u_telemetry(.clk(clk),.rst_n(rst_n),.sample_tick(sample_tick),
-  .pcm(pcm),.keys(keys[11:0]),.volume(volume),.pitch(pitch),.busy(test_owned?test_busy:busy),
+ instrument_telemetry #(.EXTERNAL_NOTE_ENABLE(MIDI_ENABLE || OPTICAL_ENABLE)) u_telemetry(.clk(clk),.rst_n(rst_n),.sample_tick(sample_tick),
+  .pcm(pcm),.keys(performance_keys),.volume(volume),.pitch(pitch),.busy(test_owned?test_busy:busy),
   .peak(peak),.rms(rms),.level_dbfs(level_dbfs),.peak_percent(peak_percent),
   .volume_percent(volume_percent),.voices(voices),.primary_note(note),
-  .note_valid(note_valid),.frequency_hz(hz),.frequency_bcd(freq_bcd),.clip(clip));
+  .note_valid(note_valid),.frequency_hz(hz),.frequency_bcd(freq_bcd),.clip(clip),
+  .external_note(external_note),.external_note_valid(external_note_valid && !test_owned));
  wire [1:0] ui_page,ui_cursor,ui_song;
  wire ui_start,ui_toggle,ui_restart;
  instrument_ui_control #(.HOLD_SAMPLES(UI_HOLD_SAMPLES)) u_menu(
@@ -71,17 +88,18 @@ module top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_CYCLES=63390,
  wire menu_key_pause=(|keys[15:14]) && keys!=16'h9000 && keys!=16'h3000;
  song_guide #(.EXTERNAL_UI(1)) u_guide(.clk(clk),.rst_n(rst_n),.sample_tick(sample_tick),.pause(test_owned || ui_page!=0 || menu_key_pause),
   .song_id(ui_song),.ui_start(ui_start),.ui_toggle(ui_toggle),.ui_restart(ui_restart),
-  .keys(keys),.ghost(flags[6]),.active(guide_active),.done(guide_done),
+  .keys({keys[15:12],performance_keys}),.ghost(flags[6]),.active(guide_active),.done(guide_done),
   .cue_mask(cue_mask),.next_mask(next_mask),.wrong_mask(wrong_mask),
   .step_index(guide_step),.total_steps(guide_total),.beat_progress(beat_progress),
   .target_beats(target_beats));
  wire pll_locked,frame_tick;
  hdmi_live_display #(.UI_ENABLE(1)) u_display(.clk27(clk),.rst_n(rst_n),.sample_tick(sample_tick),
-  .pcm(pcm),.peak(peak),.keys(keys[11:0]),.timbre(timbre),.note(note),.note_valid(note_valid),
+  .pcm(pcm),.peak(peak),.keys(performance_keys),.timbre(timbre),.note(note),.note_valid(note_valid),
   .frequency_bcd(freq_bcd),.volume_percent(volume_percent),.level_dbfs(level_dbfs),
   .peak_percent(peak_percent),.pitch(pitch),.voices(voices),
-  .pressure0(adc_values[15]?8'd0:adc_values[14:7]),
-  .pressure1(adc_values[31]?8'd0:adc_values[30:23]),.flags(flags),
+  // 表情版显示实际0..255平滑控制量，而非旧鼓的压缩原始ADC码。
+  .pressure0(PRESSURE_EXPRESSION_ENABLE?expression0:(adc_values[15]?8'd0:adc_values[14:7])),
+  .pressure1(PRESSURE_EXPRESSION_ENABLE?expression1:(adc_values[31]?8'd0:adc_values[30:23])),.flags(flags),
   .guide_active(guide_active),.guide_done(guide_done),.cue_mask(cue_mask),
   .next_mask(next_mask),.wrong_mask(wrong_mask),.guide_step(guide_step+6'd1),
   .guide_total(guide_total),.beat_progress(beat_progress),.target_beats(target_beats),.clip(clip),

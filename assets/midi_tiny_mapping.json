@@ -1,0 +1,443 @@
+{
+  "schema_version": 1,
+  "document_kind": "V019_project_mapping_contract",
+  "version": "V020",
+  "language": "zh-CN",
+  "verified_date": "2026-10-24",
+  "status": "offline_validated_hardware_pending",
+  "is_midiplus_control_center_preset": false,
+  "automatically_programs_keyboard": false,
+  "hardware_arrival_confirmed": false,
+  "hardware_tested": false,
+  "devices": {
+    "keyboard_user_selected_model": "MIDIPLUS TINY+32",
+    "official_manual_family": "TINY / TINY+，32键",
+    "optical_sensor": "DFRobot SEN0503",
+    "optical_pair_count": 2,
+    "receiver_original_recommendation": "BMV51M001",
+    "cable_original_recommendation_example": "BOSS BMIDI-5-35；必须核对Type A / TRS 3.5mm到DIN5公规格",
+    "purchase_state": "用户决定按推荐购置TINY+32与SEN0503；未确认到货、接口实物或电气结果"
+  },
+  "transport": {
+    "usb_host_implemented": false,
+    "keyboard_power": "独立USB 5V电源 -> TINY+32 USB-C",
+    "data_flow": [
+      "TINY+32 3.5mm TRS MIDI OUT",
+      "Type A TRS 3.5mm -> DIN5公线",
+      "BMV51M001 MIDI IN",
+      "6N138接收路径 -> BMCOM pin3 RX",
+      "Tang Primer 20K PMOD0 T8 midi_rx"
+    ],
+    "trs_midi_type": "A",
+    "trs_to_din": {
+      "tip": 5,
+      "ring": 4,
+      "sleeve": 2
+    },
+    "uart": {
+      "baud": 31250,
+      "data_bits": 8,
+      "parity": "none",
+      "stop_bits": 1,
+      "logic_voltage_v": 3.3
+    },
+    "bmcom": [
+      {
+        "pin": 1,
+        "label": "NC",
+        "connection": "悬空"
+      },
+      {
+        "pin": 2,
+        "label": "TX",
+        "direction": "送往MIDI OUT路径的输入",
+        "connection": "只接收时悬空"
+      },
+      {
+        "pin": 3,
+        "label": "RX",
+        "direction": "MIDI IN接收路径输出，厂家按主机RX命名",
+        "connection": "T8 midi_rx"
+      },
+      {
+        "pin": 4,
+        "label": "VDD",
+        "connection": "3.3V"
+      },
+      {
+        "pin": 5,
+        "label": "GND",
+        "connection": "FPGA公共GND"
+      }
+    ],
+    "receiver_pin_direction_evidence": "厂家Schematic V1.0的MIDI IN/6N138/RX网名及应用说明；中文V1.00的两行发送描述重复，不以该重复文本交叉接线",
+    "physical_connector_fit_verified": false,
+    "physical_pin_order_verified": false,
+    "debug_uart_separate": {
+      "rx_ball": "T13",
+      "tx_ball": "M11",
+      "baud": 115200,
+      "must_not_connect_midi_here": true
+    }
+  },
+  "pins": {
+    "new": {
+      "midi_rx": "T8",
+      "beamA": "P8",
+      "beamB": "P9"
+    },
+    "unused": [
+      "T9"
+    ],
+    "retained_mcp3208": {
+      "SCLK": "T6",
+      "DIN": "P6",
+      "OUT": "R8",
+      "CS": "T7"
+    },
+    "retained_ads1115": {
+      "SCL": "D14",
+      "SDA": "E15",
+      "ADDR": "GND",
+      "address_7bit": 72
+    },
+    "retained_matrix": {
+      "R1": "T11",
+      "R2": "M14",
+      "R3": "T12",
+      "R4": "J14",
+      "C1": "P11",
+      "C2": "R11",
+      "C3": "M15",
+      "C4": "J16"
+    }
+  },
+  "channel_numbering": {
+    "user_interface": "1..16",
+    "wire_status_low_nibble": "0..15"
+  },
+  "melody": {
+    "channel_1based": 1,
+    "channel_wire_0based": 0,
+    "accepted_messages": [
+      "NoteOn",
+      "NoteOff",
+      "ControlChange",
+      "PitchBend",
+      "ProgramChange"
+    ],
+    "note_on_velocity_zero_action": "NoteOff",
+    "note_number_range": [
+      0,
+      127
+    ],
+    "middle_c_convention": {
+      "name": "C4",
+      "note": 60
+    },
+    "velocity": {
+      "input_bits": 7,
+      "output_bits": 8,
+      "zero_is_note_off": true,
+      "implementation_snapshot_formula": "(v7 << 1) | (v7 >> 6)",
+      "implementation_snapshot_verilog": "{rx_data[6:0], rx_data[6]}",
+      "nonzero_endpoints": {
+        "input_1": 2,
+        "input_127": 255
+      },
+      "verification": "已读midi_keyboard.v源码表达式，未由文档worker运行MIDI仿真"
+    },
+    "cc": {
+      "1": {
+        "name": "颤音深度",
+        "fpga_generated_lfo_hz_approx": 6,
+        "zero_disables": true
+      },
+      "7": {
+        "name": "主音量",
+        "range_input": [
+          0,
+          127
+        ],
+        "range_output": [
+          0,
+          255
+        ],
+        "arbitration": "latest_changed_source"
+      },
+      "64": {
+        "name": "MIDI延音",
+        "on_min": 64,
+        "off_max": 63,
+        "source_scope": "MIDI"
+      },
+      "120": {
+        "name": "紧急静音",
+        "effect_scope": "global_all_sources_and_pending_strum",
+        "channel_filter_final_policy": "仅主旋律监听通道（默认CH1）接受；接受后清所有输入来源与待发扫弦。"
+      },
+      "123": {
+        "name": "释放MIDI音符",
+        "effect_scope": "MIDI_source_only",
+        "must_not_release_other_source_same_note": true
+      }
+    },
+    "pitch_bend": {
+      "input_bits": 14,
+      "center": 8192,
+      "control": "摇杆左右",
+      "arbitration": "latest_changed_source",
+      "semitone_range": "按最终合成器映射验收，本文不承诺"
+    },
+    "program_change": {
+      "0": "长笛",
+      "1": "拨弦"
+    },
+    "programs_are_project_specific_not_general_midi": true,
+    "program_selection_shared_with": [
+      "矩阵/触摸S13",
+      "矩阵/触摸S14"
+    ]
+  },
+  "pads_suggested_configuration": {
+    "must_configure_and_verify_in_control_center": true,
+    "not_assumed_factory_default": true,
+    "mode": "NOTE",
+    "channel_1based": 10,
+    "channel_wire_0based": 9,
+    "required_note_mapping": {
+      "36": "底鼓",
+      "38": "军鼓"
+    },
+    "velocity_sensitive": true,
+    "other_pad_notes_contract": "忽略",
+    "implementation_snapshot_extra_notes": {
+      "35": "底鼓",
+      "40": "军鼓"
+    },
+    "implementation_snapshot_extra_notes_disposition": "与仅36/38及其他忽略的合同存在差异，待主agent决定/修正；不作为额外支持承诺"
+  },
+  "suggested_controls": {
+    "keyboard": "CH1",
+    "joystick_horizontal": "Pitch Bend，CH1；编辑器CC128指弯音选择项，非线上CC128",
+    "joystick_vertical": "CC1，CH1",
+    "knob_K1_optional": "CC7，CH1",
+    "factory_knob_ccs_from_manual_only": {
+      "K1": 93,
+      "K2": 91,
+      "K3": 71,
+      "K4": 74
+    },
+    "factory_values_are_not_current_configuration_evidence": true,
+    "pc_control": "按设备实际可配置发送方式核对0/1；不编造默认实体按钮"
+  },
+  "control_arbitration": {
+    "volume_sources": [
+      "MIDI_CC7",
+      "ADS1115_A2实体滑杆"
+    ],
+    "pitch_sources": [
+      "MIDI_PitchBend",
+      "ADS1115_A3实体滑杆"
+    ],
+    "policy": "最近发生数值变化的来源接管",
+    "unchanged_repeated_message_must_not_retake": true,
+    "physical_slider_can_retake_when_moved": true,
+    "validated_behavior": "首个MIDI值可接管；此后只有新数值变化接管，实体滑杆移动可夺回；重复相同MIDI值不夺回。"
+  },
+  "safety_and_release_contract": {
+    "global_panic_triggers": [
+      "melody_channel_CC120",
+      "Stop_0xFC",
+      "SystemReset_0xFF",
+      "ActiveSense_armed_stream_timeout",
+      "UART_framing_error",
+      "FIFO_overflow",
+      "remote_takeover_rise",
+      "digital_zero_rise"
+    ],
+    "global_effect": "清所有来源的音频门控/活动扫弦/遗留队列与延音，避免清音后再被旧事件重触发",
+    "active_sensing": {
+      "arm_only_after_first_FE": true,
+      "stream_timeout_ms": 350,
+      "unarmed_normal_long_hold_must_not_timeout": true,
+      "keyboard_sends_FE_by_default": "未知，不作假定",
+      "implementation_snapshot_refresh": "任意有效UART接收MIDI字节"
+    },
+    "cc123": "只释放MIDI来源音符，当前源码同时清MIDI延音状态",
+    "source_tags": {
+      "0": "本地矩阵/触摸",
+      "1": "MIDI",
+      "2": "光电扫弦"
+    },
+    "same_note_independent_release": true,
+    "test32": {
+      "shared_synth_voice_count": 32,
+      "real_inputs_must_not_pollute_test": true,
+      "cancel_pending_input_events": true,
+      "optical_rearm_after_clear": true
+    },
+    "digital_zero": "清除所有来源/活动光弦，退出不重放旧按键，松键重按或新手势恢复。"
+  },
+  "ignored_performance_messages_contract": [
+    "非支持通道普通演奏消息",
+    "其他ControlChange与ProgramChange",
+    "CH10除35/36/38/40外的pad音符",
+    "Aftertouch",
+    "SysEx/MMC",
+    "MIDI Clock/Start/Continue等未映射实时消息；FC除外"
+  ],
+  "implementation_snapshot_protocol_differences": [],
+  "optical": {
+    "model": "SEN0503",
+    "pair_count": 2,
+    "voltage_v": 3.3,
+    "factory_range_at_3v3_cm_approx": 20,
+    "factory_response_time_ms": 2,
+    "transmitter_wires": {
+      "red": "3.3V",
+      "black": "公共GND"
+    },
+    "receiver_wires": {
+      "red": "3.3V",
+      "black": "公共GND",
+      "white": "OUT，A->P8，B->P9"
+    },
+    "pullups": {
+      "each_white_out_ohms": 10000,
+      "to_voltage_v": 3.3,
+      "separate_per_output": true,
+      "must_not_pull_up_to_5v": true
+    },
+    "optional_local_decoupling_nf": 100,
+    "manufacturer_output_type": "NPN常开",
+    "blocked_polarity": "厂商未明确；未实测",
+    "startup_unblocked_idle_learning_ms": 200,
+    "startup_instructions": "移开手、两束对齐且无遮挡再启动；误学后重新无遮挡复位",
+    "geometry": {
+      "parallel_beams": true,
+      "spacing_along_hand_travel_cm": [
+        3,
+        5
+      ]
+    },
+    "direction": {
+      "A_then_B": "ascending",
+      "B_then_A": "descending"
+    },
+    "pair_timeout_ms": 150,
+    "single_beam_fallback": "超过配对窗后触发一次，响应更慢；不含实测方向/速度",
+    "long_block_no_retrigger": true,
+    "rearm": "两束均回空闲",
+    "held_midi_chord_max_notes": 6,
+    "default_notes": [
+      60,
+      64,
+      67,
+      72
+    ],
+    "default_note_names": [
+      "C4",
+      "E4",
+      "G4",
+      "C5"
+    ],
+    "timbre": "拨弦",
+    "timbre_id": 1,
+    "shared_synth_voices": 32,
+    "release_old_strum_before_new": true,
+    "paired_gap_options_ms": [
+      2,
+      4,
+      6,
+      10
+    ],
+    "implementation_snapshot_bins": [
+      {
+        "max_pair_delay_ms": 8,
+        "velocity8": 255,
+        "gap_ms": 2
+      },
+      {
+        "max_pair_delay_ms": 20,
+        "velocity8": 220,
+        "gap_ms": 4
+      },
+      {
+        "max_pair_delay_ms": 50,
+        "velocity8": 180,
+        "gap_ms": 6
+      },
+      {
+        "max_pair_delay_ms": 150,
+        "velocity8": 140,
+        "gap_ms": 10
+      }
+    ],
+    "implementation_snapshot_fallback": {
+      "velocity8": 160,
+      "gap_ms": 8
+    },
+    "implementation_snapshot_chord_selection": "ascending取最低最多6音；descending取最高最多6音；每次触发快照",
+    "simultaneous_beams": "不可声称有先后方向；当前模块快照用默认升序、velocity180、gap6ms",
+    "timing_values_are_not_end_to_end_hardware_measurements": true
+  },
+  "primary_sources": [
+    {
+      "id": "tiny_cn",
+      "url": "https://web-file.midiplus.com/upload/202307/11/TINY%20%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C.pdf",
+      "sections": [
+        "1.2",
+        "2.1",
+        "2.2",
+        "2.8",
+        "2.9",
+        "4.3"
+      ],
+      "pdf_physical_pages_1based": [
+        5,
+        6,
+        7,
+        9,
+        20
+      ]
+    },
+    {
+      "id": "bmv_product",
+      "url": "https://www.bestmodulescorp.com.cn/zh/bmv51m001.html"
+    },
+    {
+      "id": "bmv_manual_cn",
+      "url": "https://www.bestmodulescorp.com.cn/zh/amfile/file/download/file/2102/product/1316/",
+      "version": "V1.00"
+    },
+    {
+      "id": "bmv_manual_en",
+      "url": "https://www.bestmodulescorp.com/en/amfile/file/download/file/2100/product/1316/",
+      "version": "V1.00"
+    },
+    {
+      "id": "bmv_schematic",
+      "url": "https://www.bestmodulescorp.com.cn/zh/amfile/file/download/file/2107/product/1316/",
+      "version": "V1.0",
+      "date": "2023-05-12",
+      "sheet": "1/1"
+    },
+    {
+      "id": "sen0503",
+      "url": "https://www.dfrobot.com.cn/goods-3274.html"
+    }
+  ],
+  "verification_boundary": "最终RTL单元/系统仿真、源哈希、Gowin构建/时序及文档渲染通过；未烧录/测真实硬件。JSON是工程映射说明，不是键盘配置文件。",
+  "display_limits": {
+    "virtual_keys": "原12键范围用于显示和跟弹；其他MIDI音符通过独立7bit代表音符显示",
+    "frequency_hz_bcd_max": 9999,
+    "overflow_behavior": "4位显示饱和9999，原始frequency_hz仍为真实16位统计"
+  },
+  "pressure_expression": {
+    "A0": "brightness; continuous lowpass opening",
+    "A1": "vibrato depth; max combined with CC1, not added",
+    "pressure_drum_input": false,
+    "keyboard_channel10_drums_retained": true
+  }
+}

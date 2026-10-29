@@ -1,0 +1,193 @@
+{
+  "project": "D:\\Gowin_project\\instrument_expression_20261024",
+  "resources": {
+    "Logic": 18055.0,
+    "Register": 7673.0,
+    "CLS": 9909.0,
+    "BSRAM": 9.0,
+    "DSP": 13.25
+  },
+  "capacities": {
+    "Logic": 20736.0,
+    "Register": 16173.0,
+    "CLS": 10368.0,
+    "BSRAM": 46.0,
+    "DSP": 24.0
+  },
+  "utilization_percent": {
+    "Logic": 87.071,
+    "Register": 47.443,
+    "CLS": 95.573,
+    "BSRAM": 19.565,
+    "DSP": 55.208
+  },
+  "timing_violations": {
+    "Setup": 0,
+    "Hold": 0
+  },
+  "fmax_mhz": {
+    "clk27": 27.067,
+    "serial126": 909.263,
+    "pixel25_2": 30.271
+  },
+  "synthesis_hierarchy": {
+    "u_alloc": {
+      "name": "u_alloc",
+      "Register": "648",
+      "Alu": "224",
+      "Lut": "304",
+      "T_Register": "648(648)",
+      "T_Alu": "224(224)",
+      "T_Lut": "304(304)"
+    },
+    "synth": {
+      "name": "synth",
+      "Register": "1578",
+      "Alu": "84",
+      "Lut": "1340",
+      "PADD18": "1",
+      "MULT18X18": "2",
+      "MULTADDALU18X18": "1",
+      "Bsram": "3",
+      "T_Register": "1578(1578)",
+      "T_Alu": "84(84)",
+      "T_Lut": "1506(1340)",
+      "T_PADD18": "1(1)",
+      "T_MULT18X18": "2(2)",
+      "T_MULTADDALU18X18": "1(1)",
+      "T_Bsram": "3(3)"
+    },
+    "u_telemetry": {
+      "name": "u_telemetry",
+      "Register": "366",
+      "Alu": "128",
+      "Lut": "489",
+      "MULT18X18": "2",
+      "MULTALU36X18": "1",
+      "MULTADDALU18X18": "3",
+      "Bsram": "1",
+      "T_Register": "366(366)",
+      "T_Alu": "128(128)",
+      "T_Lut": "567(489)",
+      "T_MULT18X18": "2(2)",
+      "T_MULTALU36X18": "1(1)",
+      "T_MULTADDALU18X18": "3(3)",
+      "T_Bsram": "1(1)"
+    },
+    "u_dashboard": {
+      "name": "u_dashboard",
+      "Register": "51",
+      "Alu": "15",
+      "Lut": "3844",
+      "T_Register": "51(51)",
+      "T_Alu": "15(15)",
+      "T_Lut": "3844(3844)",
+      "T_Bsram": "4(0)"
+    }
+  },
+  "firmware": "D:\\Gowin_project\\instrument_expression_20261024\\impl\\pnr\\instrument_handoff.fs",
+  "usercode": "0x000052D9",
+  "firmware_sha256": "5c8be9899de5b1898337a84fbed230f842eb335a7f9e622e8009a0290019f01f",
+  "input_hashes_verified": true,
+  "hardware_programmed": false,
+  "baseline": {
+    "project": "D:\\Gowin_project\\instrument_midi_optical_20261024",
+    "resources": {
+      "Logic": 18141.0,
+      "Register": 7659.0,
+      "CLS": 9999.0,
+      "BSRAM": 9.0,
+      "DSP": 12.25
+    },
+    "capacities": {
+      "Logic": 20736.0,
+      "Register": 16173.0,
+      "CLS": 10368.0,
+      "BSRAM": 46.0,
+      "DSP": 24.0
+    },
+    "utilization_percent": {
+      "Logic": 87.486,
+      "Register": 47.357,
+      "CLS": 96.441,
+      "BSRAM": 19.565,
+      "DSP": 51.042
+    },
+    "timing_violations": {
+      "Setup": 0,
+      "Hold": 0
+    },
+    "fmax_mhz": {
+      "clk27": 29.381,
+      "serial126": 2380.239,
+      "pixel25_2": 26.476
+    },
+    "synthesis_hierarchy": {
+      "u_alloc": {
+        "name": "u_alloc",
+        "Register": "648",
+        "Alu": "224",
+        "Lut": "302",
+        "T_Register": "648(648)",
+        "T_Alu": "224(224)",
+        "T_Lut": "302(302)"
+      },
+      "synth": {
+        "name": "synth",
+        "Register": "1578",
+        "Alu": "84",
+        "Lut": "1343",
+        "PADD18": "1",
+        "MULT18X18": "2",
+        "MULTADDALU18X18": "1",
+        "Bsram": "3",
+        "T_Register": "1578(1578)",
+        "T_Alu": "84(84)",
+        "T_Lut": "1509(1343)",
+        "T_PADD18": "1(1)",
+        "T_MULT18X18": "2(2)",
+        "T_MULTADDALU18X18": "1(1)",
+        "T_Bsram": "3(3)"
+      },
+      "u_telemetry": {
+        "name": "u_telemetry",
+        "Register": "366",
+        "Alu": "128",
+        "Lut": "499",
+        "MULT18X18": "2",
+        "MULTALU36X18": "1",
+        "MULTADDALU18X18": "3",
+        "Bsram": "1",
+        "T_Register": "366(366)",
+        "T_Alu": "128(128)",
+        "T_Lut": "577(499)",
+        "T_MULT18X18": "2(2)",
+        "T_MULTALU36X18": "1(1)",
+        "T_MULTADDALU18X18": "3(3)",
+        "T_Bsram": "1(1)"
+      },
+      "u_dashboard": {
+        "name": "u_dashboard",
+        "Register": "51",
+        "Alu": "15",
+        "Lut": "3940",
+        "T_Register": "51(51)",
+        "T_Alu": "15(15)",
+        "T_Lut": "3940(3940)",
+        "T_Bsram": "4(0)"
+      }
+    },
+    "firmware": "D:\\Gowin_project\\instrument_midi_optical_20261024\\impl\\pnr\\instrument_handoff.fs",
+    "usercode": "0x00005D02",
+    "firmware_sha256": "f9a4c0be3691b2a6171bce759807238cce1547324e1675c715284636795bcd5f",
+    "input_hashes_verified": true,
+    "hardware_programmed": false
+  },
+  "resource_reduction": {
+    "Logic": 86.0,
+    "Register": -14.0,
+    "CLS": 90.0,
+    "BSRAM": 0.0,
+    "DSP": -1.0
+  }
+}

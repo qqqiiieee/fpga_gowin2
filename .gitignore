@@ -1,20 +1,22 @@
-# Generated files and machine-specific configuration
 impl/
 validation/
 measurements/
-*.gprj.user
+.venv/
 __pycache__/
 *.py[cod]
+*.vvp
 *.log
 *.jou
 *.wdb
+*.gprj.user
 *.fs
-!/instrument_handoff.fs
+!/instrument_v020.fs
 device_config.json
 .env*
-# Release archives and conversation/session data do not belong in this repository
-乐器版本/
 .claude/
 .codex/
 conversations/
 transcripts/
+tools/vendor/
+*.lic
+license.dat

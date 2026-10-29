@@ -1,11 +1,13 @@
 // Tang Primer 20K 顶层：端口、上电复位及三层连接，不在这里实现状态机。
-// 输入层：键盘/ADS1115/UART；声音层：32复音/双鼓/滤波/耳机；状态层：LED/组合键。
+// 输入层：键盘/ADS1115/UART；声音层：32复音/MIDI双鼓/滤波表情/耳机；状态层：LED/组合键。
+// PRESSURE_EXPRESSION_ENABLE=1时FSR A0明亮度/A1揉弦，0保留历史鼓输入供对照。
+// monitor_expression0/1是平滑后0..255控制量，不是kg；calibrated两位为对应通道标定状态。
 // clk=27MHz H11。VIRTUAL_ADC_CYCLES 是虚拟 ADC 节奏，不是音频采样率。
 // 无外部复位口；寄存器初值和 por_cnt 产生配置后低有效复位，再按 clk 同步释放。
 // monitor_rst_n 是此源域复位；monitor_tick 为93750Hz整帧装载使能，不是新时钟。
 // matrix_rows 为逐行0/Z，matrix_cols低有效需上拉；ADC为开漏I2C，UART为8N1。
 // hp_bck/ws/din 是 PT8211 右对齐串行口；pa_en 固定1，amp_* 三口固定0。
-// monitor_pcm 为16位二补码装载字；keys bit0..15为S1..S16，timbre为0..15，
+// monitor_pcm为16位二补码装载字；keys bit0..15为S1..S16，timbre为0长笛/1拨弦，
 // volume为0..255控制码，pitch为9位有符号弯音码；busy每位对应声部0..31。
 // monitor_adc低到高四个16位原始码为A0/A1压力、A2音量、A3弯音，不是kg。
 // monitor_flags bit7..0依次为overrun/ghost/input_ready/adc_stale/adc_fault/
@@ -16,6 +18,8 @@
 // 须在1..65536内匹配虚拟计数器。TEST_* 默认187500/5625000/46875/8，
 // 单位为采样数，范围/非正值处理继承 oscillator_test_control。
 module instrument_audio_top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_CYCLES=63390,
+    parameter TOUCH_ENABLE=0,parameter PRESSURE_EXPRESSION_ENABLE=0,
+    parameter MIDI_ENABLE=0,parameter OPTICAL_ENABLE=0,parameter MIDI_CHANNEL=0,parameter PHASE_RAM=0,
     parameter TEST_HOLD_SAMPLES=187500,parameter TEST_MAX_SAMPLES=5625000,
     parameter TEST_SWEEP_HALF_SAMPLES=46875,parameter TEST_RAMP_DIV=8)(
     input clk,output [3:0] matrix_rows,input [3:0] matrix_cols,
@@ -29,7 +33,13 @@ module instrument_audio_top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_C
     output monitor_test_owned,output monitor_test_mode,
     output [31:0] monitor_test_gate,output [31:0] monitor_test_busy,
     output [5:0] monitor_test_requested,output monitor_test_sweep,
-    output [4:0] monitor_test_index);
+    output [4:0] monitor_test_index,
+    output touch_cs_n,output touch_sclk,output touch_mosi,input touch_miso,
+    input midi_rx,input [1:0] optical_beams,
+    output [11:0] monitor_performance_keys,output [6:0] monitor_external_note,
+    output monitor_external_note_valid,
+    output [7:0] monitor_expression0,output [7:0] monitor_expression1,
+    output [1:0] monitor_pressure_calibrated);
     // 配置后先保持复位 256 个主时钟，待状态确定后才允许工作。
     reg [7:0] por_cnt=0;reg rst_n=0;
     always @(posedge clk) begin
@@ -50,6 +60,8 @@ module instrument_audio_top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_C
     wire [8:0] test_gain;
     wire [3:0] test_state;
     wire normal_input_ready;
+    wire [1:0] note_source;
+    wire panic_audio;
     // 本地长按/串口虚拟键都使用同一已消抖key_state，避免矩阵鬼键绕过。
     // 默认计数按93750Hz；参数只为仿真加速提供覆盖，不改变板上时钟。
     oscillator_test_control #(.HOLD_SAMPLES(TEST_HOLD_SAMPLES),.MAX_SAMPLES(TEST_MAX_SAMPLES),
@@ -59,7 +71,9 @@ module instrument_audio_top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_C
         .test_mode(test_mode),.gate_mask(test_gate),.requested_count(test_requested),
         .sweep_active(test_sweep),.sweep_index(test_index),.master_gain(test_gain),
         .clear_audio(test_clear),.state_debug(test_state),.normal_input_ready(normal_input_ready));
-    instrument_inputs #(.VIRTUAL_ADC_CYCLES(VIRTUAL_ADC_CYCLES)) input_hub(
+    instrument_inputs #(.VIRTUAL_ADC_CYCLES(VIRTUAL_ADC_CYCLES),.TOUCH_ENABLE(TOUCH_ENABLE),
+        .PRESSURE_EXPRESSION_ENABLE(PRESSURE_EXPRESSION_ENABLE),
+        .MIDI_ENABLE(MIDI_ENABLE),.OPTICAL_ENABLE(OPTICAL_ENABLE),.MIDI_CHANNEL(MIDI_CHANNEL)) input_hub(
         .clk(clk),.rst_n(rst_n),.matrix_rows(matrix_rows),.matrix_cols(matrix_cols),
         .adc_scl(adc_scl),.adc_sda(adc_sda),.uart_rx(uart_rx),.uart_tx(uart_tx),
         .synth_overrun(overrun),.suppress_controls(test_owned),
@@ -69,18 +83,30 @@ module instrument_audio_top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_C
         .slider_volume(slider_volume),.slider_pitch(slider_pitch),
         .hit0(hit0),.hit1(hit1),.velocity0(velocity0),.velocity1(velocity1),
         .digital_zero_test(digital_zero_test),.adc_fault(adc_fault),.adc_stale(adc_stale),
-        .monitor_ready(input_ready),.monitor_remote(input_remote),.monitor_adc(monitor_adc));
-    instrument_audio #(.LOWPASS_ENABLE(LOWPASS_ENABLE),.NUM_VOICES(32),.TRANSITION_INPUT_ENABLE(1)) audio(
+        .monitor_ready(input_ready),.monitor_remote(input_remote),.monitor_adc(monitor_adc),
+        .touch_cs_n(touch_cs_n),.touch_sclk(touch_sclk),.touch_mosi(touch_mosi),.touch_miso(touch_miso),
+        .midi_rx(midi_rx),.optical_beams(optical_beams),.sample_tick(monitor_tick),
+        .allow_performance(normal_input_ready),.note_source(note_source),.panic_audio(panic_audio),
+        .performance_keys(monitor_performance_keys),.external_note(monitor_external_note),
+        .external_note_valid(monitor_external_note_valid),
+        .pressure_brightness(monitor_expression0),.pressure_vibrato(monitor_expression1),
+        .pressure_calibrated(monitor_pressure_calibrated));
+    instrument_audio #(.LOWPASS_ENABLE(LOWPASS_ENABLE),.NUM_VOICES(32),
+        .TRANSITION_INPUT_ENABLE(1),.REDUCED_TIMBRES(1),
+        .SOURCE_TAG_ENABLE(MIDI_ENABLE || OPTICAL_ENABLE),.PHASE_RAM(PHASE_RAM),
+        .PRESSURE_EXPRESSION_ENABLE(PRESSURE_EXPRESSION_ENABLE)) audio(
         .clk(clk),.rst_n(rst_n),.note_on(note_on),.note_off(note_off),.note(note),
         .velocity(velocity),.timbre(timbre),.slider_volume(slider_volume),.slider_pitch(slider_pitch),
         .hit0(hit0),.hit1(hit1),.velocity0(velocity0),.velocity1(velocity1),
         .digital_zero_test(digital_zero_test),.filter_enable(filter_enable),
-        .test_owned(test_owned),.test_mode(test_mode),.test_clear(test_clear),
+        .test_owned(test_owned),.test_mode(test_mode),.test_clear(test_clear || panic_audio),
         .normal_input_ready(normal_input_ready),
         .test_gate_mask(test_gate),.test_master_gain(test_gain),
         .hp_bck(hp_bck),.hp_ws(hp_ws),.hp_din(hp_din),.overrun(overrun),
         .monitor_tick(monitor_tick),.monitor_pcm(monitor_pcm),
-        .monitor_pitch(monitor_pitch),.monitor_busy(monitor_busy),.monitor_test_busy(monitor_test_busy));
+        .monitor_pitch(monitor_pitch),.monitor_busy(monitor_busy),.monitor_test_busy(monitor_test_busy),
+        .event_source(note_source),.pressure_brightness(monitor_expression0),
+        .pressure_brightness_ready(monitor_pressure_calibrated[0]));
     wire [3:0] normal_led_n;
     instrument_status status(.clk(clk),.rst_n(rst_n),
         .key_state(test_owned?16'd0:key_state),.keypad_ghost(keypad_ghost),

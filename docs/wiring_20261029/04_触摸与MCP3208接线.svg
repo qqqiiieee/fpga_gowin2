@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="1340" viewBox="0 0 1520 1340"><rect width="1520" height="120" fill="#e6eff8"/><g font-family="Microsoft YaHei,sans-serif"><text x="30" y="44" font-size="30" fill="#183448" font-weight="700" text-anchor="start">V020 接线复用 · GVS / MCP3208</text><text x="30" y="88" font-size="21" fill="#183448" font-weight="400" text-anchor="start">2026-10-29｜沿用已核对原图的接线；当前 A0/A1 为连续表情，A2/A3 为音量/音高。</text></g><svg y="120" xmlns="http://www.w3.org/2000/svg" width="1520" height="1220" viewBox="0 0 1520 1220" role="img" aria-labelledby="title desc">
+  <title id="title">V018 GVS模拟电容触摸板、MCP3208与Tang Primer 20K接线</title>
+  <desc id="desc">触摸V与MCP模块3V3接PMOD0的3.3V，所有GND共地。S经过10k串联到CH0，分压节点另接10k到地。SPI为CLK到T6、DIN到P6、OUT到R8、CS到T7。ADS1115与原矩阵、板载3.5mm音频保留。</desc>
+  <defs>
+    <style>
+      text{font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif;fill:#142b43;font-size:21px}
+      .title{font-size:34px;font-weight:700}.h{font-size:25px;font-weight:700}.small{font-size:18px}.tiny{font-size:16px}
+      .box{fill:#fff;stroke:#8babc5;stroke-width:2}.pwr{fill:none;stroke:#cf3541;stroke-width:4}
+      .gnd{fill:none;stroke:#344d63;stroke-width:3}.signal{fill:none;stroke:#147d82;stroke-width:4}
+      .spi{fill:none;stroke:#315ec6;stroke-width:3}.warn{fill:#ac2b32;font-weight:700}.muted{fill:#476780}
+      .port{fill:#fff;stroke:#147d82;stroke-width:3}.dot{fill:#147d82}.key{fill:#edf5fa;stroke:#b0c5d7}
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#315ec6"/></marker>
+    <g id="ground"><path d="M0,0 V14 M-16,14 H16 M-11,21 H11 M-5,28 H5" class="gnd"/></g>
+  </defs>
+  <rect width="1520" height="1220" fill="#f2f6fa"/>
+  <text x="30" y="48" class="title">GVS 模拟触摸键盘 · 精确接线图</text>
+  <text x="30" y="80" class="small muted">阶段1 / V017基线 → V018输入扩展　按模块丝印和FPGA球号接线；本图不是排针物理针序图</text>
+  <path d="M140,120 H1290" class="pwr"/>
+  <text x="370" y="111" class="small" fill="#cf3541">公共 3.3V 电源：来自 PMOD0（不要接 5V）</text>
+  <rect x="30" y="170" width="270" height="420" rx="15" class="box"/>
+  <rect x="740" y="170" width="300" height="420" rx="15" class="box"/>
+  <rect x="1180" y="170" width="310" height="420" rx="15" class="box"/>
+  <path d="M140,120 V204 M810,120 V204 M1290,120 V204" class="pwr"/>
+  <circle cx="140" cy="120" r="5" fill="#cf3541"/><circle cx="810" cy="120" r="5" fill="#cf3541"/><circle cx="1290" cy="120" r="5" fill="#cf3541"/>
+  <text x="126" y="232">V</text><text x="216" y="232">G</text>
+  <text x="778" y="232">3V3</text><text x="936" y="232">G</text>
+  <text x="1245" y="232">3.3V</text><text x="1380" y="232">GND</text>
+  <use href="#ground" x="227" y="244"/><use href="#ground" x="947" y="244"/><use href="#ground" x="1410" y="244"/>
+  <text x="55" y="295" class="h">GVS 触摸板</text>
+  <text x="268" y="333" class="h">S</text><circle cx="300" cy="325" r="5" class="port"/>
+  <path d="M305,325 H370 M462,325 H740" class="signal"/>
+  <rect x="370" y="313" width="92" height="24" fill="#fff" stroke="#147d82" stroke-width="3"/>
+  <text x="364" y="294">R串 = 10kΩ</text>
+  <circle cx="530" cy="325" r="6" class="dot"/>
+  <text x="549" y="313" class="small">分压节点</text>
+  <path d="M530,325 V407 M530,477 V506" class="signal"/>
+  <rect x="518" y="407" width="24" height="70" fill="#fff" stroke="#147d82" stroke-width="3"/>
+  <text x="554" y="438">R下 = 10kΩ</text>
+  <text x="554" y="466" class="small">节点 → GND</text>
+  <use href="#ground" x="530" y="506"/>
+  <text x="498" y="562" class="small">共地</text>
+  <text x="767" y="294" class="h">MCP3208 模块</text>
+  <circle cx="740" cy="325" r="5" class="port"/><text x="760" y="333">CH0（模拟输入）</text>
+  <text x="760" y="360" class="tiny muted">2.5V参考；CH0板载分压未知</text>
+  <path d="M1180,390 H1042" class="spi" marker-end="url(#arrow)"/>
+  <path d="M1180,432 H1042" class="spi" marker-end="url(#arrow)"/>
+  <path d="M1042,474 H1178" class="spi" marker-end="url(#arrow)"/>
+  <path d="M1180,516 H1042" class="spi" marker-end="url(#arrow)"/>
+  <text x="958" y="398">CLK</text><text x="958" y="440">DIN</text><text x="958" y="482">OUT</text><text x="972" y="524">CS</text>
+  <text x="1068" y="381" class="tiny">SCLK</text><text x="1068" y="423" class="tiny">MOSI</text><text x="1068" y="465" class="tiny">MISO</text><text x="1077" y="507" class="tiny">CSn</text>
+  <text x="1210" y="295" class="h">Tang Primer 20K</text>
+  <text x="1210" y="330">PMOD0 · SPI固定</text>
+  <text x="1210" y="398">T6  / SCLK</text><text x="1210" y="440">P6  / MOSI</text>
+  <text x="1210" y="482">R8  / MISO</text><text x="1210" y="524">T7  / CSn</text>
+  <text x="770" y="565" class="warn small">5V–18V 端子：悬空，不接</text>
+  <text x="1210" y="565" class="small muted">3V3 / GND 均取 PMOD0</text>
+  <g text-anchor="middle" class="small">
+    <rect x="58" y="370" width="44" height="35" rx="4" class="key"/><text x="80" y="395">1</text>
+    <rect x="110" y="370" width="44" height="35" rx="4" class="key"/><text x="132" y="395">2</text>
+    <rect x="162" y="370" width="44" height="35" rx="4" class="key"/><text x="184" y="395">3</text>
+    <rect x="214" y="370" width="44" height="35" rx="4" class="key"/><text x="236" y="395">A</text>
+    <rect x="58" y="412" width="44" height="35" rx="4" class="key"/><text x="80" y="437">4</text>
+    <rect x="110" y="412" width="44" height="35" rx="4" class="key"/><text x="132" y="437">5</text>
+    <rect x="162" y="412" width="44" height="35" rx="4" class="key"/><text x="184" y="437">6</text>
+    <rect x="214" y="412" width="44" height="35" rx="4" class="key"/><text x="236" y="437">B</text>
+    <rect x="58" y="454" width="44" height="35" rx="4" class="key"/><text x="80" y="479">7</text>
+    <rect x="110" y="454" width="44" height="35" rx="4" class="key"/><text x="132" y="479">8</text>
+    <rect x="162" y="454" width="44" height="35" rx="4" class="key"/><text x="184" y="479">9</text>
+    <rect x="214" y="454" width="44" height="35" rx="4" class="key"/><text x="236" y="479">C</text>
+    <rect x="58" y="496" width="44" height="35" rx="4" class="key"/><text x="80" y="521">*</text>
+    <rect x="110" y="496" width="44" height="35" rx="4" class="key"/><text x="132" y="521">0</text>
+    <rect x="162" y="496" width="44" height="35" rx="4" class="key"/><text x="184" y="521">#</text>
+    <rect x="214" y="496" width="44" height="35" rx="4" class="key"/><text x="236" y="521">D</text>
+  </g>
+  <text x="55" y="565" class="small muted">按位置标定，勿按电压排序</text>
+  <rect x="30" y="612" width="1460" height="74" rx="10" fill="#fff0e9" stroke="#e6a188"/>
+  <text x="50" y="642" class="warn">模拟 S 不能直接接 FPGA！两只10k电阻按需补齐；节点只送 MCP CH0。</text>
+  <text x="50" y="671" class="small">理想外部分压：V节点 = S/2，S=3.3V时约1.65V；板载负载可能再次衰减，首次必须逐键标定。</text>
+  <rect x="30" y="714" width="710" height="274" rx="14" class="box"/>
+  <text x="50" y="751" class="h">ADS1115：压力 / 滑杆保持原接法</text>
+  <text x="50" y="791">SCL → D14　　SDA → E15　　VDD → 3.3V</text>
+  <text x="50" y="831">GND → 共地　　ADDR → GND　　地址 0x48</text>
+  <text x="50" y="876">A0：压力0　　　　　 A1：压力1</text>
+  <text x="50" y="916">A2：音量滑杆　　　 A3：音高滑杆</text>
+  <text x="50" y="960" class="small muted">触摸S改走MCP CH0；不占用ADS1115四个既有通道</text>
+  <rect x="770" y="714" width="720" height="274" rx="14" class="box"/>
+  <text x="790" y="751" class="h">原8线矩阵：可选备用菜单 / 组合键</text>
+  <text x="790" y="796">R1 → T11　　　 R2 → M14</text>
+  <text x="790" y="836">R3 → T12　　　 R4 → J14</text>
+  <text x="790" y="876">C1 → P11　　　 C2 → R11</text>
+  <text x="790" y="916">C3 → M15　　　 C4 → J16</text>
+  <text x="790" y="960" class="small muted">保留现有键盘即可，无需另买膜键盘</text>
+  <rect x="30" y="1012" width="1460" height="70" rx="12" fill="#e5f2ed" stroke="#a1c6b4"/>
+  <text x="50" y="1055" class="h">音频保持：板载 3.5mm 耳机输出　｜　GVS只按单键验收，多键和弦留待后续MIDI阶段</text>
+  <text x="30" y="1120" class="small">供电：用户已依据商品图 / 原理图确认3V3输入接法；动手前仍按实物丝印核对，未宣称已通电实测。</text>
+  <text x="30" y="1153" class="small">所有 G / GND 同一电位；地符号均表示该公共地。SPI箭头表示信号方向，模块 OUT 是送往FPGA的MISO。</text>
+  <text x="30" y="1186" class="small muted">图为逻辑接线示意，不暗示模块排针排列、内部分压阻值或触摸芯片实际响应时间。</text>
+</svg>
+</svg>

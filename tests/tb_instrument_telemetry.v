@@ -14,7 +14,7 @@ module tb_instrument_telemetry;
  wire valid,clip;
  integer change_cycle;
  instrument_telemetry dut(clk,rst_n,tick,pcm,keys,volume,pitch,busy,
-   peak,rms,dbfs,peak_percent,volume_percent,voices,note,valid,hz,bcd,clip);
+   peak,rms,dbfs,peak_percent,volume_percent,voices,note,valid,hz,bcd,clip,7'd0,1'b0);
  task need;
   input condition;
   input [511:0] message;

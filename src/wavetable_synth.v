@@ -1,9 +1,9 @@
 // =============================================================================
-// 共享波表合成器：16 音色、32 复音，输出 16 位二补码 PCM。
+// 共享波表合成器：生产为2音色、32复音，输出16位二补码PCM。
 //
 // 「音色」是不同的周期波形；「声部」是正在播放的一颗音符及其独立状态。
-// 16 种音色共享同一份 ROM，32 个声部各自保存相位、包络和上一帧门控。
-// 本版只保留实际使用的 soft 层：16 * 1024 * 16 = 262144 bit。
+// NUM_TIMBRES种音色共享同一份ROM，32个声部各自保存相位、包络和上一帧门控。
+// soft 层默认完整保存；生产实例可选经生成器验证的奇对称半表，容量减半。
 // V008 的 color 恒为 0，另一半 bright 波形不会贡献声音，故可精确移除。
 //
 // clk=27 MHz；fs_tick 每 288 个 clk 到来一次，Fs=93750 Hz。
@@ -12,7 +12,7 @@
 // rst_n 异步低有效；fs_tick 是 clk 域的一拍启动使能，不是另一时钟。
 // gate/retrigger 每位对应一个声部；retrigger 在任意 clk 捕获并等该路时隙消费。
 // note_bus/vel_bus/timbre_bus 从低位开始按声部 i 分别占 [i*7+:7]、
-// [i*8+:8]、[i*4+:4]；音符用 note_table 编号，力度 0..255，音色 0..15。
+// [i*8+:8]、[i*TIMBRE_BITS+:TIMBRE_BITS]；音符用note_table编号，力度0..255。
 // pitch 是 9 位有符号弯音码 [-256,255]，不是半音或 Hz；test_mode 选择测试正弦。
 // sample 为 16 位二补码 PCM 位图；frame_done 在最后声部累加发布时脉冲一 clk。
 // voice_busy 含释放尾音状态，voice_audible 仅表示包络非零；overrun 粘滞到复位。
@@ -20,24 +20,39 @@
 // 不应把 NUM_VOICES 当作任意扩容参数：索引宽度、测试表 0..31 和帧预算须匹配。
 // TABLE_BITS 决定演奏表每音色 2^TABLE_BITS 点；测试表固定 1024 点，当前按 10 配套。
 // FILE/TEST_FILE 是 $readmemh 的演奏/测试 ROM 文本路径，默认值见参数声明。
+// COMPACT_ROM 默认 0，兼容任意 FILE；1 使用 PACKED_FILE 中每音色原索引 0..511。
+// 半表必须由 generate_odd_half_rom.py 验证完整原表后生成，不能仅将后半周取负。
+// TIMBRE_BITS默认4以兼容历史独立测试；生产设1、NUM_TIMBRES=2，只保存1位音色。
+// DUAL_PROFILE=1时0=原ID1柔和长笛、1=原ID7拨弦，保留原来的起音速度。
 // =============================================================================
 module wavetable_synth #(
     parameter NUM_VOICES=32,
     parameter TABLE_BITS=10,
     parameter TEST_FILE="src/test_sine.hex",
-    parameter FILE="src/timbre_soft.hex"
+    parameter FILE="src/timbre_soft.hex",
+    parameter COMPACT_ROM=0,
+    parameter PACKED_FILE="src/timbre_odd_half.hex",
+    parameter TIMBRE_BITS=4,
+    parameter NUM_TIMBRES=(1<<TIMBRE_BITS),
+    parameter DUAL_PROFILE=0,
+    parameter PHASE_RAM=0 // 1: synchronous block RAM; 0: legacy observable phases[].
 )(
     input clk,input rst_n,input fs_tick,input test_mode,
     input [NUM_VOICES-1:0] gate,input [NUM_VOICES-1:0] retrigger,
     input [NUM_VOICES*7-1:0] note_bus,
     input [NUM_VOICES*8-1:0] vel_bus,
-    input [NUM_VOICES*4-1:0] timbre_bus,
+    input [NUM_VOICES*TIMBRE_BITS-1:0] timbre_bus,
     input signed [8:0] pitch,
     output reg [15:0] sample,output reg frame_done,output reg overrun,
     output [NUM_VOICES-1:0] voice_busy,
     output [NUM_VOICES-1:0] voice_audible
 );
     localparam IW=$clog2(NUM_VOICES);
+    // 每 8 clk 最多注入一个样本，4 级流水线在 fs_tick 时最多残留一个。
+    // 两次 fs_tick 之间最多累加 NUM_VOICES+1 项；组合 final_sum 再留一项。
+    // 32 声部为 22 位，覆盖 34 * [-32768,32767]，也保留 overrun 行为。
+    localparam MIX_BITS=16+$clog2(NUM_VOICES+2);
+    localparam SCALE_BITS=MIX_BITS-2; // 正常模式至少右移 2 位，保留完整符号。
     localparam IDLE=0,ATTACK=1,DECAY=2,SUSTAIN=3,RELEASE=4;
 
     // 各声部独立状态。24 位 DDS 相位自然溢出，实现一个周期的循环。
@@ -53,7 +68,7 @@ module wavetable_synth #(
     reg [NUM_VOICES-1:0] gates_frame;
     reg [NUM_VOICES*7-1:0] notes_frame;
     reg [NUM_VOICES*8-1:0] velocities_frame;
-    reg [NUM_VOICES*4-1:0] timbres_frame;
+    reg [NUM_VOICES*TIMBRE_BITS-1:0] timbres_frame;
     reg signed [8:0] pitch_frame;
     reg test_frame; // 与音符/门控同时冻结，单帧内不切换波形或频率。
     reg running;
@@ -61,28 +76,52 @@ module wavetable_synth #(
     reg [2:0] slot;
 
     // 单口同步 ROM：地址先寄存，下一个上升沿读取到 rom_q。
-    // 高 4 位选择音色，低 TABLE_BITS 位选择周期内位置。
-    reg [15:0] rom[0:(16*(1<<TABLE_BITS))-1] /* synthesis syn_romstyle="block_rom" */;
-    reg [TABLE_BITS+3:0] rom_address,tone_address;
+    // 高TIMBRE_BITS位选择音色，低TABLE_BITS位选择周期内位置。
+    // 生产只有1位bank地址，避免16选1音色选择器和每声部4位快照。
+    reg [TABLE_BITS+TIMBRE_BITS-1:0] rom_address,tone_address;
     // 额外一张1024点正弦ROM用于验证；地址仍由各路独立相位产生。
     // 和演奏波表并行读取，复用相同插值/包络/累加流水线，未另建32路引擎。
     reg [15:0] sine_rom[0:1023] /* synthesis syn_romstyle="block_rom" */;
     reg [15:0] sine_q;
-    reg [15:0] rom_q;
+    wire [15:0] rom_q;
     wire [15:0] waveform_q=test_frame?sine_q:rom_q;
     reg signed [15:0] soft_a,soft_b,soft_base,soft_interp;
-    reg signed [25:0] soft_product;
+    // 17 位差值 * 非负 8 位 frac，绝对值 <= 65535*255，25 位足够。
+    reg signed [24:0] soft_product;
     reg [7:0] frac,env_slot;
-    initial $readmemh(FILE,rom);
+    generate if(COMPACT_ROM) begin:compact_wave_rom
+        // 对 idx>=512，原索引 -idx 的低 9 位是 (-idx_low9)&511。
+        // 同一上升沿保存 ROM 读数和原 idx[9]；符号恢复不再增加寄存级。
+        // 这保留 rom_q 的原单拍延迟，包括复位和帧中 test_frame 切换。
+        reg [15:0] rom_half[0:(NUM_TIMBRES*(1<<(TABLE_BITS-1)))-1] /* synthesis syn_romstyle="block_rom" */;
+        wire [TABLE_BITS-2:0] index_low=rom_address[TABLE_BITS-2:0];
+        wire [TABLE_BITS-2:0] mirrored_low=-index_low;
+        wire [TABLE_BITS-2:0] packed_index=rom_address[TABLE_BITS-1]?mirrored_low:index_low;
+        wire [TABLE_BITS+TIMBRE_BITS-2:0] packed_address={rom_address[TABLE_BITS+TIMBRE_BITS-1:TABLE_BITS],packed_index};
+        reg [15:0] packed_q;
+        reg negate_q;
+        initial $readmemh(PACKED_FILE,rom_half);
+        always @(posedge clk) begin
+            packed_q<=rom_half[packed_address];
+            negate_q<=rom_address[TABLE_BITS-1];
+        end
+        assign rom_q=negate_q?(16'd0-packed_q):packed_q;
+    end else begin:full_wave_rom
+        // 默认支路完全不读取 PACKED_FILE，任意 16 位 FILE 样本都照原样播放。
+        reg [15:0] rom[0:(NUM_TIMBRES*(1<<TABLE_BITS))-1] /* synthesis syn_romstyle="block_rom" */;
+        reg [15:0] full_q;
+        initial $readmemh(FILE,rom);
+        always @(posedge clk) full_q<=rom[rom_address];
+        assign rom_q=full_q;
+    end endgenerate
     initial $readmemh(TEST_FILE,sine_rom);
     always @(posedge clk) begin
-        rom_q<=rom[rom_address];
         sine_q<=sine_rom[rom_address[9:0]];
     end
 
     wire [6:0] selected_note=notes_frame[voice_index*7+:7];
     wire [7:0] velocity=velocities_frame[voice_index*8+:8];
-    wire [3:0] timbre=timbres_frame[voice_index*4+:4];
+    wire [TIMBRE_BITS-1:0] timbre=timbres_frame[voice_index*TIMBRE_BITS+:TIMBRE_BITS];
     wire selected_gate=gates_frame[voice_index];
     wire [23:0] increment;
     note_table frequency(selected_note,increment);
@@ -96,13 +135,56 @@ module wavetable_synth #(
     wire [4:0] test_voice_index=voice_index;
     oscillator_test_frequencies test_frequency(test_voice_index,test_increment);
     wire [23:0] selected_increment=test_frame?test_increment:bent_increment;
-    wire [23:0] current_phase=phases[voice_index];
+    // Slot 7 prefetches the following voice. A new fs_tick always fetches voice 0,
+    // including an early tick that interrupts slot 0; the interrupted write is blocked.
+    wire [23:0] current_phase;
+    generate if(PHASE_RAM) begin:phase_ram
+        reg [23:0] ram[0:NUM_VOICES-1] /* synthesis syn_ramstyle="block_ram" */;
+        reg [23:0] read_q;
+        reg [NUM_VOICES-1:0] phase_valid;
+        reg read_valid_q;
+        wire [IW-1:0] next_voice=(voice_index==NUM_VOICES-1)?{IW{1'b0}}:
+                                 (voice_index+1'b1);
+        wire [IW-1:0] read_address=fs_tick?{IW{1'b0}}:
+                                  ((running && slot==7)?next_voice:voice_index);
+        wire write_enable=rst_n && !fs_tick && running && slot==0;
+        // No reset or clear on the storage or its synchronous data read register.
+        // Raw uninitialised/stale data is masked until that voice has been written.
+        always @(posedge clk) begin
+            read_q<=ram[read_address];
+            if(write_enable) ram[voice_index]<=current_phase+selected_increment;
+        end
+        // Only the 32-bit valid mask and the read-valid register reset asynchronously.
+        // Read data and its validity always refer to the same sampled address.
+        always @(posedge clk or negedge rst_n) begin
+            if(!rst_n) begin phase_valid<=0;read_valid_q<=0;end
+            else begin
+                read_valid_q<=phase_valid[read_address];
+                if(write_enable) phase_valid[voice_index]<=1'b1;
+            end
+        end
+        assign current_phase=read_valid_q?read_q:24'd0;
+    end else begin:phase_registers
+        // Separate nonblocking process preserves the original reset/update timing
+        // and keeps the top-level phases[] array available to old standalone tests.
+        integer phase_i;
+        always @(posedge clk or negedge rst_n) begin
+            if(!rst_n) begin
+                for(phase_i=0;phase_i<NUM_VOICES;phase_i=phase_i+1) phases[phase_i]<=0;
+            end else if(!fs_tick && running && slot==0)
+                phases[voice_index]<=current_phase+selected_increment;
+        end
+        assign current_phase=phases[voice_index];
+    end endgenerate
     wire [7:0] current_env=envelopes[voice_index];
     wire [2:0] current_state=states[voice_index];
     wire [7:0] sub=subdivisions[voice_index];
     wire [7:0] sustain=(velocity>>1)+(velocity>>2); // 约为力度的 3/4。
-    wire [7:0] attack=(timbre==0 || timbre==1 || timbre==8)?1:
-                     ((timbre==6 || timbre==7 || timbre==14)?8:3);
+    // 重编号不能顺带改变ADSR：长笛1码/采样、拨弦8码/采样。
+    // 历史默认分支供16音色独立回归使用，生产常量参数会消除该分支。
+    wire [7:0] attack=DUAL_PROFILE ? (timbre==0 ? 8'd1 : 8'd8) :
+                     ((timbre==0 || timbre==1 || timbre==8)?8'd1:
+                     ((timbre==6 || timbre==7 || timbre==14)?8'd8:8'd3));
     reg [7:0] env_next;
     reg [2:0] state_next;
 
@@ -155,20 +237,22 @@ module wavetable_synth #(
     reg v0,v1,v2,v3,last0,last1,last2,last3;
     reg signed [15:0] soft0,soft1,interp2,sample3;
     reg [7:0] env0,env1,env2;
-    reg signed [27:0] accumulator;
+    reg signed [MIX_BITS-1:0] accumulator;
     wire signed [24:0] amplitude_product=$signed(interp2)*$signed({1'b0,env2});
-    wire signed [27:0] final_sum=accumulator+sample3;
+    wire signed [MIX_BITS-1:0] final_sum=accumulator+sample3;
 
     // 多声部先以较宽有符号数求和，避免 16 位相加直接溢出。
     // 沿用原版增益和软拐点：超过 16000 的幅度只增长 1/4，最终再限幅。
     // 这是幅度压缩，不是低通滤波，也不能消除 DAC 之后的模拟噪声。
     // 测试固定velocity=192，最大单路幅值<24576；32路最坏同相和
     // 再除64后<12288，低于满幅的一半。测试用线性缩放，避免软限幅谐波。
-    wire signed [27:0] scaled=test_frame?(final_sum>>>6):(final_sum>>>2);
-    wire [27:0] magnitude=scaled[27]?-scaled:scaled;
-    wire [27:0] compressed=(magnitude>16000)?
-        (28'd16000+((magnitude-16000)>>2)):magnitude;
-    wire [15:0] bounded=compressed>32767?16'd32767:compressed[15:0];
+    wire signed [SCALE_BITS-1:0] scaled=test_frame?(final_sum>>>6):(final_sum>>>2);
+    wire [SCALE_BITS-1:0] magnitude=scaled[SCALE_BITS-1]?-scaled:scaled;
+    // 显式定宽常量，避免把限幅比较/减法重新扩成 32 位。
+    localparam [SCALE_BITS-1:0] COMPRESS_KNEE=16000,PCM_LIMIT=32767;
+    wire [SCALE_BITS-1:0] compressed=(magnitude>COMPRESS_KNEE)?
+        (COMPRESS_KNEE+((magnitude-COMPRESS_KNEE)>>2)):magnitude;
+    wire [15:0] bounded=compressed>PCM_LIMIT?16'd32767:compressed[15:0];
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
@@ -179,7 +263,7 @@ module wavetable_synth #(
             v0<=0;v1<=0;v2<=0;v3<=0;last0<=0;last1<=0;last2<=0;last3<=0;
             soft0<=0;soft1<=0;interp2<=0;sample3<=0;env0<=0;env1<=0;env2<=0;
             for(i=0;i<NUM_VOICES;i=i+1) begin
-                phases[i]<=0;envelopes[i]<=0;subdivisions[i]<=0;
+                envelopes[i]<=0;subdivisions[i]<=0;
                 states[i]<=IDLE;previous_notes[i]<=0;
             end
         end else begin
@@ -192,7 +276,7 @@ module wavetable_synth #(
             if(v3) begin
                 accumulator<=final_sum;
                 if(last3) begin
-                    sample<=test_frame?scaled[15:0]:(scaled[27]?-bounded:bounded);
+                    sample<=test_frame?scaled[15:0]:(scaled[SCALE_BITS-1]?-bounded:bounded);
                     frame_done<=1;
                 end
             end
@@ -209,13 +293,12 @@ module wavetable_synth #(
                         rom_address<={timbre,current_phase[23:24-TABLE_BITS]};
                         tone_address<={timbre,current_phase[23:24-TABLE_BITS]};
                         frac<=current_phase[23-TABLE_BITS:16-TABLE_BITS];env_slot<=env_next;
-                        phases[voice_index]<=current_phase+selected_increment;
                         envelopes[voice_index]<=env_next;states[voice_index]<=state_next;
                         subdivisions[voice_index]<=sub+1'b1;
                         previous_gates[voice_index]<=selected_gate;
                         previous_notes[voice_index]<=selected_note;
                     end
-                    1:rom_address<={tone_address[TABLE_BITS+3:TABLE_BITS],tone_address[TABLE_BITS-1:0]+1'b1};
+                    1:rom_address<={tone_address[TABLE_BITS+TIMBRE_BITS-1:TABLE_BITS],tone_address[TABLE_BITS-1:0]+1'b1};
                     2:soft_a<=$signed(waveform_q);
                     3:soft_b<=$signed(waveform_q);
                     4:begin soft_base<=soft_a;soft_product<=soft_difference*$signed({1'b0,frac});end

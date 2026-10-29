@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2030" viewBox="0 0 1600 2030"><rect width="1600" height="120" fill="#e6eff8"/><g font-family="Microsoft YaHei,sans-serif"><text x="30" y="44" font-size="30" fill="#183448" font-weight="700" text-anchor="start">V020 接线复用 · MIDI / 双光束</text><text x="30" y="88" font-size="21" fill="#183448" font-weight="400" text-anchor="start">2026-10-29｜沿用已核对原图的接线；当前 A0/A1 为连续表情，A2/A3 为音量/音高。</text></g><svg y="120" xmlns="http://www.w3.org/2000/svg" id="v019-wiring" width="1600" height="1910" viewBox="0 0 1600 1910" role="img" aria-labelledby="v019-title v019-desc">
+  <title id="v019-title">V019 MIDI 与 SEN0503 双光束接线</title>
+  <desc id="v019-desc">MIDIPLUS TINY+32 独立 USB 5V 供电，MIDI OUT 经 Type A TRS 转 DIN5 公线进入 BMV51M001 MIDI IN。模块 BMCOM 3脚 RX 是接收路径输出，接 FPGA T8 midi_rx，4脚供3.3V，5脚共地，1脚 NC 和2脚 TX 悬空。两套 SEN0503 的发射与接收红线供3.3V，黑线共地，各接收白线经独立10k上拉到3.3V，A接P8，B接P9。原 V018 接线列在底部。所有电源和地符号为同名网络；图不是排针物理针序图。</desc>
+  <defs>
+    <style>#v019-wiring text{font-family:'Microsoft YaHei','Noto Sans CJK SC',sans-serif;fill:#152a3b;font-size:23px}#v019-wiring .title{font-size:35px;font-weight:700}#v019-wiring .head{font-size:27px;font-weight:700}#v019-wiring .sub{font-size:21px;fill:#4a6070}#v019-wiring .small{font-size:19px}#v019-wiring .tiny{font-size:18px}#v019-wiring .bold{font-weight:700}#v019-wiring .blue{fill:#1464a2}#v019-wiring .red{fill:#b12f39}#v019-wiring .green{fill:#14715d}#v019-wiring .gray{fill:#586773}#v019-wiring .panel{fill:#fff;stroke:#bbcbd6;stroke-width:2}#v019-wiring .old{fill:#f1f4f6;stroke:#aab8c2;stroke-width:2}#v019-wiring .pwr{fill:none;stroke:#bd3441;stroke-width:3}#v019-wiring .gnd{fill:none;stroke:#596572;stroke-width:3}#v019-wiring .sig{fill:none;stroke:#1464a2;stroke-width:4}#v019-wiring .light{fill:none;stroke:#159473;stroke-width:3;stroke-dasharray:11 7}#v019-wiring .res{fill:#fff;stroke:#bd3441;stroke-width:3}#v019-wiring .dot{fill:#1464a2}#v019-wiring .port{fill:#fff;stroke:#1464a2;stroke-width:3}
+    </style>
+    <marker id="signal-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#1464a2"/></marker>
+    <marker id="light-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#159473"/></marker>
+  </defs>
+  <rect width="1600" height="1910" fill="#f8fafc"/>
+  <text x="40" y="54" class="title">V019 · MIDI 与双光束接线</text>
+  <text x="40" y="91" class="sub">新增线路 / 3.3V FPGA 逻辑　　依据厂商资料 + 集成合同；未声称已到货或实测</text>
+  <rect x="40" y="117" width="1520" height="460" rx="14" class="panel"/>
+  <text x="62" y="157" class="head">① MIDI：键盘 OUT → 接收模块 IN → FPGA RX</text>
+  <rect x="65" y="192" width="365" height="275" rx="12" fill="#eaf3fc" stroke="#9fc3df"/>
+  <text x="85" y="229" class="head">MIDIPLUS TINY+32</text>
+  <text x="85" y="264">3.5mm TRS MIDI OUT</text>
+  <text x="85" y="302" class="small">信号由键盘发出</text>
+  <text x="85" y="367" class="bold">USB-C：独立 USB 5V 电源</text>
+  <path d="M250 441V393" class="pwr"/>
+  <text x="85" y="455" class="small red">不从 FPGA I/O 供电</text>
+  <path d="M430 282H660" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="456" y="241" class="small blue">TRS 3.5mm</text>
+  <text x="456" y="267" class="small blue">Type A → DIN5公</text>
+  <text x="455" y="321" class="tiny">DIN4 ↔ Ring</text>
+  <text x="455" y="347" class="tiny">DIN5 ↔ Tip</text>
+  <text x="455" y="373" class="tiny">DIN2 ↔ Sleeve</text>
+  <rect x="660" y="192" width="410" height="275" rx="12" fill="#edf8f4" stroke="#98c8b8"/>
+  <text x="680" y="229" class="head">BMV51M001</text>
+  <text x="680" y="265">MIDI IN → 6N138 → RX</text>
+  <text x="680" y="304" class="bold blue">BMCOM 3脚 RX：接收输出</text>
+  <text x="680" y="343" class="small">1脚 NC / 2脚 TX：只收时悬空</text>
+  <text x="680" y="380" class="small">4脚 VDD：3.3V　5脚 GND：共地</text>
+  <text x="680" y="419" class="small">按厂家网名接；RX 不改接 TX</text>
+  <path d="M1070 282H1270" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="1086" y="241" class="small blue">3.3V UART</text>
+  <text x="1086" y="267" class="small blue">31250bps 8N1</text>
+  <rect x="1270" y="192" width="265" height="275" rx="12" fill="#eaf3fc" stroke="#9fc3df"/>
+  <text x="1290" y="229" class="head">FPGA · PMOD0</text>
+  <circle cx="1270" cy="282" r="5" class="port"/>
+  <text x="1290" y="286" class="bold">T8 = midi_rx</text>
+  <text x="1290" y="338" class="small">T9：留空</text>
+  <text x="1290" y="378" class="small">3V3 → BMV VDD</text>
+  <text x="1290" y="418" class="small">GND → BMV GND</text>
+  <path d="M1390 467V491H790V467" class="pwr"/>
+  <path d="M1460 467V523H1020V467" class="gnd"/>
+  <text x="1080" y="487" class="tiny red">+3.3V</text>
+  <text x="1080" y="550" class="tiny gray">公共 GND</text>
+  <text x="65" y="551" class="small red">先核对到货丝印与插座兼容性；USB 直插 FPGA 无 USB Host，不能完成本接法。</text>
+
+  <rect x="40" y="602" width="1520" height="615" rx="14" class="panel"/>
+  <text x="62" y="643" class="head">② SEN0503 ×2：每套独立发射 / 接收，白 OUT 各有 10k 上拉</text>
+  <text x="62" y="675" class="small">红线接 +3.3V，黑线接 GND；所有同名电源 / 地网络相连。白 OUT 不得上拉到 5V。</text>
+  <path d="M100 712H1200" class="pwr"/>
+  <text x="100" y="704" class="small red">+3.3V（PMOD0 同一电源网）</text>
+  <path d="M100 751H1020" class="gnd"/>
+  <text x="330" y="742" class="small gray">GND（与 FPGA 共地）</text>
+  <rect x="80" y="782" width="250" height="158" rx="10" fill="#eef8f5" stroke="#9dc9b8"/>
+  <text x="100" y="819" class="bold">A 发射端</text>
+  <text x="100" y="857" class="small">红：+3.3V</text>
+  <text x="100" y="896" class="small">黑：GND</text>
+  <path d="M125 712V782" class="pwr"/><path d="M280 751V782" class="gnd"/>
+  <text x="117" y="772" class="tiny red">红</text><text x="272" y="772" class="tiny gray">黑</text>
+  <rect x="580" y="782" width="320" height="158" rx="10" fill="#eef8f5" stroke="#9dc9b8"/>
+  <text x="600" y="819" class="bold">A 接收端</text>
+  <text x="600" y="857" class="small">红 / 黑：+3.3V / GND</text>
+  <text x="600" y="896" class="small">白 OUT A（NPN）</text>
+  <path d="M625 712V782" class="pwr"/><path d="M850 751V782" class="gnd"/>
+  <text x="617" y="772" class="tiny red">红</text><text x="842" y="772" class="tiny gray">黑</text>
+  <path d="M330 838H580" class="light" marker-end="url(#light-arrow)"/>
+  <text x="357" y="824" class="small green">红外光 A</text>
+  <path d="M900 881H1270" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="932" y="912" class="small blue">白 OUT A</text>
+  <path d="M1090 712V783" class="pwr"/><rect x="1078" y="783" width="24" height="58" class="res"/>
+  <path d="M1090 841V881" class="pwr"/><circle cx="1090" cy="881" r="5" class="dot"/>
+  <text x="1113" y="819" class="small red">10k A</text>
+
+  <path d="M100 980H1200" class="pwr"/><text x="100" y="972" class="small red">+3.3V（同上）</text>
+  <path d="M100 1019H1020" class="gnd"/><text x="330" y="1010" class="small gray">公共 GND（同上）</text>
+  <rect x="80" y="1050" width="250" height="138" rx="10" fill="#eef8f5" stroke="#9dc9b8"/>
+  <text x="100" y="1084" class="bold">B 发射端</text>
+  <text x="100" y="1122" class="small">红：+3.3V</text><text x="100" y="1159" class="small">黑：GND</text>
+  <path d="M125 980V1050" class="pwr"/><path d="M280 1019V1050" class="gnd"/>
+  <text x="117" y="1040" class="tiny red">红</text><text x="272" y="1040" class="tiny gray">黑</text>
+  <rect x="580" y="1050" width="320" height="138" rx="10" fill="#eef8f5" stroke="#9dc9b8"/>
+  <text x="600" y="1084" class="bold">B 接收端</text>
+  <text x="600" y="1122" class="small">红 / 黑：+3.3V / GND</text><text x="600" y="1159" class="small">白 OUT B（NPN）</text>
+  <path d="M625 980V1050" class="pwr"/><path d="M850 1019V1050" class="gnd"/>
+  <text x="617" y="1040" class="tiny red">红</text><text x="842" y="1040" class="tiny gray">黑</text>
+  <path d="M330 1107H580" class="light" marker-end="url(#light-arrow)"/>
+  <text x="357" y="1093" class="small green">红外光 B</text>
+  <path d="M900 1148H1270" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="932" y="1180" class="small blue">白 OUT B</text>
+  <path d="M1090 980V1050" class="pwr"/><rect x="1078" y="1050" width="24" height="58" class="res"/>
+  <path d="M1090 1108V1148" class="pwr"/><circle cx="1090" cy="1148" r="5" class="dot"/>
+  <text x="1113" y="1086" class="small red">10k B</text>
+  <rect x="1270" y="782" width="265" height="406" rx="12" fill="#eaf3fc" stroke="#9fc3df"/>
+  <text x="1290" y="819" class="head">FPGA · PMOD0</text>
+  <circle cx="1270" cy="881" r="5" class="port"/><text x="1290" y="889" class="bold">P8 = beamA</text>
+  <text x="1290" y="949" class="small">启动无遮挡 200ms</text>
+  <text x="1290" y="985" class="small">自动记忆空闲电平</text>
+  <text x="1290" y="1033" class="small red">遮挡极性待实测</text>
+  <circle cx="1270" cy="1148" r="5" class="port"/><text x="1290" y="1156" class="bold">P9 = beamB</text>
+
+  <rect x="40" y="1242" width="1520" height="264" rx="14" class="panel"/>
+  <text x="62" y="1281" class="head">③ 光路俯视：两束平行，沿手移动方向间隔 3~5cm</text>
+  <rect x="82" y="1310" width="180" height="52" rx="7" fill="#e4f3ec"/><text x="104" y="1345">A 发射</text>
+  <rect x="672" y="1310" width="180" height="52" rx="7" fill="#e4f3ec"/><text x="693" y="1345">A 接收</text>
+  <rect x="82" y="1418" width="180" height="52" rx="7" fill="#e4f3ec"/><text x="104" y="1453">B 发射</text>
+  <rect x="672" y="1418" width="180" height="52" rx="7" fill="#e4f3ec"/><text x="693" y="1453">B 接收</text>
+  <path d="M262 1336H672M262 1444H672" class="light" marker-end="url(#light-arrow)"/>
+  <text x="295" y="1380" class="small green">3.3V 光程约 20cm，先短距离对齐</text>
+  <path d="M900 1336V1444M886 1336H914M886 1444H914" fill="none" stroke="#5d6b76" stroke-width="2"/>
+  <text x="919" y="1395" class="small">3~5cm</text>
+  <path d="M1095 1325V1448" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="1132" y="1374">A → B：音序升</text>
+  <path d="M1300 1450V1405" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="1132" y="1490" class="small">B → A：音序降；长遮挡不重复</text>
+  <text x="1132" y="1320" class="small">移开手、对齐光路再启动</text>
+
+  <rect x="40" y="1531" width="1520" height="284" rx="14" class="old"/>
+  <text x="62" y="1573" class="head">④ V018 已有接法保留 · 灰色区为基线，不是新增端口</text>
+  <text x="65" y="1616" class="small bold">GVS / MCP3208 · PMOD0</text>
+  <text x="65" y="1650" class="small">S → 10k → CH0，CH0 → 10k → GND</text>
+  <text x="65" y="1684" class="small">CLK←T6　DIN←P6　OUT→R8　CS←T7</text>
+  <text x="65" y="1718" class="small">V / MCP 3V3：3.3V；全部共地</text>
+  <text x="65" y="1752" class="small red">MCP 的 5V–18V 端子悬空</text>
+  <text x="65" y="1786" class="small">GVS 单模拟编码按单键验收</text>
+  <text x="610" y="1616" class="small bold">ADS1115 · PMOD2</text>
+  <text x="610" y="1650" class="small">SCL=D14　SDA=E15</text>
+  <text x="610" y="1684" class="small">ADDR=GND / 0x48</text>
+  <text x="610" y="1718" class="small">A0/A1：两路压力</text>
+  <text x="610" y="1752" class="small">A2/A3：音量 / 音高滑杆</text>
+  <text x="610" y="1786" class="small">VDD=3.3V / GND=公共地</text>
+  <text x="1090" y="1616" class="small bold">矩阵 PMOD1 / 板载耳机</text>
+  <text x="1090" y="1650" class="small">R1..4：T11 M14 T12 J14</text>
+  <text x="1090" y="1684" class="small">C1..4：P11 R11 M15 J16</text>
+  <text x="1090" y="1718" class="small">PT8211 → 板载 3.5mm 耳机</text>
+  <text x="1090" y="1752" class="small">调试 UART：T13 RX / M11 TX</text>
+  <text x="1090" y="1786" class="small red">115200bps；勿与 T8 MIDI 混接</text>
+  <text x="40" y="1855" class="small">图例：蓝实线 = 电信号及方向；红 = +3.3V；灰 = GND；绿虚线 = 光路。各模块电源端可按需并联 100nF 去耦。</text>
+  <text x="40" y="1888" class="tiny gray">逻辑接线图，不代表排针物理顺序。依据：MIDIPLUS TINY 中文手册；BMV51M001 Schematic V1.0；DFRobot SEN0503 产品资料。</text>
+</svg>
+</svg>

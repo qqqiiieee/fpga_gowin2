@@ -1,0 +1,36 @@
+{
+  "version": "V020",
+  "title": "FSR改为明亮度与揉弦表情，保留双滑杆及32声部",
+  "date": "2026-10-24",
+  "created_at": "2026-10-24T18:51:09+08:00",
+  "status": "编译、时序与离线测试通过；未烧录，实机待验",
+  "firmware_name": "instrument_v020.fs",
+  "usercode": "0x000052D9",
+  "sha256": "5c8be9899de5b1898337a84fbed230f842eb335a7f9e622e8009a0290019f01f",
+  "resources": {
+    "Logic": 18055.0,
+    "Register": 7673.0,
+    "CLS": 9909.0,
+    "BSRAM": 9.0,
+    "DSP": 13.25
+  },
+  "timing_violations": {
+    "Setup": 0,
+    "Hold": 0
+  },
+  "fmax_mhz": {
+    "clk27": 27.067,
+    "serial126": 909.263,
+    "pixel25_2": 30.271
+  },
+  "test_counts": {
+    "pressure_parameter_cases": 15,
+    "pressure_black_box_assertions": 1545748,
+    "independent_audio_groups": 3,
+    "system_regression_passes": 13,
+    "inherited_unchanged_evidence_groups": 4
+  },
+  "hardware_programmed": false,
+  "development_project": "D:\\Gowin_project\\instrument_expression_20261024",
+  "notes": "上电先松开两张FSR约1秒供基线学习。屏幕明亮/VIB显示平滑控制量0~255，不是kg。FSR表情为全局共享，不是每键MPE；MIDI pads的鼓功能仍保留。触摸键盘中心还需独立逐键标定。已离线测试/编译，未进行本版实机烧录或声音验证。"
+}

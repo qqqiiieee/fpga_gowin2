@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="V019 MIDIPLUS TINY+32、BMV51M001、DFRobot SEN0503双光束的官方资料核对、接线、映射合同及首次测试。SVG与样式内嵌，离线可读。">
+<title>V019｜MIDI 与光电接线测试</title>
+<style>
+:root{--ink:#193143;--muted:#516878;--blue:#16649c;--line:#c8d6df;--paper:#fff;--bg:#f0f4f7;--green:#17694e;--amber:#7b500d;--red:#a52c36}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.8 'Microsoft YaHei','Noto Sans CJK SC',sans-serif}main{max-width:1240px;margin:32px auto;background:var(--paper);padding:42px 48px 54px;border:1px solid var(--line);border-radius:14px}h1{font-size:34px;line-height:1.4;margin:10px 0 16px}h2{font-size:25px;margin:42px 0 16px;border-top:2px solid var(--line);padding-top:25px}h3{font-size:20px;margin:25px 0 12px}p{margin:12px 0}a{color:var(--blue);text-underline-offset:3px}code{font:0.94em Consolas,monospace;background:#edf2f6;padding:2px 5px;border-radius:4px}table{border-collapse:collapse;width:100%;margin:16px 0 20px;table-layout:fixed}th,td{border:1px solid var(--line);padding:11px 13px;vertical-align:top;overflow-wrap:anywhere}th{text-align:left;background:#eaf1f6}tbody tr:nth-child(even){background:#f8fafb}.badge{display:inline-block;border:1px solid #c0d5e5;border-radius:20px;padding:3px 13px;font-size:14px;margin:0 8px 8px 0;background:#eaf3fb}.badge.wait{background:#fff4df;border-color:#e6cc96;color:var(--amber)}.note,.warn,.baseline{padding:15px 20px;border-left:5px solid var(--blue);background:#edf5fb;margin:20px 0}.warn{border-color:var(--red);background:#fff0ef}.baseline{border-color:#7d8d99;background:#f2f5f6}.muted,figcaption,footer{color:var(--muted);font-size:14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.grid>section{min-width:0}figure{margin:20px 0}figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:9px}figcaption{margin-top:10px}li{margin:9px 0}ol,ul{padding-left:27px}.checklist li{padding-left:2px}.small{font-size:14px}.status{font-weight:bold;color:var(--amber)}.stamp{letter-spacing:2px;color:var(--blue);font-size:14px;font-weight:bold}nav{border:1px solid var(--line);padding:13px 18px;border-radius:8px;background:#f9fbfd}nav a{display:inline-block;margin-right:19px}.test td:first-child{width:9%}pre{white-space:pre-wrap;background:#edf2f6;border:1px solid var(--line);border-radius:7px;padding:15px;font:15px/1.7 Consolas,'Microsoft YaHei',monospace}footer{border-top:1px solid var(--line);margin-top:40px;padding-top:18px}@media(max-width:800px){main{margin:0;padding:24px 16px;border-radius:0}h1{font-size:28px}.grid{grid-template-columns:1fr}th,td{padding:8px 7px;font-size:14px}figure{overflow:auto}figure svg{min-width:1000px}}@media print{body{background:white;font-size:10pt}main{margin:0;border:0;padding:0;max-width:none}h1{font-size:23pt}h2{font-size:17pt;break-after:avoid}h3{break-after:avoid}a{color:inherit}table{font-size:9pt}tr,.note,.warn,.baseline{break-inside:avoid}figure{break-inside:avoid}figure svg{min-width:0;width:100%}nav{display:none}.grid{display:block}footer{font-size:8pt}}
+</style>
+</head>
+<body><main>
+<header>
+<div class="stamp">阶段 2 · V019 · 2026-10-24</div>
+<h1>MIDI 键盘与双光束<br>接线、映射与首次测试</h1>
+<span class="badge">最终选型：MIDIPLUS TINY+32</span><span class="badge">双光束：SEN0503 ×2</span><span class="badge wait">已决定按推荐购置 · 到货 / 实测未确认</span>
+<p>在 V018 的触摸、压力、滑杆、矩阵及板载耳机通路上，新增 <strong>T8 的 MIDI 接收</strong>与 <strong>P8/P9 的两束光电输入</strong>。键盘 MIDI OUT 经 Type A 线接 BMV51M001 的 MIDI IN；接收模块送 3.3V UART 给 FPGA。光束负责扫弦方向、力度和逐音间隔，声音由同一个 32 声部合成器产生。</p>
+<div class="warn"><strong>先看确认边界：</strong>本文已核对厂商资料并整理 V019 集成合同；BMV51M001 + Type A 线是原推荐接口组合，仍需到货核对。本文没有到货照片、通电测量或实机声音记录。V019 的离线仿真、Gowin布局布线与时序已通过；下文首次测试仍需真实硬件执行，不能据此认定整机实测 PASS。直接把键盘 USB 插入 FPGA 板，不会实现本方案所需的 USB Host。</div>
+<nav aria-label="内容导航"><a href="#sources">厂商依据</a><a href="#wiring">接线图</a><a href="#retained">V018 基线</a><a href="#mapping">MIDI 映射</a><a href="#optical">扫弦规则</a><a href="#first-test">首次测试</a><a href="#diagnosis">诊断</a><a href="#verification">验证边界</a></nav>
+</header>
+
+<section id="sources"><h2>1　厂商依据与确认范围</h2>
+<p>器件技术依据仅使用以下厂商原始资料；本工程合同与源码快照另外标注，不把工程约定写成厂家默认功能。</p>
+<table><thead><tr><th style="width:25%">原始资料</th><th style="width:43%">本次确认</th><th>尚需确认 / 说明</th></tr></thead><tbody>
+<tr><td><a href="https://web-file.midiplus.com/upload/202307/11/TINY%20%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C.pdf">MIDIPLUS TINY 中文手册</a><br>官网 2023-07-11 下载版本</td><td>本手册覆盖 TINY/TINY+。§1.2 后面板与 §2.1 外接设备：USB-C、3.5mm TRS MIDI OUT。§4.3：使用 <strong>Type A</strong>，DIN4 对 Ring、DIN5 对 Tip、DIN2 对 Sleeve。§2.2、2.8、2.9：摇杆、旋钮及 pads 可在 MIDIPLUS Control Center 配置。</td><td>PDF 物理第 5/6/7/9/20 页，正文页码 4/5/6/8/18（末尾有两页均印 18）。用户最终称谓 TINY+32 对应 32 键 TINY+，应核对到货铭牌；不得把当前设置当成出厂状态。</td></tr>
+<tr><td><a href="https://www.bestmodulescorp.com.cn/zh/bmv51m001.html">BMV51M001 厂商产品页</a><br><a href="https://www.bestmodulescorp.com.cn/zh/amfile/file/download/file/2102/product/1316/">中文使用手册 V1.00</a><br><a href="https://www.bestmodulescorp.com/en/amfile/file/download/file/2100/product/1316/">厂家英文手册 V1.00</a></td><td>支持 MIDI 接收 / UART 31250bps；有 6N138 光耦。BMCOM：1 NC、2 TX、3 RX、4 VDD、5 GND。工程统一选 <strong>3.3V</strong> 供电，供电与 FPGA 逻辑参考一致。</td><td>产品概述写 3~5.5V，接口页写 3.3~5.5V；3.3V 落在两者范围内。中文第 4 页 TX/RX 两行描述重复，不能单凭“发送数据线”判断方向。厂家插座描述含 8-pin DIN / 大 S，须到货核对标准 DIN5 公头能否插合。</td></tr>
+<tr><td><a href="https://www.bestmodulescorp.com.cn/zh/amfile/file/download/file/2107/product/1316/">BMV51M001 Schematic V1.0</a><br><a href="https://www.bestmodulescorp.com/en/amfile/file/download/file/2107/product/1316/">同一原理图英文站入口</a><br>2023-05-12，1 / 1 页</td><td>原理图网名将 MIDI IN 的 U1（6N138）接收输出对应到 <strong>RX</strong>；TX 网接 MIDI OUT 路径。结合 BMCOM 针表及厂商应用说明，<strong>3脚 RX → FPGA T8</strong>，不是按通常串口习惯改接 TX。</td><td>本次核对原理图网名 / 元件连接的文本提取与厂家说明；未把厂商 PDF 转成可目视检查的原理图图片。到货后仍须看丝印、针号、板版次和 3.3V 波形；不能照示意图猜排针顺序。</td></tr>
+<tr><td><a href="https://www.dfrobot.com.cn/goods-3274.html">DFRobot SEN0503 厂商页面</a></td><td>DC 3.0~5V，3.3V 光程约 20cm，响应时间 2ms，NPN 常开。发射红 / 黑为电源 / 地；接收红 / 黑 / 白为电源 / 地 / OUT。</td><td>页面线色说明用 5VDC 表示红线用途，本工程按工作电压范围统一改为 3.3V。厂家没有明确写遮挡时 OUT 为高还是低；“NPN 常开”不作为本批次遮挡极性的实测结论。</td></tr>
+</tbody></table>
+<p class="small muted">核对日期：2026-10-24。官方 TINY PDF 已读取共 21 页，相关页见上表；BMV 资料通过厂家网页 / PDF 文本服务读取，直接下载端曾返回站点防护 HTML，未将该响应冒充 PDF。未查询购物价格，也未采用销售平台参数替代厂商依据。</p>
+</section>
+
+<section id="wiring"><h2>2　按端口名与 FPGA 球号接线</h2>
+<figure>
+<svg xmlns="http://www.w3.org/2000/svg" id="v019-wiring" width="1600" height="1910" viewBox="0 0 1600 1910" role="img" aria-labelledby="v019-title v019-desc">
+  <title id="v019-title">V019 MIDI 与 SEN0503 双光束接线</title>
+  <desc id="v019-desc">MIDIPLUS TINY+32 独立 USB 5V 供电，MIDI OUT 经 Type A TRS 转 DIN5 公线进入 BMV51M001 MIDI IN。模块 BMCOM 3脚 RX 是接收路径输出，接 FPGA T8 midi_rx，4脚供3.3V，5脚共地，1脚 NC 和2脚 TX 悬空。两套 SEN0503 的发射与接收红线供3.3V，黑线共地，各接收白线经独立10k上拉到3.3V，A接P8，B接P9。原 V018 接线列在底部。所有电源和地符号为同名网络；图不是排针物理针序图。</desc>
+  <defs>
+    <style>#v019-wiring text{font-family:'Microsoft YaHei','Noto Sans CJK SC',sans-serif;fill:#152a3b;font-size:23px}#v019-wiring .title{font-size:35px;font-weight:700}#v019-wiring .head{font-size:27px;font-weight:700}#v019-wiring .sub{font-size:21px;fill:#4a6070}#v019-wiring .small{font-size:19px}#v019-wiring .tiny{font-size:18px}#v019-wiring .bold{font-weight:700}#v019-wiring .blue{fill:#1464a2}#v019-wiring .red{fill:#b12f39}#v019-wiring .green{fill:#14715d}#v019-wiring .gray{fill:#586773}#v019-wiring .panel{fill:#fff;stroke:#bbcbd6;stroke-width:2}#v019-wiring .old{fill:#f1f4f6;stroke:#aab8c2;stroke-width:2}#v019-wiring .pwr{fill:none;stroke:#bd3441;stroke-width:3}#v019-wiring .gnd{fill:none;stroke:#596572;stroke-width:3}#v019-wiring .sig{fill:none;stroke:#1464a2;stroke-width:4}#v019-wiring .light{fill:none;stroke:#159473;stroke-width:3;stroke-dasharray:11 7}#v019-wiring .res{fill:#fff;stroke:#bd3441;stroke-width:3}#v019-wiring .dot{fill:#1464a2}#v019-wiring .port{fill:#fff;stroke:#1464a2;stroke-width:3}
+    </style>
+    <marker id="signal-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#1464a2"/></marker>
+    <marker id="light-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#159473"/></marker>
+  </defs>
+  <rect width="1600" height="1910" fill="#f8fafc"/>
+  <text x="40" y="54" class="title">V019 · MIDI 与双光束接线</text>
+  <text x="40" y="91" class="sub">新增线路 / 3.3V FPGA 逻辑　　依据厂商资料 + 集成合同；未声称已到货或实测</text>
+  <rect x="40" y="117" width="1520" height="460" rx="14" class="panel"/>
+  <text x="62" y="157" class="head">① MIDI：键盘 OUT → 接收模块 IN → FPGA RX</text>
+  <rect x="65" y="192" width="365" height="275" rx="12" fill="#eaf3fc" stroke="#9fc3df"/>
+  <text x="85" y="229" class="head">MIDIPLUS TINY+32</text>
+  <text x="85" y="264">3.5mm TRS MIDI OUT</text>
+  <text x="85" y="302" class="small">信号由键盘发出</text>
+  <text x="85" y="367" class="bold">USB-C：独立 USB 5V 电源</text>
+  <path d="M250 441V393" class="pwr"/>
+  <text x="85" y="455" class="small red">不从 FPGA I/O 供电</text>
+  <path d="M430 282H660" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="456" y="241" class="small blue">TRS 3.5mm</text>
+  <text x="456" y="267" class="small blue">Type A → DIN5公</text>
+  <text x="455" y="321" class="tiny">DIN4 ↔ Ring</text>
+  <text x="455" y="347" class="tiny">DIN5 ↔ Tip</text>
+  <text x="455" y="373" class="tiny">DIN2 ↔ Sleeve</text>
+  <rect x="660" y="192" width="410" height="275" rx="12" fill="#edf8f4" stroke="#98c8b8"/>
+  <text x="680" y="229" class="head">BMV51M001</text>
+  <text x="680" y="265">MIDI IN → 6N138 → RX</text>
+  <text x="680" y="304" class="bold blue">BMCOM 3脚 RX：接收输出</text>
+  <text x="680" y="343" class="small">1脚 NC / 2脚 TX：只收时悬空</text>
+  <text x="680" y="380" class="small">4脚 VDD：3.3V　5脚 GND：共地</text>
+  <text x="680" y="419" class="small">按厂家网名接；RX 不改接 TX</text>
+  <path d="M1070 282H1270" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="1086" y="241" class="small blue">3.3V UART</text>
+  <text x="1086" y="267" class="small blue">31250bps 8N1</text>
+  <rect x="1270" y="192" width="265" height="275" rx="12" fill="#eaf3fc" stroke="#9fc3df"/>
+  <text x="1290" y="229" class="head">FPGA · PMOD0</text>
+  <circle cx="1270" cy="282" r="5" class="port"/>
+  <text x="1290" y="286" class="bold">T8 = midi_rx</text>
+  <text x="1290" y="338" class="small">T9：留空</text>
+  <text x="1290" y="378" class="small">3V3 → BMV VDD</text>
+  <text x="1290" y="418" class="small">GND → BMV GND</text>
+  <path d="M1390 467V491H790V467" class="pwr"/>
+  <path d="M1460 467V523H1020V467" class="gnd"/>
+  <text x="1080" y="487" class="tiny red">+3.3V</text>
+  <text x="1080" y="550" class="tiny gray">公共 GND</text>
+  <text x="65" y="551" class="small red">先核对到货丝印与插座兼容性；USB 直插 FPGA 无 USB Host，不能完成本接法。</text>
+
+  <rect x="40" y="602" width="1520" height="615" rx="14" class="panel"/>
+  <text x="62" y="643" class="head">② SEN0503 ×2：每套独立发射 / 接收，白 OUT 各有 10k 上拉</text>
+  <text x="62" y="675" class="small">红线接 +3.3V，黑线接 GND；所有同名电源 / 地网络相连。白 OUT 不得上拉到 5V。</text>
+  <path d="M100 712H1200" class="pwr"/>
+  <text x="100" y="704" class="small red">+3.3V（PMOD0 同一电源网）</text>
+  <path d="M100 751H1020" class="gnd"/>
+  <text x="330" y="742" class="small gray">GND（与 FPGA 共地）</text>
+  <rect x="80" y="782" width="250" height="158" rx="10" fill="#eef8f5" stroke="#9dc9b8"/>
+  <text x="100" y="819" class="bold">A 发射端</text>
+  <text x="100" y="857" class="small">红：+3.3V</text>
+  <text x="100" y="896" class="small">黑：GND</text>
+  <path d="M125 712V782" class="pwr"/><path d="M280 751V782" class="gnd"/>
+  <text x="117" y="772" class="tiny red">红</text><text x="272" y="772" class="tiny gray">黑</text>
+  <rect x="580" y="782" width="320" height="158" rx="10" fill="#eef8f5" stroke="#9dc9b8"/>
+  <text x="600" y="819" class="bold">A 接收端</text>
+  <text x="600" y="857" class="small">红 / 黑：+3.3V / GND</text>
+  <text x="600" y="896" class="small">白 OUT A（NPN）</text>
+  <path d="M625 712V782" class="pwr"/><path d="M850 751V782" class="gnd"/>
+  <text x="617" y="772" class="tiny red">红</text><text x="842" y="772" class="tiny gray">黑</text>
+  <path d="M330 838H580" class="light" marker-end="url(#light-arrow)"/>
+  <text x="357" y="824" class="small green">红外光 A</text>
+  <path d="M900 881H1270" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="932" y="912" class="small blue">白 OUT A</text>
+  <path d="M1090 712V783" class="pwr"/><rect x="1078" y="783" width="24" height="58" class="res"/>
+  <path d="M1090 841V881" class="pwr"/><circle cx="1090" cy="881" r="5" class="dot"/>
+  <text x="1113" y="819" class="small red">10k A</text>
+
+  <path d="M100 980H1200" class="pwr"/><text x="100" y="972" class="small red">+3.3V（同上）</text>
+  <path d="M100 1019H1020" class="gnd"/><text x="330" y="1010" class="small gray">公共 GND（同上）</text>
+  <rect x="80" y="1050" width="250" height="138" rx="10" fill="#eef8f5" stroke="#9dc9b8"/>
+  <text x="100" y="1084" class="bold">B 发射端</text>
+  <text x="100" y="1122" class="small">红：+3.3V</text><text x="100" y="1159" class="small">黑：GND</text>
+  <path d="M125 980V1050" class="pwr"/><path d="M280 1019V1050" class="gnd"/>
+  <text x="117" y="1040" class="tiny red">红</text><text x="272" y="1040" class="tiny gray">黑</text>
+  <rect x="580" y="1050" width="320" height="138" rx="10" fill="#eef8f5" stroke="#9dc9b8"/>
+  <text x="600" y="1084" class="bold">B 接收端</text>
+  <text x="600" y="1122" class="small">红 / 黑：+3.3V / GND</text><text x="600" y="1159" class="small">白 OUT B（NPN）</text>
+  <path d="M625 980V1050" class="pwr"/><path d="M850 1019V1050" class="gnd"/>
+  <text x="617" y="1040" class="tiny red">红</text><text x="842" y="1040" class="tiny gray">黑</text>
+  <path d="M330 1107H580" class="light" marker-end="url(#light-arrow)"/>
+  <text x="357" y="1093" class="small green">红外光 B</text>
+  <path d="M900 1148H1270" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="932" y="1180" class="small blue">白 OUT B</text>
+  <path d="M1090 980V1050" class="pwr"/><rect x="1078" y="1050" width="24" height="58" class="res"/>
+  <path d="M1090 1108V1148" class="pwr"/><circle cx="1090" cy="1148" r="5" class="dot"/>
+  <text x="1113" y="1086" class="small red">10k B</text>
+  <rect x="1270" y="782" width="265" height="406" rx="12" fill="#eaf3fc" stroke="#9fc3df"/>
+  <text x="1290" y="819" class="head">FPGA · PMOD0</text>
+  <circle cx="1270" cy="881" r="5" class="port"/><text x="1290" y="889" class="bold">P8 = beamA</text>
+  <text x="1290" y="949" class="small">启动无遮挡 200ms</text>
+  <text x="1290" y="985" class="small">自动记忆空闲电平</text>
+  <text x="1290" y="1033" class="small red">遮挡极性待实测</text>
+  <circle cx="1270" cy="1148" r="5" class="port"/><text x="1290" y="1156" class="bold">P9 = beamB</text>
+
+  <rect x="40" y="1242" width="1520" height="264" rx="14" class="panel"/>
+  <text x="62" y="1281" class="head">③ 光路俯视：两束平行，沿手移动方向间隔 3~5cm</text>
+  <rect x="82" y="1310" width="180" height="52" rx="7" fill="#e4f3ec"/><text x="104" y="1345">A 发射</text>
+  <rect x="672" y="1310" width="180" height="52" rx="7" fill="#e4f3ec"/><text x="693" y="1345">A 接收</text>
+  <rect x="82" y="1418" width="180" height="52" rx="7" fill="#e4f3ec"/><text x="104" y="1453">B 发射</text>
+  <rect x="672" y="1418" width="180" height="52" rx="7" fill="#e4f3ec"/><text x="693" y="1453">B 接收</text>
+  <path d="M262 1336H672M262 1444H672" class="light" marker-end="url(#light-arrow)"/>
+  <text x="295" y="1380" class="small green">3.3V 光程约 20cm，先短距离对齐</text>
+  <path d="M900 1336V1444M886 1336H914M886 1444H914" fill="none" stroke="#5d6b76" stroke-width="2"/>
+  <text x="919" y="1395" class="small">3~5cm</text>
+  <path d="M1095 1325V1448" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="1132" y="1374">A → B：音序升</text>
+  <path d="M1300 1450V1405" class="sig" marker-end="url(#signal-arrow)"/>
+  <text x="1132" y="1490" class="small">B → A：音序降；长遮挡不重复</text>
+  <text x="1132" y="1320" class="small">移开手、对齐光路再启动</text>
+
+  <rect x="40" y="1531" width="1520" height="284" rx="14" class="old"/>
+  <text x="62" y="1573" class="head">④ V018 已有接法保留 · 灰色区为基线，不是新增端口</text>
+  <text x="65" y="1616" class="small bold">GVS / MCP3208 · PMOD0</text>
+  <text x="65" y="1650" class="small">S → 10k → CH0，CH0 → 10k → GND</text>
+  <text x="65" y="1684" class="small">CLK←T6　DIN←P6　OUT→R8　CS←T7</text>
+  <text x="65" y="1718" class="small">V / MCP 3V3：3.3V；全部共地</text>
+  <text x="65" y="1752" class="small red">MCP 的 5V–18V 端子悬空</text>
+  <text x="65" y="1786" class="small">GVS 单模拟编码按单键验收</text>
+  <text x="610" y="1616" class="small bold">ADS1115 · PMOD2</text>
+  <text x="610" y="1650" class="small">SCL=D14　SDA=E15</text>
+  <text x="610" y="1684" class="small">ADDR=GND / 0x48</text>
+  <text x="610" y="1718" class="small">A0/A1：两路压力</text>
+  <text x="610" y="1752" class="small">A2/A3：音量 / 音高滑杆</text>
+  <text x="610" y="1786" class="small">VDD=3.3V / GND=公共地</text>
+  <text x="1090" y="1616" class="small bold">矩阵 PMOD1 / 板载耳机</text>
+  <text x="1090" y="1650" class="small">R1..4：T11 M14 T12 J14</text>
+  <text x="1090" y="1684" class="small">C1..4：P11 R11 M15 J16</text>
+  <text x="1090" y="1718" class="small">PT8211 → 板载 3.5mm 耳机</text>
+  <text x="1090" y="1752" class="small">调试 UART：T13 RX / M11 TX</text>
+  <text x="1090" y="1786" class="small red">115200bps；勿与 T8 MIDI 混接</text>
+  <text x="40" y="1855" class="small">图例：蓝实线 = 电信号及方向；红 = +3.3V；灰 = GND；绿虚线 = 光路。各模块电源端可按需并联 100nF 去耦。</text>
+  <text x="40" y="1888" class="tiny gray">逻辑接线图，不代表排针物理顺序。依据：MIDIPLUS TINY 中文手册；BMV51M001 Schematic V1.0；DFRobot SEN0503 产品资料。</text>
+</svg>
+<figcaption>内嵌 SVG 与样式均为本地内容，断网仍可阅读和放大；独立图：<a href="MIDI与双光束接线.svg">MIDI 与双光束接线.svg</a>。球号不等于排针序号；按到货器件丝印、开发板引脚表核对。</figcaption>
+</figure>
+<table><thead><tr><th style="width:29%">新增端口 / 线</th><th style="width:32%">接往</th><th>动作 / 注意</th></tr></thead><tbody>
+<tr><td>TINY+32 USB-C</td><td>独立 USB 5V 电源</td><td>用于给键盘供电；键盘 MIDI 数据通过另一条 TRS 线进入接收模块。USB 插 FPGA 不能替代该接收链。</td></tr>
+<tr><td>键盘 3.5mm MIDI OUT</td><td>Type A TRS 3.5mm → DIN5 公线 → BMV MIDI IN</td><td>原推荐 BOSS BMIDI-5-35 可作线材规格例；核对实际购买线的 Type A 和公头，不将普通音频线当 MIDI 转接线。键盘 OUT 指向模块 IN。</td></tr>
+<tr><td>BMCOM 3脚 RX</td><td>PMOD0 <strong>T8 / midi_rx</strong></td><td>厂商定义的接收路径输出，31250bps、8N1、3.3V UART。只接收时不需要 FPGA TX。</td></tr>
+<tr><td>BMCOM 4脚 VDD / 5脚 GND</td><td>3.3V / FPGA 公共 GND</td><td>接收模块与 FPGA 共地；勿将 VDD 改成 5V 后直接把其逻辑线送 T8。键盘侧通过厂商 MIDI 接收光耦通路连接，无需另拉键盘外壳地线。</td></tr>
+<tr><td>BMCOM 1脚 NC / 2脚 TX</td><td>悬空</td><td>本版只接收，不接模块 MIDI OUT。按厂家针号识别，不从图上推导插头观察面的左右顺序。</td></tr>
+<tr><td>SEN0503 A、B：发射红 / 黑</td><td>3.3V / GND</td><td>共两套发射器，各自供电；不能只给接收器供电。</td></tr>
+<tr><td>SEN0503 A、B：接收红 / 黑</td><td>3.3V / GND</td><td>与 FPGA、BMV 及已有模块共地；电源端按需并联 100nF 去耦，靠近器件。</td></tr>
+<tr><td>A 接收白 OUT</td><td><strong>P8 / beamA</strong>，节点另经 <strong>10k → 3.3V</strong></td><td>独立上拉 A；白线不是电源线。</td></tr>
+<tr><td>B 接收白 OUT</td><td><strong>P9 / beamB</strong>，节点另经 <strong>10k → 3.3V</strong></td><td>独立上拉 B；两路白线不能短接，也不能上拉到 5V。</td></tr>
+<tr><td>PMOD0 T9</td><td>留空</td><td>T6/P6/R8/T7 继续用于 MCP3208。调试 T13/M11 仍为 115200bps，与 T8 的 MIDI 分离。</td></tr>
+</tbody></table>
+<div class="note"><strong>3.3V 电源是共同电源网，但供电能力还需核对：</strong>整理线束后在带载状态测 BMV 和四个光电端的电压，观察 FPGA 是否复位。若改用独立稳压 3.3V 电源，须与 FPGA 共地，并先处理电源连接方式，避免把两个不同来源的电源输出直接并联。本文未测 PMOD 可用电流，也未实测两套传感器总电流。</div>
+</section>
+
+<section id="retained"><h2>3　V018 既有接法保留</h2>
+<div class="baseline">接线基线来自本工程的 <a href="V018_触摸键盘接线与测试.html">V018 触摸键盘接线与测试</a>、<a href="触摸键盘接线.svg">V018 独立接线图</a>和 <a href="../src/multi_tone.cst">当前引脚约束</a>。本次只增加 MIDI / 光电线路；先逐项核对基线，再验证新增功能。</div>
+<div class="grid"><section><h3>触摸 / MCP3208 · PMOD0</h3><ul>
+<li>GVS：V → 3.3V，G → 公共 GND。S → 10k → MCP CH0；同一 CH0 节点再经 10k → GND。</li>
+<li>MCP 模块 3V3 → 3.3V，G → GND；<strong>5V–18V 端子悬空</strong>。S 不直接接 FPGA 数字脚。</li>
+<li>CLK ← T6；DIN ← P6；OUT → R8；CS ← T7。箭头以实际信号流为准。</li>
+<li>单路模拟编码按单键验收，不承诺任意触摸多键和弦；MIDI 负责外部多音输入。</li>
+</ul></section><section><h3>ADS1115 · PMOD2</h3><ul>
+<li>VDD → 3.3V，GND / ADDR → 公共 GND，I²C 7位地址 0x48。</li>
+<li>SCL → D14，SDA ↔ E15；I²C 上拉保持 3.3V。</li>
+<li>A0 / A1 保留压力0 / 压力1。</li>
+<li>A2 / A3 保留音量滑杆 / 音高滑杆。</li>
+</ul></section><section><h3>原 8 线矩阵 · PMOD1</h3><ul>
+<li>R1 / R2 / R3 / R4 → T11 / M14 / T12 / J14。</li>
+<li>C1 / C2 / C3 / C4 → P11 / R11 / M15 / J16。</li>
+<li>S13 / S14 与 MIDI PC 共同修改同一当前音色；S15 / S16 菜单保持基线。</li>
+<li>保留现有矩阵作菜单 / 组合键，不按另一块排线的物理顺序盲换。</li>
+</ul></section><section><h3>耳机 / HDMI / 调试</h3><ul>
+<li>板载 PT8211 → 原 3.5mm 耳机输出；已有音频与 HDMI 接法保持。</li>
+<li>T13 = 调试 UART RX，M11 = 调试 UART TX，115200bps。</li>
+<li><strong>T8 = MIDI RX，31250bps</strong>。两种串口的波特率、数据含义和线路不能混接。</li>
+<li>不要把 TINY 的 3.5mm MIDI OUT 插入耳机口。</li>
+</ul></section></div>
+</section>
+
+<section id="mapping"><h2>4　MIDI 映射合同与键盘设置</h2>
+<p>映射数据见 <a href="../assets/midi_tiny_mapping.json">midi_tiny_mapping.json</a>。这是本工程合同与建议设置，不是 MIDIPLUS 的出厂配置文件，也不会自动写入键盘。通道按用户界面 <strong>1~16</strong> 编号；线上状态字低四位对应 <strong>0~15</strong>。</p>
+<table><thead><tr><th style="width:24%">输入</th><th style="width:40%">V019 软件映射（到货后实测）</th><th>配置 / 验收要点</th></tr></thead><tbody>
+<tr><td>CH1 Note On / Note Off</td><td>主旋律默认监听通道1；Note On 的力度0等同 Note Off；非零 7bit 力度映射到合成器 8bit 力度。</td><td>音符号按 MIDI 数值判断；本文 C4=60。不同软件八度名称可能不同。当前 MIDI 源码用 <code>(v&lt;&lt;1) | (v&gt;&gt;6)</code>，1→2、127→255，仍待最终仿真确认。</td></tr>
+<tr><td>CC64 延音</td><td>标准阈值 ≥64 开启，&lt;64 关闭；延音影响 MIDI 来源的释放。</td><td>先验证键盘实际发送 CC64。SUSTAIN 按键 / 脚踏的出厂模式不能仅凭灯推断。</td></tr>
+<tr><td>CC7 音量</td><td>控制主音量，与实体 A2 滑杆采用“最近发生变化的来源”仲裁。</td><td>静止滑杆重复采样不能抢回；移动实体滑杆后应重新接管。可建议在 Control Center 把 K1 设为 CH1 / CC7。</td></tr>
+<tr><td>Pitch Bend</td><td>摇杆左右发送 Pitch Bend，14bit 中心8192；与 A3 音高滑杆采用最近变化来源仲裁。</td><td>回中应恢复基准；具体弯音范围按最终实现验收，不在本文承诺半音数。手册编辑器称“CC128”是弯音选择项，线上并不存在 CC128 数据字节。</td></tr>
+<tr><td>CC1 颤音</td><td>控制颤音深度；约 6Hz 调制由 FPGA 生成。</td><td>键盘只发送控制值，不提供 6Hz 时钟。摇杆上下建议设 CH1 / CC1，回中应停调制。</td></tr>
+<tr><td>Program Change 0 / 1</td><td>PC0 选长笛；PC1 选拨弦；与菜单 S13 / S14 同一音色状态。</td><td>本工程自定义二音色映射，不是 GM 全音色表。若编辑器用1起始显示，须核对实际发出的0 / 1；不要猜旋钮默认发送 PC。</td></tr>
+<tr><td>CH10 Pad Note 35/36 / 38/40</td><td>35/36 → 底鼓，38/40 → 军鼓，保留力度。建议配置为36和38。</td><td>在 MIDIPLUS Control Center 将 pads 设 NOTE 模式、通道10、所需 Note 编号并实际回读 / 抓消息核对；不假定到货配置已如此。</td></tr>
+<tr><td>CC120 / Stop FC / System Reset FF</td><td><strong>全局紧急静音</strong>：清除 MIDI、矩阵 / 触摸、光弦及活动扫弦 / 延音状态，防止挂音。</td><td>区别于正常松键；实际清音、队列取消与状态恢复应由集成测试确认。CC120只接受主旋律监听通道（默认CH1），接受后执行全局清音；FF和FC不受通道过滤。</td></tr>
+<tr><td>Active Sensing FE</td><td>只在收到 FE 后启用断流监控；启用后约 350ms 无 MIDI 数据流触发全局紧急静音。</td><td>从未收到 FE 时，正常长按不因350ms无消息而超时。不要宣称 TINY 一定默认发送 FE。</td></tr>
+<tr><td>CC123</td><td>释放 MIDI 来源音符，走正常释放路径；不能误释放另一来源的同音。</td><td>与 CC120 全局立即清音分开测试，验证延音 / 门控状态不遗留。</td></tr>
+<tr><td>其他消息</td><td>未支持的通道、其他 CC / PC / pads 音符、Aftertouch、SysEx / MMC、Clock / Start / Continue 等忽略其演奏动作；Stop FC执行全局清音。</td><td>解析器须保持消息边界，不将数据误作音符；实时 FE / FF 仍按上两项处理。走带键默认 MMC 不承诺控制本工程菜单。</td></tr>
+</tbody></table>
+<h3>建议在电脑上先做一次可回退的键盘配置</h3>
+<ol>
+<li>按官方手册安装 / 打开 MIDIPLUS Control Center，用 USB 连接 TINY+，读取当前设置并保存备份。不同软件版本界面用词可能不同，按手册的 NOTE / CC / MIDI 通道字段识别。</li>
+<li>主键盘发送通道设1；摇杆左右选 Pitch Bend，线上中心8192；上下选 CC1，相关发送通道也核对为1。</li>
+<li>可把 K1 改为 CH1 / CC7；其余旋钮按需配置。厂家手册列 K1~K4 的默认 CC 为93/91/71/74，不能把旋钮转动却无效果直接判为 FPGA 故障。</li>
+<li>pads 设 NOTE 模式、通道10。明确挑两块设36和38并保存；35/36也可触发底鼓，38/40也可触发军鼓；其余Note当前不处理。手册示例 Bank A 含36/37/38/39，不能据此跳过配置核对。</li>
+<li>用可查看原始 MIDI 事件的监视器核对 CH、Note、velocity、CC、Pitch Bend / PC。若 PC 无方便的实体发送方式，可由最终受支持的配置或测试端验证；不要假造一个不存在的 TINY 菜单。</li>
+<li>保存到设备后断电重启并复查。电脑 USB 监视通过只证明 USB 路径；最后仍须测 TRS MIDI OUT → BMV → T8 这条实际链。</li>
+</ol>
+<div class="note"><strong>来源标签必须贯通：</strong>矩阵 / 触摸、本版 MIDI、光弦各自拥有音符来源标记；同一个 MIDI 音符号可以由多种来源同时持有。松开本地 C4 只释放本地 C4，MIDI C4 继续；反过来也一样。新扫弦只先释放旧扫弦来源，不能把仍按住的 MIDI 和弦一起关掉。MIDI、矩阵与光弦共享 32 声部，不是每种输入各32路。</div>
+</section>
+
+<section id="optical"><h2>5　双光束扫弦规则</h2>
+<ol>
+<li>把两套发射 / 接收端分别对齐成两束平行光路；沿手移动方向，A 与 B 相隔 <strong>3~5cm</strong>。3.3V 时发射到接收距离先取短于约20cm，避免一开始就在厂商标称边缘调试。</li>
+<li><strong>启动前移开手并对齐光路，保持两束无遮挡至少200ms。</strong>固件学习空闲电平；未规定遮挡必然高 / 低。若启动时手挡住，学习结果会错误，移开手后重新启动 / 复位。</li>
+<li>A 先、B 后：按音高由低到高扫；B 先、A 后：按音高由高到低扫。时差用于估计本次手势快慢，决定力度与逐音 <strong>2/4/6/10ms</strong> 间隔；这不是测得的整机声音延迟。</li>
+<li>持有 MIDI 和弦时最多选6音扫弦；没有可用和弦时用 <strong>C4 E4 G4 C5 = 60/64/67/72</strong>。光弦固定拨弦音色，不跟随主旋律长笛切换。</li>
+<li>只遮到一束或150ms内没有第二束：超时后回退触发一次扫弦，触发会更慢；不得把它描述成即时单光束响应。持续遮挡不重复发声，两束都恢复空闲后才重新等待下一次手势。</li>
+<li>新手势触发扫弦前先释放上一组光弦，取消旧序列遗留音符，防止快速连续扫动挂音。两束同时变化没有可可靠判别的先后，不能作为方向测量结果。</li>
+</ol>
+<details><summary>已交付 optical_strum.v 的参数（离线验证通过，手势实测待做）</summary>
+<p>文档检查时已出现 <a href="../src/optical_strum.v">optical_strum.v</a>，默认 27MHz，连续输入滤波约1ms，稳定空闲学习200ms，配对窗150ms；实现片段的分档如下。该表描述当前模块快照，不证明顶层接通、声音表现或物理手势已测。</p>
+<table><thead><tr><th>两束触发时差</th><th>8bit 力度</th><th>逐音间隔</th></tr></thead><tbody><tr><td>≤8ms</td><td>255</td><td>2ms</td></tr><tr><td>&gt;8ms，≤20ms</td><td>220</td><td>4ms</td></tr><tr><td>&gt;20ms，≤50ms</td><td>180</td><td>6ms</td></tr><tr><td>&gt;50ms，配对窗内</td><td>140</td><td>10ms</td></tr><tr><td>单束150ms超时</td><td>160（回退值）</td><td>8ms（回退值）</td></tr></tbody></table>
+<p class="small muted">2/4/6/10ms 指完成双束配对后的四档；单束回退当前采用8ms，与150ms触发等待是两件事。上述分档已由单元与整合仿真核对；两束同时变化按升序、力度180、间隔6ms处理，不推断真实方向。</p>
+</details>
+</section>
+
+<section id="first-test"><h2>6　到货后的首次测试：逐项执行与记录</h2>
+<p>以下为<strong>待执行</strong>的验收步骤。每一步先满足观察项再继续；不填入猜测的电平、串口记录或声音结果。</p>
+<table class="test"><thead><tr><th>步骤</th><th style="width:48%">怎么做</th><th>成功观察 / 需要保存</th></tr></thead><tbody>
+<tr><td>01<br>断电核对</td><td>核对键盘铭牌 TINY+32、BMV 型号 / 版次 / BMCOM 针号、DIN5公头与模块 MIDI IN 插合、Type A 规格；识别每套 SEN0503 的两线发射端与三线接收端。按上表接线，检查 T8/P8/P9 没有占用旧 SPI。</td><td>保存器件 / 接头 / 丝印照片；Type A 线对应 DIN4=Ring、DIN5=Tip、DIN2=Sleeve。没有到货前不可勾选“已核对”。</td></tr>
+<tr><td>02<br>带载电源</td><td>键盘 USB-C 接独立 USB5V；BMV、两套光电的全部发射 / 接收红线接3.3V、黑线共地。确认两只10k上拉到3.3V。通电测各电源端与 GND。</td><td>记录键盘供电方式、3.3V实测值与电压是否稳定；FPGA无反复复位。任何输出节点超过 FPGA 3.3V 逻辑范围时先断电查线。</td></tr>
+<tr><td>03<br>软件前提</td><td>使用本目录交付的 V019 源码 / 约束 / 固件及其验证记录；先核对 MIDI RX=T8、beamA=P8、beamB=P9。按最终版本说明在 Gowin 的 Device Configuration → Operation / FS File 选择正确文件。先完成旧触摸、矩阵、压力、滑杆与耳机基线检查。</td><td>记录具体固件标识 / 哈希、烧录方式与时间。V018 或只增加文档的工程不具备完整 V019；构建通过不能代替这一步。</td></tr>
+<tr><td>04<br>MIDI 物理链</td><td>先不扫光束。键盘 CH1 轻弹 / 重弹同一音再松开；同时按三音和弦。若不发声，用示波器或逻辑分析仪看 BMCOM 3脚 / T8，解码31250bps、8N1，检查 Note On / Off及力度0。</td><td>按键时有正确串行数据并产生声音；松开进入释放，轻 / 重不同。一个 UART bit 约32μs只是解码参考，不是本次实测结果。记录实际 CH 与事件字节。</td></tr>
+<tr><td>05<br>控制 / pads</td><td>测 CC64 开关、CC7、摇杆 Pitch Bend / CC1，PC0 / PC1 与 S13 / S14 互切。移动实体 A2/A3 滑杆验证接管，再改变 MIDI 验证重新接管。用已配置的 CH10 Note36/38 pads 测两鼓。</td><td>CC64 松开后不挂音；音量 / 弯音按最近变化来源响应；静止滑杆不抢回；CC1 有约6Hz变化、归零后停止；菜单和 PC 显示与声音一致。</td></tr>
+<tr><td>06<br>来源隔离</td><td>矩阵 / 触摸先按 C4，同时 MIDI 按 C4；分别交换松开顺序。MIDI 和弦持续按住时连续触发两次扫弦。</td><td>松一种来源不能释放另一种同音；新扫弦撤销旧光弦但 MIDI 和弦继续，无遗留门控。</td></tr>
+<tr><td>07<br>光路基线</td><td>先测每条白 OUT：无遮挡 / 遮挡各记录电压；不要预设高低。A与B均对齐且无遮挡、手移开后复位，至少等待200ms。单独遮 A，再恢复；单独遮 B，再恢复。</td><td>记录 A / B 各自空闲电压与遮挡电压、光程和环境。每一路应产生可区分电平，恢复后可再次触发。没有诊断界面时先用仪表观察，勿编造可点的光电状态页。</td></tr>
+<tr><td>08<br>双束手势</td><td>两束沿手移动方向间距3~5cm。先无遮挡启动；做 A→B、B→A，分别快 / 中 / 慢移动。无和弦先听默认四音，再保持 MIDI 三音 / 超6音和弦扫动。</td><td>分别升 / 降音序；快慢影响力度与间隔；无和弦60/64/67/72，持有和弦最多6音，始终拨弦。记录时差 / 实际逐音事件；不要仅凭听感证明2ms准确。</td></tr>
+<tr><td>09<br>异常手势</td><td>遮单束并等待超过150ms；持续遮住不动；恢复两束再扫。故意在启动时挡住，观察学习错误后移手并复位恢复。</td><td>单束只在超时后触发一次，长遮挡不重复；全空闲后重新可触发。启动误学可经正确无遮挡重启恢复。</td></tr>
+<tr><td>10<br>清音 / 失联</td><td>先确认无 FE 时 MIDI 正常长按 &gt;350ms 仍继续。再用已验证能生成原始消息的测试端先发送 FE、建立音符，然后停止数据流；另测 CC120、FF、CC123。用逻辑仿真替代不具备发送能力的实体键盘，不向调试UART灌MIDI字节。</td><td>FE启用后断流约350ms全局静音；CC120 / FF 清所有来源与活动扫弦；CC123仅释放MIDI来源。TINY是否发FE、如何发测试消息均须记录，不能假定键盘有对应按钮。</td></tr>
+<tr><td>11<br>32路验证</td><td>进入既有32声部验证流程，同时动 MIDI、矩阵 / 触摸、压力、滑杆与光束，再退出验证；实际入口按最终版本说明操作。</td><td>验证期间真实输入不能污染验证音符、音量 / 弯音或事件序列；退出不回放积压事件，光束恢复空闲后才重新触发。保存最终仿真 / 实机结果。</td></tr>
+</tbody></table>
+<h3>实际记录表（空白即未测）</h3>
+<table><thead><tr><th>项目</th><th>实测记录</th><th>项目</th><th>实测记录</th></tr></thead><tbody>
+<tr><td>器件 / BMV 版次 / 线材</td><td>________________</td><td>固件标识 / 哈希 / 时间</td><td>________________</td></tr>
+<tr><td>BMV / A / B 电源电压</td><td>________________</td><td>MIDI实际CH / pads编号</td><td>________________</td></tr>
+<tr><td>A 空闲 / 遮挡电压</td><td>________________</td><td>B 空闲 / 遮挡电压</td><td>________________</td></tr>
+<tr><td>光程 / 束间距 / 环境</td><td>________________</td><td>升降序 / 回退 / 挂音</td><td>________________</td></tr>
+<tr><td>延音 / 仲裁 / 来源隔离</td><td>________________</td><td>CC120 / FF / FE / CC123</td><td>________________</td></tr>
+<tr><td>32路验证隔离 / 退出</td><td>________________</td><td>耳机声音 / 异常现象</td><td>________________</td></tr>
+</tbody></table>
+</section>
+
+<section id="diagnosis"><h2>7　按现象排查</h2>
+<table><thead><tr><th style="width:25%">现象</th><th>优先检查</th><th style="width:30%">怎样缩小范围</th></tr></thead><tbody>
+<tr><td>键盘亮灯，无音符</td><td>主键盘 CH1；TRS插到 MIDI OUT；Type A；DIN公头接 BMV MIDI IN；BMV 3脚 RX 到 T8；BMV 3.3V / 共地；最终 V019 固件。</td><td>先抓 T8 字节。有正确消息而无声才继续查映射、音量、耳机；USB电脑监视有消息不代表TRS链已通。</td></tr>
+<tr><td>T8 无数据 / 接收乱码</td><td>别把 RX 换到 BMCOM TX；别误接 T13 / M11。接收模块串口需31250bps、8N1，调试UART仍115200bps。检查3.3V幅度及共地。</td><td>先看 BMV RX 波形，再看 T8；前者正常后者异常查连线。两者均无，回查Type A线、IN/OUT和键盘发送。</td></tr>
+<tr><td>能弹琴，pads没鼓 / 旋钮无效</td><td>pads NOTE模式、CH10、Note36/38，当前Pad Bank；K1是否真的改为CC7；PC实际编号。</td><td>先读实际事件；其他音符 / CC 被忽略是映射范围，不据此认定模块损坏。</td></tr>
+<tr><td>控制被实体滑杆“抢回”</td><td>最新变化来源仲裁；静止ADC噪声是否被当新变化；实际滑杆是否移动。</td><td>固定实体滑杆，只改MIDI观察；然后移动实体滑杆，应能重新接管。保存事件与ADC变化。</td></tr>
+<tr><td>双束不触发 / 一直视为遮挡</td><td>四端是否供电、红黑白有无错接；两只独立10k上拉3.3V；光路是否错对 / 交叉；距离先短于20cm；启动时是否挡住。</td><td>逐路测白OUT的无遮挡 / 遮挡电压，再无遮挡复位学习200ms。不要以“NPN常开”替代测量，也不要反复改RTL极性掩盖错线。</td></tr>
+<tr><td>扫弦方向相反</td><td>手的实际先后、A/P8与B/P9标签、沿移动方向间距。</td><td>单独遮A / B确认接线，按真实先后标注；同时遮住两束没有可靠方向信息。</td></tr>
+<tr><td>只慢慢响一次 / 遮久不重响</td><td>是否一直只遮到单束、两束间隔 &gt;150ms；是否未全空闲就再次扫。</td><td>单束150ms回退及长遮挡不重触发是约定行为。需两束依次触发，再均恢复空闲。</td></tr>
+<tr><td>长按350ms就断音 / 断线反而不清音</td><td>FE是否真正收到、是否启用后持续发送；CC120/FF是否产生；固件是否错误给所有长按套超时。</td><td>分别测“从未FE”和“先FE后断流”；两者必须不同。没有FE的键盘断开不保证自动感知断流。</td></tr>
+<tr><td>同音被误释放 / 快扫后挂音</td><td>voice来源标签是否贯通；旧扫弦释放与新序列取消；延音 / CC123 / panic范围。</td><td>做步骤06、09、10的独立用例；记录输入顺序。紧急静音只用于恢复，不能替代修复来源或释放逻辑。</td></tr>
+<tr><td>一接模块 FPGA复位 / 噪声</td><td>3.3V带载跌落、供电回路、短接、共地、长线；电源端100nF按需去耦。</td><td>逐个断电增接模块并测电压；保留真实电流 / 电压记录，不宣称PMOD供电已经够用。</td></tr>
+</tbody></table>
+</section>
+
+<section id="verification"><h2>8　软件验证与到货实测边界</h2>
+<div class="note"><strong>最终实现已收敛：</strong>CH10的35/36为底鼓、38/40为军鼓；FC/FF及主旋律通道CC120执行全局清音。音量/音高只在数值变化时重新夺取控制；清音会取消旧光弦队列。进入数字零测试也清除所有来源，退出后要松键重按或重新扫动，避免旧按键恢复出声。</div>
+<table><thead><tr><th>项目</th><th>交付状态及证据</th></tr></thead><tbody>
+<tr><td>整版构建</td><td>UserCode 0x00005D02，Setup/Hold违例均0。Logic18141、Register7659、CLS9999、BSRAM9、DSP12.25；CLS约96.44%，后续扩展仍需控制规模。<a href="../validation/build_summary.json">实际构建记录</a></td></tr>
+<tr><td>系统仿真</td><td>12项主回归通过，旧行映射负例按预期失败；另测全部输入启用时触摸、数字零退出、来源隔离。真实31250bit/s串行时序覆盖32音符、延音、光弦与测试模式隔离。<a href="../validation/acceptance.json">汇总验收与源哈希</a></td></tr>
+<tr><td>独立审查</td><td>静音退出挂音及HDMI仍用本地键的问题均已复现、修复并复验。<a href="../validation/midi_optical_integration_review.json">审查记录</a></td></tr>
+<tr><td>相位RAM</td><td>4种模式逐拍比对和3项故意破坏测试通过；保留32声部。冻结参考构建减少735个寄存器；最终整版资源以上行数据为准。</td></tr>
+<tr><td>接线图与映射</td><td>SVG已渲染目检；官方资料、连线方向与最终映射已核对。<a href="../validation/docs_final_followup.json">文档最终跟进</a>；并行草稿记录保留供追溯，不代表最终未完成。</td></tr>
+<tr><td>触摸基线</td><td>V018 UserCode 0x0000BDFC。默认中心是估算值，首次使用仍须逐键标定。<a href="V018_触摸键盘接线与测试.html">接线与标定步骤</a></td></tr>
+<tr><td>实机</td><td>未烧录、未测供电/线材/极性/MIDI事件/耳机声音/端到端延迟。请执行第6节，记录实测结果。仿真通过不等同于实机通过。</td></tr>
+</tbody></table>
+<p>Gowin仍报告既有TMDS位宽截断及触摸中心表异步置位/复位提示；编译器未因此失败，运行时标定和复位后的实际表现仍应按首次测试核对。完整日志随版本保存。</p>
+</section>
+<footer>V019 阶段2交付图文 · 中文离线文档 · HTML 自包含内嵌 SVG，无外部脚本 / 字体 / 图像依赖。链接可用于在线查看厂商原件与本地工程证据；断网不影响本页主体。所有待测项目保持未验证，最终以对应版本的完整软件记录与真实硬件记录为准。</footer>
+<section><h2>只读输入监视</h2><p>双击版本目录“打开全部输入监视.cmd”，或在“工程”目录运行：</p><pre>python tools/input_monitor.py --port COM8</pre><p>显示触摸原始码/键位、MIDI接收痕迹与错误、光束A/B遮挡和光弦就绪状态；只发09查询，不接管输入。串口号变动先用<code>python tools/input_monitor.py --list</code>查看。需要机器可读记录时加<code>--json</code>。接收痕迹不是“硬件已经连接”的证明，启动光电基线时必须保证无遮挡。</p></section></main></body></html>

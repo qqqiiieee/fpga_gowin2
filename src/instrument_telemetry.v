@@ -13,7 +13,7 @@
 // clip 在采样幅值>=32767后保持若干窗口，表示近数字满幅，不证明DAC已经削波。
 // 无模块参数；统计窗/参考采样率固定。复位测量为0、dBFS=-96、note_valid=0。
 // 本模块无UI暂停入口，源域计量持续运行；跟弹暂停和scope采集由各自模块负责。
-module instrument_telemetry(
+module instrument_telemetry #(parameter EXTERNAL_NOTE_ENABLE=0)(
  input clk,input rst_n,input sample_tick,input [15:0] pcm,
  input [11:0] keys,input [7:0] volume,input signed [8:0] pitch,
  input [31:0] busy,
@@ -22,7 +22,7 @@ module instrument_telemetry(
  output reg [7:0] volume_percent,output reg [5:0] voices,
  output reg [6:0] primary_note,output reg note_valid,
  output reg [15:0] frequency_hz,output reg [15:0] frequency_bcd,
- output clip);
+ output clip,input [6:0] external_note,input external_note_valid);
  // 8位分组成对相加，结果4位可容纳0..8；只计输入置位，不分析PCM声源。
  function [3:0] count8;
   input [7:0] v;
@@ -146,6 +146,10 @@ module instrument_telemetry(
   for(k=0;k<12;k=k+1)if(keys[k]&&!found)begin
    selected_note=mapped_note(k);selected_valid=1;found=1;
   end
+  // MIDI可超出原12键显示区；代表音符/Hz使用独立完整7位音符口。
+  if(EXTERNAL_NOTE_ENABLE && external_note_valid)begin
+   selected_note=external_note;selected_valid=1;
+  end
  end
  wire [23:0] base_increment;
  note_table u_frequency(selected_note,base_increment);
@@ -194,7 +198,8 @@ module instrument_telemetry(
    primary_note<=0;note_valid<=0;end
   else if(!decimal_busy)begin
    if(frequency_hz!=converted_hz || frequency_note!=converted_note || frequency_valid!=converted_valid)begin
-    converted_hz<=frequency_hz;decimal_shift<={16'd0,frequency_hz};decimal_count<=0;decimal_busy<=1;
+    // 现有面板只有4位Hz：超过9999饱和显示，禁止静默截掉万位。
+    converted_hz<=frequency_hz;decimal_shift<={16'd0,(frequency_hz > 16'd9999 ? 16'd9999 : frequency_hz)};decimal_count<=0;decimal_busy<=1;
     converted_note<=frequency_note;converted_valid<=frequency_valid;
    end
   end else begin
