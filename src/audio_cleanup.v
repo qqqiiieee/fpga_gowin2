@@ -9,9 +9,10 @@
 // 二者都为真才输出滤波结果；没有输出 valid，采样结果在 tick 更新后保持。
 // 下面按实际系数、Q8 量化与有符号除法说明；保留小数可减少整数递推的舍入误差，
 // 但不是无限精度。精确截止频率需分析离散响应，此处不推断实际听感或截止 Hz。
-module audio_cleanup #(parameter LOWPASS_ENABLE=1)(
+module audio_cleanup #(parameter LOWPASS_ENABLE=1,parameter EXPRESSION_ENABLE=0)(
  input clk,input rst_n,input tick,input quiet,input enable,input [15:0] sample_in,
- output reg [15:0] sample_out);
+ output reg [15:0] sample_out,
+ input [7:0] expression,input expression_ready);
  // state_q 为 Q8 状态：PCM 整数乘 256 后进入同一尺度，保留 8 个小数位。
  // 32 位有符号 target_q/difference 为缩放和正负输入间的差值提供运算空间。
  reg signed [31:0] state_q;
@@ -32,6 +33,7 @@ module audio_cleanup #(parameter LOWPASS_ENABLE=1)(
  // quiet 即使没有 tick 也清空历史和输出，用于结束尾音后建立确定的数字零。
  // 旁路只选择 sample_in 作为输出：每个 tick 仍更新 state_q，重新启用时有持续历史。
  // 滤波路径取 rounded_sample[15:0]，本模块没有额外的饱和比较器。
+ generate if(!EXPRESSION_ENABLE) begin:legacy_filter
  always @(posedge clk or negedge rst_n) begin
    if(!rst_n) begin state_q<=0;sample_out<=0;end
    else if(quiet) begin state_q<=0;sample_out<=0;end
@@ -40,4 +42,42 @@ module audio_cleanup #(parameter LOWPASS_ENABLE=1)(
      sample_out<=(LOWPASS_ENABLE && enable)?rounded_sample[15:0]:sample_in;
    end
  end
+ end else begin:expression_filter
+   // V020明亮度：y += alpha*(x-y)/256，alpha=8+pressure/2。
+   // 轻按/释放时滤去较多高次谐波，重按时打开频带；这不是总音量控制。
+   // 没有完成FSR标定或通道断流时，alpha回到旧值128，保持可用的普通声音。
+   // 校准后的表情独立于旧“滤波”开关；该开关仍控制未启用表情时的降噪低通。
+   // alpha每16音频帧最多变1，约22ms跨越全区，抑制系数突变带来的拉链声。
+   reg [7:0] alpha;
+   reg [3:0] alpha_div;
+   wire [7:0] target_alpha=expression_ready?(8'd8+{1'b0,expression[7:1]}):8'd128;
+   reg signed [24:0] expression_state;
+   wire signed [24:0] expression_target=$signed({sample_in,8'd0});
+   wire signed [24:0] delta=expression_target-expression_state;
+   // 25x9有符号乘积用34位保存。alpha补0，防止>=128被解释为负数。
+   wire signed [33:0] product=delta*$signed({1'b0,alpha});
+   wire signed [33:0] divided=product/34'sd256;
+   wire signed [24:0] expression_step=(divided==0 && delta!=0)?
+       (delta[24]?-25'sd1:25'sd1):divided[24:0];
+   wire signed [24:0] expression_next=expression_state+expression_step;
+   wire signed [24:0] expression_pcm=expression_next/25'sd256;
+   always @(posedge clk or negedge rst_n) begin
+     if(!rst_n)begin alpha<=128;alpha_div<=0;end
+     else if(tick)begin
+       alpha_div<=alpha_div+1'b1;
+       if(alpha_div==15)begin
+         if(alpha<target_alpha)alpha<=alpha+1'b1;
+         else if(alpha>target_alpha)alpha<=alpha-1'b1;
+       end
+     end
+   end
+   always @(posedge clk or negedge rst_n) begin
+     if(!rst_n)begin expression_state<=0;sample_out<=0;end
+     else if(quiet)begin expression_state<=0;sample_out<=0;end
+     else if(tick)begin
+       expression_state<=expression_next;
+       sample_out<=(expression_ready || (LOWPASS_ENABLE && enable))?expression_pcm[15:0]:sample_in;
+     end
+   end
+ end endgenerate
 endmodule

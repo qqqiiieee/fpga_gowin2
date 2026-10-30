@@ -7,7 +7,7 @@
 // velocity 为外部提供的 8 位力度控制量，事件时复制为 vel_out；note 为表内
 // 7 位音符编号（采用 MIDI 编号习惯），不含频率单位。note_on/note_off 为单拍，
 // note/vel_out/timbre_out 仅应在事件脉冲时使用；key_state 为消抖后按键状态。
-// ghost_active 为原始扫描矩形歧义的组合指示；selected_timbre 为当前0..15选择。
+// ghost_active 为原始扫描矩形歧义的组合指示；selected_timbre 保留4位接口。
 // ROW_CYCLES 单位为 clk 周期；默认 27MHz、6750周期/行=0.25ms，四行=1ms。
 // DEBOUNCE_FRAMES 为连续不同于已确认状态的完整帧数，默认4帧，约4ms。
 // 各状态寄存器异步低复位，扫描从第0行开始；复位时第0行仍按组合逻辑拉低，
@@ -16,11 +16,14 @@
 // 最高四键作为控制键，不发音；选择方式还取决于 TWO_BUTTON_SELECT。
 // 兼容分组模式中 SELECT_ON_RELEASE=1 时单个选择键须松开才确认；
 // =0 时在消抖后的按下边沿确认。TWO_BUTTON_SELECT=1 时强制单键松开确认：
-// S13 前一个、S14 后一个，0..15循环；S15/S16留给菜单，不切音色。
+// S13 前一个、S14 后一个，在0..TIMBRE_COUNT-1循环；S15/S16留给菜单，不切音色。
 // PERFORMANCE_MODE/SELECT_ON_RELEASE/TWO_BUTTON_SELECT 默认均为0，按布尔选项使用。
 // TWO_BUTTON_SELECT 默认0只为兼容历史四组/四变体选择；生产 input_hub 显式
 // 设 PERFORMANCE_MODE=1、SELECT_ON_RELEASE=1、TWO_BUTTON_SELECT=1、消抖3帧。
-// ROW_CYCLES 须为1..65536；DEBOUNCE_FRAMES 须为1..256以匹配16/8位计数器。
+// TIMBRE_COUNT默认16，保留历史bench的16音色循环；生产显式设2：
+// 新ID0=柔和长笛（旧ID1）、新ID1=拨弦（旧ID7），两方向均在0/1间切换。
+// TIMBRE_COUNT范围1..16，仅作用于双键循环分支；历史分组/逐键发音分支不变。
+// ROW_CYCLES/DEBOUNCE_FRAMES须为正；计数器按门槛自动定宽，最小1位。
 // frame_tick 是内部完整扫描使能，不是新时钟；选择/事件序列按每个 clk 处理。
 // 4x4 passive matrix. Rows drive low or high impedance; columns need pull-ups.
 // One full scan = 1ms at 27MHz.
@@ -31,7 +34,10 @@ module matrix_keypad #(
     parameter DEBOUNCE_FRAMES = 4,
     parameter PERFORMANCE_MODE = 0,
     parameter SELECT_ON_RELEASE = 0,
-    parameter TWO_BUTTON_SELECT = 0
+    parameter TWO_BUTTON_SELECT = 0,
+    parameter EXTERNAL_KEYS_ENABLE = 0,
+    parameter EXTERNAL_TIMBRE_ENABLE = 0,
+    parameter TIMBRE_COUNT = 16
 )(
     input suppress_select,
     input clk,
@@ -48,14 +54,23 @@ module matrix_keypad #(
     output reg [3:0] timbre_out,
     output reg [15:0] key_state,
     output ghost_active,
-    output [3:0] selected_timbre
+    output [3:0] selected_timbre,
+    input [15:0] external_keys,
+    input timbre_set_valid,input [3:0] timbre_set_value
 );
+    // 计数器只保存0..门槛-1；参数定宽避免每键都生成8位消抖加法器。
+    // 最小宽度为1，兼容ROW_CYCLES/DEBOUNCE_FRAMES=1的边界配置。
+    localparam ROW_WIDTH=(ROW_CYCLES>1)?$clog2(ROW_CYCLES):1;
+    localparam DEBOUNCE_WIDTH=(DEBOUNCE_FRAMES>1)?$clog2(DEBOUNCE_FRAMES):1;
+    // 最后一个有效ID在 elaboration 时确定；比较/加减即可回绕，不引入除法或取模。
+    // 保留4位寄存器，使TIMBRE_COUNT=16仍与旧接口及默认测试完全兼容。
+    localparam [3:0] LAST_TIMBRE=TIMBRE_COUNT-1;
     reg [1:0] row_index;
-    reg [15:0] row_timer;
+    reg [ROW_WIDTH-1:0] row_timer;
     reg [3:0] cols_meta, cols_sync;
     reg [15:0] raw_keys;
     reg frame_tick;
-    reg [7:0] debounce_count [0:15];
+    reg [DEBOUNCE_WIDTH-1:0] debounce_count [0:15];
     reg [15:0] reported;
     genvar r;
     // 每行独立三态输出：未选行悬空，减少多键时行间电流冲突；列由外部上拉。
@@ -80,7 +95,10 @@ module matrix_keypad #(
             if (row_timer == ROW_CYCLES-1) begin
                 row_timer <= 0;
                 // 物理列低表示按下，故取反；虚拟键已经用1表示按下，无需取反。
-                raw_keys[row_index*4 +: 4] <= virtual_enable ? virtual_keys[row_index*4 +: 4] : ~cols_sync;
+                // 模拟触摸已经解码成one-hot位图，与可选原矩阵合并，再共用消抖/组合键。
+                // 默认关闭以兼容旧独立调用的悬空新端口；远程输入仍完整覆盖实体来源。
+                raw_keys[row_index*4 +: 4] <= virtual_enable ? virtual_keys[row_index*4 +: 4] :
+                    (~cols_sync | (EXTERNAL_KEYS_ENABLE?external_keys[row_index*4+:4]:4'd0));
                 row_index <= row_index + 1'b1;
                 if (row_index == 3) frame_tick <= 1;
             end else row_timer <= row_timer + 1'b1;
@@ -128,7 +146,7 @@ module matrix_keypad #(
     end
 
     // 兼容 TWO_BUTTON_SELECT=0 分支为每组保存变体；双键循环分支另存完整4位音色。
-// 两种分支都不按住自动重复；实际是否提交由 apply_selection 决定。
+    // 两种分支都不按住自动重复；实际是否提交由 apply_selection 决定。
     // Ignore multi-selector combinations (including the diagnostic shortcut).
     reg [3:0] control_previous;
     reg [1:0] selected_group;
@@ -141,6 +159,9 @@ module matrix_keypad #(
     // ghost 或实体/虚拟来源切换取消候选，直到扫描和消抖状态都确认全松。
     // 不复位 reported/key_state，保证音符释放仍被事件发送器逐个交付。
     reg selector_wait_release,virtual_previous;
+    // 来源在一帧中途切换时raw_keys可能仍是旧来源的全0，不能马上据此解除保护。
+    // 先经过两次帧边界：丢弃可能混合的新旧帧，再取得完整的新来源帧。
+    reg [1:0] selector_fresh_frames;
     wire selector_source_changed=virtual_enable!=virtual_previous;
     // 只把已消抖的最高四位视为选择键，避免原始触点抖动直接切换音色。
     wire [3:0] control_keys=key_state[15:12];
@@ -171,11 +192,15 @@ module matrix_keypad #(
         if(selection_started && next_group==selected_group)
             next_variant=variants[next_group]+2'd1;
     end
-    // 兼容分组分支高2位为组、低2位为变体；生产双键分支直接用0..15编号。
+    // 兼容分组分支高2位为组、低2位为变体；双键分支用0..TIMBRE_COUNT-1。
     assign selected_timbre=TWO_BUTTON_SELECT?two_button_timbre:
         {selected_group,variants[selected_group]};
+    // S13在0向前时跳到最后一个有效ID，S14在最后一个ID向后时跳到0。
+    // 不能仅依赖4位自然溢出，否则生产2音色时会错误出现15或2。
+    wire [3:0] previous_button_timbre=(two_button_timbre==0)?LAST_TIMBRE:(two_button_timbre-4'd1);
+    wire [3:0] following_button_timbre=(two_button_timbre==LAST_TIMBRE)?4'd0:(two_button_timbre+4'd1);
     wire [3:0] next_timbre=TWO_BUTTON_SELECT ?
-        ((selection_keys==4'b0001)?(two_button_timbre-4'd1):(two_button_timbre+4'd1)) :
+        ((selection_keys==4'b0001)?previous_button_timbre:following_button_timbre) :
         {next_group,next_variant};
     // A selector and a playing key detected in one scan use the new choice.
     // 被 suppress_select 拦截时，旁路也必须沿用真正已选择的音色。
@@ -191,15 +216,18 @@ module matrix_keypad #(
             control_previous<=0;selected_group<=0;selection_started<=0;
             two_button_timbre<=0;
             pending_control<=0;pending_valid<=0;control_chord<=0;
-            selector_wait_release<=0;virtual_previous<=0;
+            selector_wait_release<=0;virtual_previous<=0;selector_fresh_frames<=0;
             for(group_index=0;group_index<4;group_index=group_index+1) variants[group_index]<=0;
         end else begin
             control_previous<=control_keys;
             virtual_previous<=virtual_enable;
             if(ghost || selector_source_changed)begin
                 pending_valid<=0;control_chord<=1;selector_wait_release<=1;
+                selector_fresh_frames<=2;
             end else if(selector_wait_release)begin
-                if(key_state==0 && raw_keys==0)begin
+                if(frame_tick && selector_fresh_frames!=0)
+                    selector_fresh_frames<=selector_fresh_frames-1'b1;
+                if(selector_fresh_frames==0 && key_state==0 && raw_keys==0)begin
                     selector_wait_release<=0;pending_valid<=0;control_chord<=0;
                 end
             end else if(release_select) begin
@@ -216,6 +244,11 @@ module matrix_keypad #(
                 else begin
                     selected_group<=next_group;variants[next_group]<=next_variant;selection_started<=1;
                 end
+            end
+            // MIDI PC只接受两种生产编号，优先于同拍本地松键，并取消旧选择候选。
+            if(EXTERNAL_TIMBRE_ENABLE && timbre_set_valid && timbre_set_value<=LAST_TIMBRE)begin
+                two_button_timbre<=timbre_set_value;
+                pending_valid<=0;control_chord<=1;
             end
         end
     end

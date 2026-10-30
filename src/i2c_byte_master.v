@@ -8,8 +8,7 @@
 // 成功完成字节后 SCL 保持低，由下一条命令继续事务。超时会释放两根线。
 // QUARTER_CYCLES/TIMEOUT_CYCLES 单位为 clk 周期。默认 clk=27MHz，
 // 68 周期约 2.52us，四相位位周期约 10.07us；270000 周期为 10ms。
-// 参数须为正：QUARTER_CYCLES-1 要能由16位 divider 计到，
-// TIMEOUT_CYCLES-1 要能由24位 watchdog 计到；这里没有参数自动限幅。
+// 参数须为正，divider/watchdog按门槛自动定宽；这里没有参数自动限幅。
 // 无外部 clock enable：内部相位使能推进状态，超时和输入同步仍每 clk 运行。
 // error 保持到下一命令接收时清零；不能脱离 done 把旧 error 当成新事件。
 // 状态机按 START、STOP、写8位+从机ACK、读8位+主机ACK/NACK 分组；
@@ -27,8 +26,12 @@ module i2c_byte_master #(
       R_LOW=14,R_RISE=15,R_HIGH=16,R_FALL=17,RA_LOW=18,RA_RISE=19,RA_HIGH=20,RA_FALL=21;
     reg [4:0] state;
     reg scl_low,sda_low;
-    reg [15:0] divider;
-    reg [23:0] watchdog;
+    // 生产配置68/270000只需7/19位，减少无效高位触发器和进位链。
+    // 未改变分频门槛、时钟延展等待或超时发生的时钟边沿。
+    localparam DIVIDER_WIDTH=(QUARTER_CYCLES>1)?$clog2(QUARTER_CYCLES):1;
+    localparam WATCHDOG_WIDTH=(TIMEOUT_CYCLES>1)?$clog2(TIMEOUT_CYCLES):1;
+    reg [DIVIDER_WIDTH-1:0] divider;
+    reg [WATCHDOG_WIDTH-1:0] watchdog;
     reg [2:0] bit_no;
     reg [7:0] shift;
     reg nack;

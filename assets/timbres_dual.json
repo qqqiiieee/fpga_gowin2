@@ -1,0 +1,21 @@
+{
+  "source": "src/timbre_soft.hex",
+  "source_sha256": "9d003d4551c86f6b13fe45f2cd48d727bf716962feb6de29eed81ae39e19f253",
+  "production_timbres": 2,
+  "voices": 32,
+  "timbres": [
+    {
+      "id": 0,
+      "name": "柔和长笛",
+      "source_bank": 1,
+      "attack": 1
+    },
+    {
+      "id": 1,
+      "name": "拨弦",
+      "source_bank": 7,
+      "attack": 8
+    }
+  ],
+  "note": "原16音色表只作生成与历史测试基准；生产只实例化timbre_dual_half.hex的2x512个16位样本。"
+}

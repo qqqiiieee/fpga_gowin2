@@ -1,4 +1,12 @@
-# Preserve exact V015 source and firmware bytes for build hashes.
+# Preserve exact RTL, assets and firmware bytes for release SHA256 verification.
 * -text
-*.docx binary
 *.fs binary
+*.bin binary
+*.png binary
+# Empty text-ROM rows retain generator comments verbatim for build input hashes.
+src/hdmi_ui_text.vh -whitespace
+src/hdmi_ui_lookup.vh -whitespace
+tests/tb_hdmi_instrument_dashboard.v -whitespace
+tests/tb_hdmi_live_display.v -whitespace
+# Keep vendor timing/report table alignment in archived evidence.
+verification/*.txt -whitespace

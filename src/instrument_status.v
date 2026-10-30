@@ -1,7 +1,8 @@
 // 状态与诊断控制层。27MHz 主时钟；LED 低电平点亮。
 // 把 LED、滤波组合键和计时移出顶层，避免显示逻辑混入声音数据通路。
 // rst_n 异步低有效，复位 filter_enable=1；无 clock enable/模块参数，计时每 clk。
-// key_state bit0..15 对应S1..S16，1为按下；selected_timbre 为0..15的音色编号。
+// key_state bit0..15 对应S1..S16，1为按下；selected_timbre 保留4位接口，
+// 生产仅0=柔和长笛（旧ID1）、1=拨弦（旧ID7）；LED按同一新编号显示。
 // note_on/hit0/hit1 是 clk 域触发事件，只用于短时点灯，不代表持续有声。
 // digital_zero_test/adc_fault/adc_stale 是持续状态；输出 filter_enable 也为持续开关。
 // 无valid输出；LED组合反映优先状态，正常时逐位取反显示4位音色编号。

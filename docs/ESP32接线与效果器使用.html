@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>V034 · ESP32 接线与效果器使用</title>
+<style>
+:root{font:16px/1.75 system-ui,"Microsoft YaHei",sans-serif;color:#213047;background:#edf2f7}*{box-sizing:border-box}body{margin:0}main{max-width:1050px;margin:auto;padding:36px 24px 80px}header{padding:30px;background:#18364a;color:white;border-radius:18px}h1{font-size:30px;line-height:1.4;margin:8px 0}h2{font-size:23px;color:#174965;margin-top:0}h3{font-size:18px;margin:24px 0 8px}section{background:white;padding:28px;border:1px solid #dbe4ed;border-radius:14px;margin-top:22px}p{margin:10px 0}.tag{font-size:14px;letter-spacing:.12em;color:#99dfdc}.notice{border-left:5px solid #d49323;background:#fff8e8;padding:16px 20px;margin:20px 0}.good{border-color:#248b80;background:#edf9f7}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:15px}th,td{border-bottom:1px solid #dce4eb;padding:12px;text-align:left;vertical-align:top}th{background:#edf5f8}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#132b3b;color:#e3f4fa;padding:18px;border-radius:10px;line-height:1.65;font-size:14px}code{font-family:Consolas,monospace}li{margin:9px 0}a{color:#08747e}small,.muted{color:#617184}nav{display:flex;gap:14px;flex-wrap:wrap;margin:20px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:#f1f6fa;border-radius:10px;padding:18px}.bad{color:#9c411c}footer{padding:24px 4px;font-size:14px;color:#617184}@media(max-width:650px){main{padding:16px 12px 40px}header,section{padding:20px}h1{font-size:26px}.grid{grid-template-columns:1fr}th,td{padding:8px;font-size:13px}}@media print{body{background:white}main{padding:0}header{background:#eee;color:black}section{break-inside:avoid;border-radius:0}pre{background:#eee;color:black}nav{display:none}}
+</style></head><body><main>
+<header><div class="tag">TANG PRIMER 20K · V034</div><h1>ESP32 接线与效果器使用</h1><p>从两块板的固件、三根信号线，到手机 Wi-Fi 和三个效果的实际操作。</p></header>
+<div class="notice"><strong>V034：</strong>新增面板长按1切音色、长按2切KEY/STRUM/HYBRID；混合模式支持键盘与光电同时发声。FPGA和ESP32需要配套升级。<a href="V034_面板长按与键盘扫弦混合.html">新操作与无线连接说明</a>；编译/烧录状态见根目录 manifest.json。</div>
+<nav><a href="#prepare">准备与固件</a><a href="#wire">三线接法</a><a href="#upload">ESP 首次上传</a><a href="#phone">手机操作</a><a href="#knobs">旋钮与接管</a><a href="#pads">Pad 与钢琴音高</a><a href="#trouble">排查</a><a href="#validation">验证证据</a></nav>
+<section id="prepare"><h2>1. 先明确：接上线还需要什么</h2>
+<p>FPGA 负责发声和效果运算；ESP32 只提供 Wi-Fi 网页，把参数送给 FPGA 并显示实际回读。手机不传音频，也不替代 MIDI 接收器。需要分别给 FPGA 和 ESP32 部署匹配的固件。</p>
+<div class="grid"><div class="card"><strong>FPGA 侧</strong><p>Tang Primer 20K与原音频输出链路；四键仍使用A11/B11/N6/D11。V034新增长按1切音色，长按2切模式，短按保留页/播放/重播/选曲。</p></div><div class="card"><strong>ESP32 侧</strong><p>classic ESP32-WROOM32 开发板（ESP32 Dev Module），不是 C3/S3；数据 USB 线、适用的 USB 串口驱动、三根连接线。裸 WROOM 模块还需要下载/供电电路，不能等同于带 USB 的开发板。</p></div></div>
+<p>首次给 ESP32 上传需要电脑和可传数据的 USB 线。之后演奏时可使用独立 USB 电源。你已有的 ESP32 开发板可用于此方案，另外准备数据 USB 线和三根杜邦线即可。</p>
+<pre>手机浏览器 ⇄ ESP32 Wi-Fi / UART2 ⇄ FPGA 参数控制 → 共用效果器 → 原音频输出
+MIDI 键盘 MIDI OUT → 现有 MIDI 接收链路 → FPGA T8（31250 baud）
+                        与手机 UART（115200 baud）是两条独立通道</pre>
+</section>
+<section id="wire"><h2>2. 断电后按方向连接：GPIO17 → L9，N8 → GPIO16</h2>
+<table><thead><tr><th>ESP32 开发板</th><th>FPGA / PMOD3</th><th>方向与用途</th></tr></thead><tbody>
+<tr><td>GPIO17 / TX2</td><td><strong>L9 / phone_uart_rx</strong></td><td>ESP32 发参数 → FPGA 接收</td></tr>
+<tr><td>GPIO16 / RX2</td><td><strong>N8 / phone_uart_tx</strong></td><td>FPGA 实际状态、ACK → ESP32 接收</td></tr>
+<tr><td>GND</td><td>GND</td><td>公共参考地，必须接</td></tr>
+<tr><td>ESP32 自己的 USB</td><td>不接 FPGA 电源输出</td><td>ESP32 独立供电</td></tr>
+<tr><td>3V3 输出</td><td><strong>不与 FPGA 3V3 输出连接</strong></td><td>不要把两路稳压输出并联</td></tr></tbody></table>
+<p>两端采用 <strong>3.3V TTL，115200 baud，8 数据位、无校验、1 停止位（8N1）</strong>。不能接 RS232 电平或 5V TTL。引脚名称按 FPGA 的方向读：RX 是 FPGA 收，所以接 ESP32 TX。L9/N8 是约束中的 FPGA 引脚名，不是随意数排针得到的位置；按底板 PMOD3 引脚对照定位。</p>
+<p>FPGA 原 FTDI 调试串口 T13/M11、MIDI 接收 T8 均独立，不能拿来替代手机端口。本版已将协议文档和 ESP32 接线注释统一为 L9/N8。<strong>引脚以 <a href="../src/multi_tone.cst">multi_tone.cst</a> 的 L9/N8 为准</strong>，ESP32 实际 GPIO 常量仍正确为 16/17。</p></section>
+<section id="upload"><h2>3. 给 ESP32 准备并上传本版网页固件</h2>
+<p>本次已重编译更新过旋钮说明的 ESP 固件，见 <a href="../verification/esp32_build_summary.json">build-result.json</a>。上传步骤如下由你在确认硬件和端口后执行；本次代理没有执行上传或打开串口。</p>
+<ol><li>此前实机已确认V033（UserCode 0x000046D2）。V034新增混合模式2，需要匹配新版FPGA和ESP32；旧桥接程序只允许0/1，不能用旧网页验证HYBRID。新版当前是否已烧录，请查根目录 manifest.json 的烧录状态。</li>
+<li>将 ESP32 开发板用<strong>数据 USB 线</strong>连电脑，在 Windows 设备管理器确认这块 ESP32 的 COM 号。不要选择 FPGA 的 FTDI COM 口。驱动缺失或只有充电线时先解决识别问题。</li>
+<li>首次按本页命令上传前，先执行下面的编译准备命令；它也会建立上传所需的本地配置和草图目录。命令只编译，不上传，复用已安装工具链：</li></ol>
+<pre>在仓库根目录进入 esp32_phone，再运行 build.ps1；构建与上传步骤见本目录上一级 esp32_phone/README.md。</pre>
+<p>仅 SDK/编译器复用原目录；V034 的草图、缓存、编译中间文件位于 <code>.build_work</code>，输出位于 <code>build</code>，不会覆盖旧版源码或构建产物。检查 <code>build/build-result.json</code> 中 <code>compile_passed=true</code>，并核对源文件及产物 SHA256。修改 <code>esp32_phone.ino</code>、<code>bridge_core.h</code> 或 <code>web_ui.h</code> 后必须重编译。</p>
+<p><strong>实际上传命令：</strong>把下面的 <code>COMx</code> 替换为已确认的 ESP32 端口。保留完整 build 目录（应用、bootloader、分区表等），不要只拿一个应用 bin 盲填烧录地址。<code>upload</code> 不会自动重新编译：</p>
+<pre>$espToolchain = '你的现有工具链目录'
+&amp; "$espToolchain\cli\arduino-cli.exe" upload `
+  --config-file '.\.build_work\arduino-cli.yaml' `
+  --fqbn 'esp32:esp32:esp32' --port 'COMx' `
+  --input-dir '.\build' '.\.build_work\sketch\esp32_phone'</pre>
+<p>工具明确报告写入/校验成功后重启 ESP32；若停在连接阶段，核对端口、驱动、数据线，按开发板说明进入 BOOT 下载模式再试。编译成功不等于上传成功。上传完成后断电，接好第 2 节信号线，再给两端上电。FPGA 与 ESP32 各用自己的电源并共地。</p></section>
+<section id="phone"><h2>4. 手机连接及第一次开效果</h2>
+<ol><li>手机 Wi-Fi 选择 <strong>Tang20K-Music</strong>，密码 <strong>fpga2026</strong>。系统提示“无互联网”时选择保留连接，不要自动切走。</li>
+<li>浏览器地址栏输入 <strong><a href="http://192.168.4.1/">http://192.168.4.1/</a></strong>。使用 HTTP，不是 HTTPS；本固件不保证自动弹出门户页面。</li>
+<li><strong>看到网页 ≠ FPGA 已连接。</strong>先等待状态变为绿色“FPGA 已连接 · 实际值持续回读”，完整回读结束且控件启用。这样才说明 ESP32 收到了 FPGA 有效应答；仍不等于声音、电气可靠性或延迟已验收。</li>
+<li>“演奏”区选择 KEY（直接按键演奏），主音量先设适中值，例如 120；音色可选“长笛 Flute”或“拨弦 Pluck”。确认实际 digital zero 为 0。</li>
+<li>“效果器”区把 <strong>FX 模式</strong>选为 Delay 延迟，等待确认；然后把<strong>湿度 Wet</strong>设为例如 80，等待“FPGA 已确认”和实际值一致，再弹键试听。</li>
+<li>试 Chorus 或 Reverb 时先选择对应 FX 模式，再调湿度。换模式会恢复该效果自己的已存强度；不要假定上一种效果的湿度会自动覆盖另外两种。</li>
+<li>比较干声时选 OFF，或把当前效果强度/湿度调到 0。听到的声音从 FPGA 原音频输出出来，手机网页本身没有录音、音频播放或音频传输。</li></ol>
+<div class="notice good"><strong>如何判断一次修改完成：</strong>“请求已入队 / 等待 ACK”只代表接收了操作；需要收到 FPGA 正常 ACK，并且实际值达到目标，才显示确认。若显示“控制冲突，目标 X，实际 Y”，以实际值为准，检查滑杆、CC7、诊断/静音等控制来源。断链时控件禁用，恢复完整回读后重新操作；旧待发参数不会自动补发。</div>
+<h3>练习结束后保存与下次恢复</h3>
+<ol><li>所有参数都确认生效后，在页面“JSON 参数预设”点击<strong>导出最近回读值</strong>，将 <code>Tang20K-preset.json</code> 保存到手机“下载”或“文件”。</li>
+<li>下次上电，重新连接热点、打开网页，等绿色 FPGA 已连接后，点击<strong>导入 JSON 预设</strong>选择该文件，再等待各项确认。</li>
+<li>目前导出的是音量、音色、当前效果及包络等参数，不包含演奏录音、乐谱或三种效果各自的全部历史强度。未导出的临时参数不能保证断电保留。</li>
+<li>练习结束先松开琴键和延音踏板；若有持续音，用 Panic 清音，再断开电源。</li></ol>
+<p>Panic 清持续音并取消待发参数请求，不等同于一直静音，也不会替你撤销 FTDI 等其它来源的 digital zero。无声音先看实际主音量、输入模式与静音，不要仅观察 Wi-Fi 图标。</p></section>
+<section id="knobs"><h2>5. 四旋钮：三种互斥效果强度＋总音量</h2>
+<table><thead><tr><th>实体旋钮 / CH1 CC</th><th>本版功能</th><th>屏幕值</th></tr></thead><tbody>
+<tr><td>K1 / CC93</td><td>接受到强度变化 → 选 Delay，并调其强度</td><td>DL：已存 Delay 强度</td></tr>
+<tr><td>K2 / CC91</td><td>接受到强度变化 → 选 Chorus，并调其强度</td><td>CH：已存 Chorus 强度</td></tr>
+<tr><td>K3 / CC71</td><td>接受到强度变化 → 选 Reverb，并调其强度</td><td>RV：已存 Reverb 强度</td></tr>
+<tr><td>K4 / CC74</td><td>总音量，经现有仲裁器发单拍变化请求</td><td>VL：最终实际主音量</td></tr></tbody></table>
+<p>三种效果共用一个效果器和历史 RAM，<strong>一次只有一种效果</strong>，没有新增三个并联 DSP 或 RAM。复位为 OFF，三个强度各保存 64；时间/反馈/调制默认 96/80/48。强度 0 表示当前效果只输出干声，模式可以仍显示 Delay/Chorus/Reverb。在手机上选择 OFF 可明确关闭效果。</p>
+<h3>旋钮转了没变：先经过目标，再继续转</h3>
+<p>例如 DL 显示 64：慢慢把 K1 转到这个值附近，或从目标一侧跨到另一侧。首次接受相同值只完成接管，不切模式；再继续转动造成实际变化，才选择 Delay。未接管的远处值不会让参数突然跳变。已接管的非活动效果仍记住自己的目标，稍微改变它的强度即可切回；重复发送它的旧值不会抢模式。</p>
+<p>CC 原始值为 0–127，扩展规则为 <code>(v&lt;&lt;1)|(v&gt;&gt;6)</code>，覆盖端点 0/255，但并非能逐一输出全部 256 个整数。因此软接管允许相差 1 码；手机能写全部 0–255。屏幕显示保存目标/实际音量，不显示尚未接管的旋钮物理位置。</p>
+<h3>手机和旋钮同时用</h3>
+<ul><li>手机参数 3 选择模式：恢复对应已存强度，并清除三个效果旋钮的接管历史。手机选 OFF 后，重复未变的旋钮值不会自动开启；经过目标再改变才会开启对应效果。</li>
+<li>手机参数 4 改湿度：同步当前效果的保存值，并重新要求该旋钮软接管。OFF 时更新最近选择的效果，复位默认归 Delay。手机 SET3/SET4 同拍优先，冲突的效果 CC 整条丢弃，不留旧采样来伪造跨越。</li>
+<li>K4 按<strong>实际主音量</strong>接管；CC7 改变最终音量后，K4 必须重新接管。自己的正常请求回读不会使它每转一步就失去接管。</li>
+<li>手机参数 0 与 K4 同拍时手机优先。手机显式 SET 允许请求重取所有权；K4 重复值不发请求。V034 已停用实体滑杆，A2/A3 不再参与音量或弯音。CC7 保留原仲裁器“与共享上次请求值比较”的规则。</li>
+<li>四个菜单键仍负责原菜单/跟弹操作，不新增 FX 快捷键；top 的 <code>ui_fx_cycle</code> 固定为 0。键盘单独选效果使用 K1/K2/K3，全部模式也可由手机选择。</li></ul>
+<h3>手机详细参数仍可用，和实体旋钮含义不同</h3>
+<table><thead><tr><th>手机字段 / 参数 ID</th><th>作用</th></tr></thead><tbody>
+<tr><td>fx_mode / 3</td><td>0 OFF、1 Delay、2 Chorus、3 Reverb</td></tr>
+<tr><td>fx_wet / 4</td><td>当前/最近效果的强度，0–255</td></tr>
+<tr><td>fx_time / 5</td><td>Delay 时间、Chorus 基准延迟、Reverb 尺寸</td></tr>
+<tr><td>fx_feedback / 6</td><td>Delay/Reverb 反馈，实际系数有上限；Chorus 不使用</td></tr>
+<tr><td>fx_modulation / 7</td><td>Chorus 调制速率/深度；Delay/Reverb 中保留</td></tr>
+<tr><td>attack/decay/sustain/release / 8–11</td><td>ADSR 包络；原始 0–255 控制码，不直接宣称毫秒</td></tr>
+<tr><td>volume / 0；timbre / 1；input_mode / 2</td><td>音量 0–255；长笛/拨弦 0/1；KEY/STRUM/HYBRID 0/1/2</td></tr>
+<tr><td>hdmi_page / 12；filter / 13；digital_zero / 14</td><td>页面 0–3；滤波 0/1；手机静音请求 0/1，回读最终实际静音</td></tr></tbody></table></section>
+<section id="pads"><h2>6. Pad、黑白键和音色分别是什么</h2>
+<table><thead><tr><th>Pad 消息（通道 10）</th><th>打击乐</th><th>兼容音符</th></tr></thead><tbody>
+<tr><td>36</td><td>底鼓</td><td>35</td></tr><tr><td>37</td><td>闭镲</td><td>42</td></tr><tr><td>38</td><td>军鼓</td><td>40</td></tr><tr><td>39</td><td>开镲</td><td>46</td></tr></tbody></table>
+<p>Pad 非零力度的 Note On 触发对应打击乐，不作为钢琴旋律声部分配；力度 0 不敲击。旋律和四旋钮默认通道 1。以上是当前 FPGA 接收规则，不代表已经读到这把键盘的实际 Pad/CC 配置；需要实物联调确认。手机不会替你重配键盘 Pad。</p>
+<p><strong>黑键和白键的半音音高原本就已实现。</strong>当前音频使用完整 MIDI 音符，不将黑键压成白键；黑/白不是两种独立音色。可选音色是长笛和拨弦。V034 图形默认显示 MIDI41(F2)–72(C5) 的 32 个连续半音，显示窗口已按用户确认的左端 F2 校正；窗口外音符不因此变成错误音高。显示几何/标签由主流程单独验证，本审计不把 HDMI 桩仿真当实屏测试。</p></section>
+<section id="trouble"><h2>7. 按现象排查</h2>
+<table><thead><tr><th>现象</th><th>先查什么</th></tr></thead><tbody>
+<tr><td>搜不到 Tang20K-Music</td><td>ESP32 是否已实际上传本版固件并启动；独立供电、正确 classic 芯片、是否修改过 SSID。仅接线不会自动生成热点。</td></tr>
+<tr><td>热点有，网页打不开</td><td>手机是否仍在此 Wi-Fi，是否坚持使用无互联网网络；手动输入 HTTP 地址 192.168.4.1。</td></tr>
+<tr><td>网页有，FPGA 过期/控件禁用</td><td>两端匹配固件是否真正部署、L9/N8 是否定位正确、17→RX/16←TX 是否交叉、公共GND、115200 8N1。网页可用本身不能证明 UART 通。</td></tr>
+<tr><td>音量改变但听不到效果</td><td>这是 K4 的预期功能。用 K1/K2/K3 接管并改变强度，或手机选择 FX 模式再设非零湿度。</td></tr>
+<tr><td>转 K1/K2/K3 一开始没反应</td><td>查看各自 DL/CH/RV 目标，慢转经过目标再继续转；手机修改目标后需要重新接管。</td></tr>
+<tr><td>有确认却没声</td><td>实际音量是否为0、digital zero 是否仍为1、KEY/STRUM、MIDI通道、原音频输出。ACK只证明参数回读，不证明音频硬件正常。</td></tr>
+<tr><td>主音量似乎被改回</td><td>查看CC7是否继续变化（V034实体滑杆已停用）。手机请求不是最终所有权，网页和VL始终以实际结果为准。</td></tr>
+<tr><td>切模式后湿度跳到以前的值</td><td>这是保存各效果强度的设计。选中模式后再调其湿度，不会把三种效果强度互相覆盖。</td></tr></tbody></table></section>
+<section id="validation"><h2>8. 当前验证范围</h2><p>V034生产输入/参数/二进制哈希一致；发布工作目录的核心5项、HDMI17模式捕获、四键12场景与8192流水向量、钢琴绘制、C++原生桥接、离线网页测试均通过。详见 <a href="../verification/portable_checks.json">便携回归记录</a> 与 <a href="../verification/software_summary.json">当前验证边界</a>。</p><p>ESP32本次编译程序存储777673/1310720字节，RAM45576/327680字节；见 <a href="../verification/esp32_compile.txt">编译日志</a>、<a href="../verification/esp32_build_summary.json">源码与二进制哈希</a>。FPGA UserCode为0x000099D5，时序检查通过，两块板本轮均未烧录。</p><p>离线测试不覆盖实物冷启动、真实光束/压力、模拟音频听感或正式赛题验收；PCM5102A无声、32路验证启动入口和手机内嵌旧引脚帮助仍需处理。</p></section><footer>来源：本版 RTL、CST、ESP 固件和实际测试日志。更改固件时应按项目版本保存约定另存版本，避免覆盖旧版本。本文为部署说明，未执行串口枚举、串口通信或烧录。</footer>
+</main></body></html>

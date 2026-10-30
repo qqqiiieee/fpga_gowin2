@@ -17,8 +17,8 @@
 // 错误经 DELAY 后再恢复。复位只复位 FPGA 逻辑，不能复位外部 ADC。
 // 无外部 clock enable，状态机每个 clk 推进；I2C 节拍由下层计数器产生。
 // PRESSURE_PRIORITY/PRESSURE_ONLY 默认均为0，作为布尔选项；ONLY 优先。
-// 时间参数须为正并落在计数器可计范围；I2C_QUARTER/字节超时还受下层
-// 16/24位计数器约束。缩短转换等待须依据 ADC 转换时序，不能视为已验证加速。
+// 时间参数须为正，主等待和下层I2C计数器分别按参数自动定宽。
+// 缩短转换等待须依据ADC转换时序，不能把减少位宽视为已验证加速。
 // ADS1115 ADDR=GND (0x48), AIN0..3 single-ended, +/-4.096V, 860 SPS.
 // Start each single conversion, wait >=1.5ms, then read register 0.
 module ads1115_reader #(
@@ -30,7 +30,10 @@ module ads1115_reader #(
   output reg [15:0] sample_data,output reg fault);
     localparam RECOVER_ISSUE=0,RECOVER_WAIT=1,DELAY=2,ISSUE=3,WAIT_BYTE=4,CONVERT=5;
     reg [2:0] state;
-    reg [31:0] timer;
+    // 同一计时器复用重试与转换等待，宽度取较大门槛；不缩短ADC等待。
+    localparam TIMER_LIMIT=(RETRY_CYCLES>CONVERT_CYCLES)?RETRY_CYCLES:CONVERT_CYCLES;
+    localparam TIMER_WIDTH=(TIMER_LIMIT>1)?$clog2(TIMER_LIMIT):1;
+    reg [TIMER_WIDTH-1:0] timer;
     reg [1:0] channel;
     reg [2:0] schedule_step;
     reg reading;

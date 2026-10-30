@@ -7,7 +7,7 @@
 // 保证只有本模块控制总线，不得在另一个引擎仍拉低 SCL 时同时恢复。
 // 参数以 clk 周期计：默认 27MHz、QUARTER_CYCLES=68，半周期=136，
 // 低/高各约 5.04us；TIMEOUT_CYCLES=270000 是整次恢复共用的 10ms 上限。
-// QUARTER_CYCLES/TIMEOUT_CYCLES 须为正，HALF_CYCLES 和超时须可由32位计数器计到；
+// QUARTER_CYCLES/TIMEOUT_CYCLES 须为正；阶段计时和超时计数器按参数定宽；
 // 参数没有自动钳位。无外部采样使能，每 clk 检查实际线电平和总超时。
 // start 在 busy 期间不排队；error 保持本次结果到下一 start，done 才标记新结果。
 // 状态机：CLOCK_LOW/RISE/HIGH 循环九次 -> STOP_LOW/DATA/RISE/HIGH/VERIFY。
@@ -24,7 +24,12 @@ module i2c_bus_recovery #(
     localparam HALF_CYCLES=2*QUARTER_CYCLES;
     reg [3:0] state;
     reg [3:0] pulse_count;
-    reg [31:0] timer,watchdog;
+    // timer仅计单阶段HALF_CYCLES，watchdog计整次恢复，分别定宽。
+    // 默认阶段计数8位、总超时19位，不再为两者各保留32位。
+    localparam TIMER_WIDTH=(HALF_CYCLES>1)?$clog2(HALF_CYCLES):1;
+    localparam WATCHDOG_WIDTH=(TIMEOUT_CYCLES>1)?$clog2(TIMEOUT_CYCLES):1;
+    reg [TIMER_WIDTH-1:0] timer;
+    reg [WATCHDOG_WIDTH-1:0] watchdog;
     reg scl_low,sda_low;
     reg scl_meta,scl_sync,sda_meta,sda_sync;
     // 开漏只允许 0 或 Z；高电平由上拉提供，不能强推 1 去对抗从机拉低。

@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "status": "estimated_not_measured",
+  "hardware_measured": false,
+  "runtime_calibration_required": true,
+  "row_major_keys": [
+    "1",
+    "2",
+    "3",
+    "A",
+    "4",
+    "5",
+    "6",
+    "B",
+    "7",
+    "8",
+    "9",
+    "C",
+    "*",
+    "0",
+    "#",
+    "D"
+  ],
+  "centers": [
+    79,
+    650,
+    1273,
+    1828,
+    217,
+    779,
+    1429,
+    1987,
+    354,
+    972,
+    1612,
+    2114,
+    526,
+    1104,
+    1715,
+    2293
+  ],
+  "reference_10bit": {
+    "1": 30,
+    "4": 82,
+    "7": 134,
+    "*": 199,
+    "2": 246,
+    "5": 295,
+    "8": 368,
+    "0": 418,
+    "3": 482,
+    "6": 541,
+    "9": 610,
+    "#": 649,
+    "A": 692,
+    "B": 752,
+    "C": 800,
+    "D": 868
+  },
+  "reference_correction": "商家752对应B；商家表中误印为C。",
+  "estimate_formula": "round(ref*4095*3.3/(1023*2*2.5))",
+  "assumptions": {
+    "module_supply_v": 3.3,
+    "external_divider": [
+      10000,
+      10000
+    ],
+    "adc_vref_v": 2.5,
+    "module_internal_divider": "unknown"
+  },
+  "recognition": {
+    "idle_raw_below": 4,
+    "center_min": 8,
+    "center_max": 4094,
+    "minimum_center_separation": 12,
+    "ambiguity_distance_margin": 2,
+    "window": "max(2,min(32,nearest_gap>>2))",
+    "idle_center": 0,
+    "stable_samples": 3
+  },
+  "persistence": "运行时仅修改FPGA RAM；复位恢复hex。主机将实测中心按rowmajor写入centers，运行本脚本后重新编译实现持久化。",
+  "limits": [
+    "原始参考只用于启动，未知内部分压可能压缩中心，必须运行时逐键校准。",
+    "中心小于8或间距小于12说明前端量程不可用，不强行合并键位。",
+    "固定模拟假值若恰在有效档位，无法与真实长按区分；只保证无效或过期时释放。"
+  ],
+  "datasheet": {
+    "url": "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/21298e.pdf",
+    "document": "DS21298E",
+    "sections": [
+      "5",
+      "6.1",
+      "Figure 6-1"
+    ]
+  }
+}

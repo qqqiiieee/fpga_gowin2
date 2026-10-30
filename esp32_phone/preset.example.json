@@ -1,0 +1,17 @@
+{
+  "volume": 128,
+  "timbre": 0,
+  "input_mode": 0,
+  "fx_mode": 0,
+  "fx_wet": 64,
+  "fx_time": 80,
+  "fx_feedback": 64,
+  "fx_modulation": 48,
+  "attack": 16,
+  "decay": 32,
+  "sustain": 192,
+  "release": 48,
+  "hdmi_page": 0,
+  "filter": 1,
+  "digital_zero": 0
+}

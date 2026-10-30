@@ -1,0 +1,50 @@
+{
+  "core": {
+    "passed": true,
+    "report": "validation/v034/20261030T185410_034505Z/summary.json",
+    "cases": 5
+  },
+  "hdmi": {
+    "passed": true,
+    "report": "validation/hdmi_v034/20261030T185439_776105Z/summary.json",
+    "captures": 17
+  },
+  "four_key": {
+    "passed": true,
+    "report": "validation/four_key_ui_render/summary.json",
+    "cases": 12
+  },
+  "native": {
+    "passed": true,
+    "report": "tests/phone_bridge/build/native-test-result.json"
+  },
+  "web": {
+    "passed": true,
+    "report": "tests/phone_bridge/build/web-test-result.json"
+  },
+  "owned_files_sha256": {
+    "scripts/toolchain.py": "51d7c6bf998ecea23dd1f5d49d7787e047d819cc6ca6f4e3659a63c485d5532f",
+    "scripts/run_v034_tests.py": "d9d4d8d31c51e0135020e723fc0e06ffa56c9cae013cad6b1524880ed07ac36e",
+    "scripts/run_hdmi_hybrid_tests.py": "5d7ff8f68e7aad27edf70f7599e869059606ceec14ccf95da2367da088906c7d",
+    "scripts/run_four_key_ui_render.py": "214ab3486ee289e0dac8f9dcae86c5b1772c2be4c68661e0c015d9ba6d4f3b38",
+    "scripts/run_piano_roll_source_tests.py": "8d390f9228de5afdf0ecfa2efab305cb10afa960e1325328079451f3ba034bb7",
+    "scripts/run_piano_roll_render_tests.py": "daed6785443b1215d7b6e37428d39ff92d79728bb7932bb30d6aa35b5ab56007",
+    "tests/phone_bridge/run_native.py": "9a73ea4a329a5bfd6f85d725f0a28306d217806c2675f92a4ad980643fec9f50",
+    "tests/phone_bridge/run_native.cmd": "a78b701632836a6d3855ae00f4c03d8ff99ccab7eb424116d6e08f998b7f9db2",
+    "tests/phone_bridge/run_tests.ps1": "681c880a8fa7435dac187476a1b848feb40bfbd0dc93590ac5111a0542bfd5da",
+    "tests/phone_bridge/web_ui.test.cjs": "8d18e4842f499001f6d51e59e097cf386910ddea5a9f061890041a250e8d648f",
+    "package.json": "4db15b2f70548dc87519f92d29d220b092cf66fc66d329db0d00e374b0087cd8",
+    "package-lock.json": "314a4138a03db10d66eaf7f49acd68ad36a53a8de2c51e9a6fdc643510db4039"
+  },
+  "frozen": true,
+  "downloaded_browsers": false,
+  "linux_execution_verified": false,
+  "browser": "Existing Edge via PLAYWRIGHT_CHROMIUM_EXECUTABLE, existing Playwright via NODE_PATH",
+  "piano_render": {
+    "passed": true,
+    "report": "tests/piano_roll_artifacts/summary.json",
+    "previews": 7
+  },
+  "production_unchanged": true,
+  "production_files_checked": 86
+}

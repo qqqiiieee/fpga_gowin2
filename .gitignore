@@ -1,19 +1,32 @@
-# Generated files and machine-specific configuration
-impl/
-validation/
-measurements/
-*.gprj.user
+# Generated outputs; the small build option file is part of the reproducible project.
+/impl/*
+!/impl/instrument_handoff_process_config.json
+/validation/
+/measurements/
+/tests/piano_roll_artifacts/
+/tests/phone_bridge/build/
+/esp32_phone/build/
+**/.toolchain/
+**/.build_work/
+node_modules/
 __pycache__/
 *.py[cod]
+*.gprj.user
 *.log
 *.jou
 *.wdb
+*.vvp
+*.ppm
+*.elf
+*.map
+*.obj
+*.exe
 *.fs
 !/instrument_handoff.fs
-device_config.json
+/device_config.json
 .env*
-# Release archives and conversation/session data do not belong in this repository
-乐器版本/
+# Historical release folders, account/session data and conversations are local only.
+/乐器版本/
 .claude/
 .codex/
 conversations/

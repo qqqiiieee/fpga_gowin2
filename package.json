@@ -1,0 +1,15 @@
+{
+  "name": "tang-primer20k-instrument-host-tests",
+  "version": "0.34.0",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "description": "Offline browser regression dependencies for the V034 FPGA instrument",
+  "scripts": {
+    "test:phone-web": "node tests/phone_bridge/web_ui.test.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

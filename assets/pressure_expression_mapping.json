@@ -1,0 +1,26 @@
+{
+  "version": "V020",
+  "pressure_usage": "continuous_expression_no_FSR_drum",
+  "hardware_wiring_unchanged": true,
+  "adc0": {
+    "effect": "brightness",
+    "deadband_adc_counts": 64,
+    "counts_per_level": 16,
+    "level_max": 255,
+    "lowpass_alpha_min": 0.03125,
+    "lowpass_alpha_max": 0.52734375
+  },
+  "adc1": {
+    "effect": "vibrato_depth",
+    "frequency_hz": 6.0014426708221436,
+    "max_bend_code_negative": -128,
+    "max_bend_code_positive": 125,
+    "baseline_pitch_owner": "existing_slider_or_MIDI_Bend"
+  },
+  "sliders": {
+    "A2": "master_volume",
+    "A3": "base_pitch"
+  },
+  "MIDI_pads": "retained; FSR cannot trigger them",
+  "physical_tested": false
+}

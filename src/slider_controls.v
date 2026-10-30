@@ -16,7 +16,7 @@
 // A2 controls master volume; A3 controls melody bend. Drums keep their pitch.
 // Freeze the last complete controls across transient I2C faults; defaults work
 // without ADC. Per-channel expiry prevents an old validity mask masking faults.
-module slider_controls #(parameter STALE_CYCLES=6750000)(
+module slider_controls #(parameter STALE_CYCLES=6750000,parameter PITCH_ENABLE=1)(
  input clk,input rst_n,input adc_valid,input [1:0] adc_channel,input [15:0] adc_data,
  output reg [7:0] volume,output reg signed [8:0] pitch,output ready);
  reg [15:0] filtered[0:1];reg [1:0] seen;
@@ -36,7 +36,9 @@ module slider_controls #(parameter STALE_CYCLES=6750000)(
  wire [18:0] scaled={next_filtered,2'b00}+next_filtered;
  wire [7:0] position=(scaled>=19'd130560)?8'd255:scaled[16:9];
   // 两通道 seen 与归约；只有一条滑条在更新不会掩盖另一条的超时。
- assign ready=(&seen);
+ // 专职屏控版只保留A2总音量滑杆；A3断开后不参与ready，也不能抢回MIDI弯音。
+ // 默认参数1保持历史双滑杆独立调用的逐拍语义。
+ assign ready=seen[0] && (PITCH_ENABLE ? seen[1] : 1'b1);
   // 年龄按每个系统clk递增而非ADC样本计数，达到上限后饱和，防止回绕误有效。
   // 一个样本分支只刷新对应通道，因此A2/A3的滤波和失效计时互不混用。
  always @(posedge clk or negedge rst_n) begin
@@ -48,7 +50,7 @@ module slider_controls #(parameter STALE_CYCLES=6750000)(
        if(age[k]<STALE_CYCLES) age[k]<=age[k]+1'b1;
        if(age[k]==STALE_CYCLES-1) seen[k]<=0;
      end
-     if(adc_valid && adc_channel>=2) begin
+     if(adc_valid && adc_channel>=2 && (PITCH_ENABLE || adc_channel==2)) begin
         // 此处对seen/age的赋值在过期检测之后：若同拍到新样本，刷新结果优先。
         // 不直接检测I2C fault；是否过期只取决于本通道多久没有完整有效样本。
        filtered[idx]<=next_filtered;seen[idx]<=1;age[idx]<=0;

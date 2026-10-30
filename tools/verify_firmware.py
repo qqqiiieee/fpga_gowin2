@@ -27,9 +27,9 @@ def main(argv=None):
     actual_hash = hashlib.sha256(firmware.read_bytes()).hexdigest()
     if actual_hash != manifest['sha256']:
         raise RuntimeError('firmware hash does not match the release manifest')
-    # operation 73 is READ UserCode, verified against the installed CLI help.
+    # operation 0 reads device ID, UserCode and status with Programmer 1.9.12.04.
     # Board programming/erasure is intentionally absent from this command.
-    command = [str(args.programmer_cli), '--device', 'GW2A-18C', '--run', '73',
+    command = [str(args.programmer_cli), '--device', 'GW2A-18C', '--operation_index', '0',
                '--cable-index', str(args.cable_index), '--frequency', '0.5MHz']
     if args.location is not None:
         command += ['--location', str(args.location)]

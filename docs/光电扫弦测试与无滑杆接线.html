@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>V034 无滑杆接线与光电扫弦测试</title><style>body{font:17px/1.75 "Microsoft YaHei",sans-serif;max-width:1000px;margin:30px auto;padding:20px;background:#edf3f7;color:#193247}section{background:white;padding:24px;margin:20px 0;border-radius:12px}h1{font-size:28px}h2{font-size:23px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #ccd9e3;text-align:left}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#173247;color:#e6f2f7;padding:16px}svg{width:100%;height:auto}a{color:#006b98}.notice{border-left:5px solid #d49530;padding:15px;background:#fff7e7}li{margin:9px 0}</style>
+<h1>V034｜撤除滑杆 · 双 FSR 保留 · 光电扫弦测试</h1>
+<p class="notice">V034已编译并通过离线仿真，尚未烧入两块板；真实光束动作仍待验证。可选择STRUM单独扫弦，或HYBRID与键盘叠加。接线以当前CST为准。</p>
+<section><h2>1. 滑杆撤线与保留接线</h2>
+<p>新版生产配置彻底停用两个滑杆：ADS1115 只轮询 A0/A1；不实例化 A2/A3 音量/弯音滤波与新鲜度控制。启动总音量为 160/255（约63%），K4、CC7 和手机可接管；Pitch Bend 由 MIDI 控制。A2/A3 再变化也不会抢音量或音高。</p>
+<p>新版烧录后断电，拆掉两只滑杆的 VCC、GND 和输出线，移除分支时保留其它器件的公共电源/地。ADS1115 的 A2、A3 分别接 GND，A0/A1 两片 FSR 和 ADS1115 电源、SCL/SDA 保持原接法。V034生产配置只采A0/A1，不再用滑杆；若实物仍是旧固件，先核对固件身份。</p>
+<table><tr><th>器件/通道</th><th>用途</th></tr><tr><td>ADS1115 A0</td><td>FSR1 明亮度</td></tr><tr><td>ADS1115 A1</td><td>FSR2 拨弦阻尼/闷音</td></tr><tr><td>ADS1115 A2、A3</td><td>新版停用，两路接GND</td></tr><tr><td>MIDI K4 / CC74</td><td>总音量；前三旋钮仍是三个效果器</td></tr><tr><td>MIDI Pitch Bend</td><td>弯音；物理滑杆不再参与</td></tr></table></section>
+<section><h2>2. 两条光路：共两组发射/接收对</h2>
+<p>按工程既定 SEN0503 对射配置：每组一个两线发射头、一个三线接收头。两端均需供电；发射头没有信号输出，接收头白线才是 OUT。厂家规格支持 3.0–5V，3.3V 标称对射距离约20cm；本工程统一用3.3V，信号上拉同样接3.3V。<a href="https://www.dfrobot.com/product-2388.html">DFRobot SEN0503 官方资料</a></p>
+<table><tr><th>接线</th><th>光路 A</th><th>光路 B</th></tr><tr><td>发射头红线</td><td>3V3</td><td>3V3</td></tr><tr><td>发射头黑线</td><td>GND</td><td>GND</td></tr><tr><td>接收头红线/黑线</td><td>3V3 / GND</td><td>3V3 / GND</td></tr><tr><td>接收头白线 OUT</td><td>PMOD0 P8</td><td>PMOD0 P9</td></tr><tr><td>OUT 外部上拉</td><td>P8经10kΩ到3V3</td><td>P9经10kΩ到3V3</td></tr></table>
+<p>10kΩ 是本工程的外部上拉方案。若现有转接模块已带明确接到3.3V的上拉，可沿用；没有上拉时不能仅凭空闲读到高电平判断接线可靠。以上线色适用于SEN0503原装线束，其它转接板以实际丝印为准。</p>
+<svg viewBox="0 0 800 260" role="img" aria-label="两条平行光路，上方A下方B，手从A到B或从B到A划过"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3Z" fill="#22908c"/></marker></defs><rect x="25" y="40" width="130" height="55" rx="8" fill="#d4e9f5"/><rect x="625" y="40" width="140" height="55" rx="8" fill="#d4e9f5"/><rect x="25" y="160" width="130" height="55" rx="8" fill="#d4e9f5"/><rect x="625" y="160" width="140" height="55" rx="8" fill="#d4e9f5"/><g fill="#173247" font-size="22" text-anchor="middle"><text x="90" y="76">A 发射头</text><text x="695" y="76">A 接收 P8</text><text x="90" y="196">B 发射头</text><text x="695" y="196">B 接收 P9</text></g><path d="M160 68 H615 M160 188 H615" stroke="#d57b2e" stroke-width="3" stroke-dasharray="10 7"/><path d="M370 38 V220" stroke="#22908c" stroke-width="4" marker-end="url(#arrow)"/><path d="M425 220 V38" stroke="#22908c" stroke-width="4" marker-end="url(#arrow)"/><text x="460" y="133" fill="#173247" font-size="20">手依次穿过，A/B间隔3～5cm</text><text x="170" y="245" fill="#173247" font-size="18">每一对先近距离5～10cm对准，两个光束平行排列</text></svg>
+<p>先分别近距离对准 A/B，再固定平行布局；不要用一只发射头同时替代两组的发射端。上电时两束光保持无遮挡至少1秒，程序会用稳定约200ms的电平学习空闲状态。若上电时被手挡住，应移开后重新复位/上电。</p></section>
+<section><h2>3. 先确认有光/遮光能返回正确状态</h2>
+<p>可用万用表直流档，黑笔接公共GND，红笔测P8/P9对应OUT：对准与遮挡时应有高低电平变化。不要预设“遮挡必须高”或“遮挡必须低”；程序以上电学到的空闲值为基准。</p>
+<p>也提供USB串口状态工具，无需切换STRUM，用于当前FTDI诊断接口。只发送既有0x80诊断查询，不发送虚拟键盘/ADC、参数写入或烧录命令。</p>
+<pre>python "tools/optical_monitor.py" --seconds 45
+# 有多个FTDI串口时加 --port COM8；端口号以当前实际枚举为准。</pre>
+<p>依次保持以下动作各约1秒，查看 ready、blocked_A、blocked_B：</p>
+<table><tr><th>动作</th><th>blocked_A</th><th>blocked_B</th></tr><tr><td>都无遮挡</td><td>0</td><td>0</td></tr><tr><td>只遮A</td><td>1</td><td>0</td></tr><tr><td>恢复无遮挡</td><td>0</td><td>0</td></tr><tr><td>只遮B</td><td>0</td><td>1</td></tr><tr><td>两路都遮</td><td>1</td><td>1</td></tr></table>
+<p>ready应为1；level_A/level_B是电气原始高低值，和blocked含义不同。工具约50ms轮询，只用来验证慢动作状态；快扫方向/速度的测量由FPGA内部完成，不能用此轮询间隔估计。</p></section>
+<section><h2>4. 再听真正的扫弦</h2>
+<ol><li>使用目前正常出声的音频输出；关闭效果或把当前效果强度调到0，FSR2完全松开，总音量中等。</li>
+<li><strong>选择STRUM或HYBRID。</strong>长按面板2约0.8秒后松手轮换模式，也可用配套ESP32网页选择。STRUM只由遮光发声；HYBRID允许琴键和遮光同时发声。以HDMI实际模式和手机回读为准。</li>
+<li>先不按任何琴键，手快速依次遮挡A→B，应扫出默认和弦 C4、E4、G4、C5。移开手，让两路都恢复无遮挡。</li>
+<li>反向 B→A，应听到同一和弦从高到低排列。尽量在150ms内依次经过两条光束；缓慢到超时会走单束后备触发，不能据此判断方向。</li>
+<li>按住MIDI琴键 C、E、G，再划过两束光，应改为扫你按住的三个音。STRUM中琴键负责选和弦，遮光才发声；最多选6个音。</li>
+<li>最后才逐渐启用效果、按FSR2测试闷音。保持遮光只触发一次，需全部恢复无遮挡后才能再触发。</li></ol>
+<p>只有一组也能做通断/发声测试：等待约150ms单束超时后产生固定方向、固定力度的扫弦，不能验证双束方向与速度。两束几乎同时遮住同样无法推断方向。</p></section>
+<section><h2>5. 手机模式入口尚未部署时</h2>
+<p>可以先做第3节的电平和USB诊断测试；处于MODE KEYBOARD时，遮光不发声是当前设计。V034可长按面板2切STRUM或HYBRID，无需手机；如需手机参数控制，ESP32必须先部署配套网页固件。</p>
+<table><tr><th>ESP32</th><th>FPGA</th></tr><tr><td>GPIO17 / TX2</td><td>PMOD3 L9 / RX</td></tr><tr><td>GPIO16 / RX2</td><td>PMOD3 N8 / TX</td></tr><tr><td>GND</td><td>公共GND</td></tr><tr><td>自己的USB供电</td><td>两块板3V3输出不并联</td></tr></table>
+<p>部署好的ESP32启动后，手机连接 <code>Tang20K-Music</code>，密码 <code>fpga2026</code>，浏览器访问 <code>http://192.168.4.1/</code>，等待“FPGA已连接”的实际回读，再选择STRUM或HYBRID。完整部署方法见 <a href="ESP32接线与效果器使用.html">ESP32接线与效果器使用</a>。</p></section>
+<section><h2>6. 根据现象定位</h2><table><tr><th>现象</th><th>先检查</th></tr><tr><td>OUT始终不变</td><td>发射头与接收头都供电了吗；红黑线/公共地、光轴、接收白线、上拉、距离</td></tr><tr><td>两路遮谁都一起变化</td><td>两根OUT是否短接、同一光源是否串扰；逐组只开一对测定位</td></tr><tr><td>blocked能变化但没声音</td><td>MODE STRUM/HYBRID、总音量、静音、FSR2是否持续按着、音频输出是否本来正常</td></tr><tr><td>只触发一次</td><td>两束是否都真正恢复无遮挡；状态机需要完整释放</td></tr><tr><td>正反方向相反</td><td>按P8=A、P9=B确认实际布局；不要凭左右摆放猜编号</td></tr></table></section>
+</html>

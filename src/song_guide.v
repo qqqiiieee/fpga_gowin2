@@ -14,7 +14,8 @@
 // 整个keys向量，额外控制键/鬼键也会使匹配无效。内部状态见release_required/matched。
 module song_guide #(
     parameter BEAT_SAMPLES = 46875,
-    parameter EXTERNAL_UI = 0
+    parameter EXTERNAL_UI = 0,
+    parameter RHYTHM_ENABLE = 0
 ) (
     input clk,
     input rst_n,
@@ -36,7 +37,8 @@ module song_guide #(
     input [1:0] song_id,
     input ui_start,
     input ui_toggle,
-    input ui_restart
+    input ui_restart,
+    output reg beat_pulse
 );
     // 根据最大双拍拍长展开计数位宽，并保证至少1位，避免小参数产生零宽状态。
     function integer bits_required;
@@ -162,6 +164,20 @@ module song_guide #(
     reg matched;
     reg [7:0] progress;
     reg [PHASE_WIDTH-1:0] phase;
+    reg [PHASE_WIDTH-1:0] beat_counter;
+    // 独立节拍时基：默认120BPM，不依赖当前是否按下正确琴键。
+    // pause冻结相位；切曲/重开/暂停命令重新对齐。脉冲用于现有板载LED辅助提示。
+    always @(posedge clk or negedge rst_n) begin
+      if(!rst_n)begin beat_counter<=0;beat_pulse<=0;end
+      else begin
+        beat_pulse<=0;
+        if(external_restart || external_toggle)beat_counter<=0;
+        else if(active && !done && !pause && sample_tick)begin
+          if(beat_counter>=BEAT_LENGTH-1)begin beat_counter<=0;beat_pulse<=1;end
+          else beat_counter<=beat_counter+1'b1;
+        end
+      end
+    end
 
     wire [PHASE_WIDTH:0] progress_length = phrase_end ? TWO_LENGTH : ONE_LENGTH;
     wire [PHASE_WIDTH:0] phase_sum = {1'b0, phase} +
@@ -254,7 +270,11 @@ module song_guide #(
                 progress <= 8'd0;
                 phase <= {PHASE_WIDTH{1'b0}};
             end else if (exact_note) begin
-                matched <= 1'b1;
+                // V021至少保持目标拍长的约80%才接受这次匹配，早松键留在本音重试。
+                // 这属于时长练习，不宣称完整自由演奏的节奏评分/任意曲谱导入。
+                // 默认0保持历史“正确按下松开即推进”的独立调用语义。
+                if(!RHYTHM_ENABLE || progress>=8'd204 ||
+                   (sample_tick && progress_sum>=9'd204))matched <= 1'b1;
                 if (sample_tick && progress != 8'hff) begin
                     if (phase_carry)
                         phase <= phase_sum - progress_length;

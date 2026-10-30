@@ -1,0 +1,20 @@
+{
+  "time_beijing": "2026-10-31T02:41:23.0774043+08:00",
+  "compile_passed": true,
+  "exit_code": 0,
+  "fqbn": "esp32:esp32:esp32",
+  "core": "2.0.17",
+  "reused_existing_toolchain": true,
+  "source_sha256": {
+    "bridge_core.h": "4E652E314843682AF33A733BE08A351C0EA75C6154717D2181013A376002C98D",
+    "web_ui.h": "4127B539CB42D9D65A74076B55EBF43E23EF0B77E370D5F9E418EA510D6E8F85",
+    "esp32_phone.ino": "6492E4B2197D9534354924CEA87E05FE5C0B093A1F806643BAFB46C736CA3BF4"
+  },
+  "binary_sha256": {
+    "esp32_phone.ino.partitions.bin": "148B959CBFF1C38AA8E1D5C0BA9D612C54997B945E56A63F41223EEF650653A1",
+    "esp32_phone.ino.bootloader.bin": "3D97B71A61331EBADDEF2A74E090C35299650F395F1387F85130010E84E46563",
+    "esp32_phone.ino.bin": "F27D9EEF301B3634B52818DF4E9B34C96E19BD89FBE29661C3F3BCCF5E38A6E3"
+  },
+  "uploaded": false,
+  "hardware_validated": false
+}

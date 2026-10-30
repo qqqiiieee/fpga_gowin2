@@ -1,0 +1,90 @@
+{
+  "project": ".",
+  "resources": {
+    "Logic": 16940.0,
+    "Register": 8100.0,
+    "CLS": 9510.0,
+    "BSRAM": 27.0,
+    "DSP": 15.75
+  },
+  "capacities": {
+    "Logic": 20736.0,
+    "Register": 16173.0,
+    "CLS": 10368.0,
+    "BSRAM": 46.0,
+    "DSP": 24.0
+  },
+  "utilization_percent": {
+    "Logic": 81.694,
+    "Register": 50.083,
+    "CLS": 91.725,
+    "BSRAM": 58.696,
+    "DSP": 65.625
+  },
+  "timing_violations": {
+    "Setup": 0,
+    "Hold": 0
+  },
+  "fmax_mhz": {
+    "clk27": 30.303,
+    "serial126": 858.728,
+    "pixel25_2": 48.409
+  },
+  "synthesis_hierarchy": {
+    "u_alloc": {
+      "name": "u_alloc",
+      "Register": "648",
+      "Alu": "224",
+      "Lut": "312",
+      "T_Register": "648(648)",
+      "T_Alu": "224(224)",
+      "T_Lut": "312(312)"
+    },
+    "synth": {
+      "name": "synth",
+      "Register": "1610",
+      "Alu": "187",
+      "Lut": "1687",
+      "PADD18": "1",
+      "PADD9": "1",
+      "MULT9X9": "1",
+      "MULT18X18": "2",
+      "MULTADDALU18X18": "1",
+      "Bsram": "3",
+      "T_Register": "1610(1610)",
+      "T_Alu": "187(187)",
+      "T_Lut": "1853(1687)",
+      "T_PADD18": "1(1)",
+      "T_PADD9": "1(1)",
+      "T_MULT9X9": "1(1)",
+      "T_MULT18X18": "2(2)",
+      "T_MULTADDALU18X18": "1(1)",
+      "T_Bsram": "3(3)"
+    },
+    "u_telemetry": {
+      "name": "u_telemetry",
+      "Register": "366",
+      "Alu": "128",
+      "Lut": "504",
+      "MULT18X18": "2",
+      "MULTALU36X18": "1",
+      "MULTADDALU18X18": "3",
+      "Bsram": "1",
+      "T_Register": "366(366)",
+      "T_Alu": "128(128)",
+      "T_Lut": "582(504)",
+      "T_MULT18X18": "2(2)",
+      "T_MULTALU36X18": "1(1)",
+      "T_MULTADDALU18X18": "3(3)",
+      "T_Bsram": "1(1)"
+    }
+  },
+  "firmware": "instrument_handoff.fs",
+  "usercode": "0x000099D5",
+  "firmware_sha256": "4286301056b4370119f9ec409b112ca28c9e51ae49c21700025ee66bf6c63831",
+  "input_hashes_verified": true,
+  "hardware_programmed": false,
+  "version": "V034",
+  "status": "PASS",
+  "compile_origin": "Gowin IDE Run All"
+}

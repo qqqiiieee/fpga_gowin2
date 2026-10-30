@@ -27,7 +27,7 @@
 // 搜帧头 -> 累积13个字段 -> 校验并提交；ACK锁存 -> 逐字节8N1发送。
 // ACK发送时不接受新包，没有接收命令队列；主机应等ACK完整结束后再发下一条。
 // 无外部 clock enable，RX/TX 位计时及两个超时器按每个 clk 工作。
-// CLK_HZ/BAUD 须为正且算出的 BIT_CYCLES 至少1；各计时门槛需在32位计数范围，
+// CLK_HZ/BAUD 须为正且算出的 BIT_CYCLES 至少1；各计时器根据参数自动定宽，
 // TIMEOUT_CYCLES 也须为正，代码不自动钳位；默认值对应本工程27MHz配置。
 // 复位保持TX空闲高、实体模式、velocity=160；缓存ADC/序号本身不表示仍有新数据。
 // Bounded, acknowledged virtual-input link. UART 115200 8N1 at 27 MHz.
@@ -37,13 +37,18 @@
 module remote_debug_link #(
   parameter CLK_HZ=27000000,
   parameter BAUD=115200,
-  parameter TIMEOUT_CYCLES=27000000
+  parameter TIMEOUT_CYCLES=27000000,
+  parameter DIAG_ENABLE=0,
+  parameter CALIB_ENABLE=1
 )(
   input clk,input rst_n,input uart_rx,output reg uart_tx,
   input [15:0] physical_keys,input [63:0] physical_adc,input [7:0] status_flags,
   output reg remote_active,output reg zero_mode,output reg park_i2c,
   output reg [15:0] virtual_keys,output reg [7:0] velocity,
-  output reg [63:0] virtual_adc,output reg accepted,output reg [7:0] last_seq
+  output reg [63:0] virtual_adc,output reg accepted,output reg [7:0] last_seq,
+  input [63:0] diagnostic_data,
+  output reg cal_write,output reg [3:0] cal_index,output reg [11:0] cal_value,
+  output reg diagnostic_request
 );
   // 对一个UART位的周期数四舍五入；默认取234周期，实际波特率约115385。
   localparam BIT_CYCLES=(CLK_HZ+BAUD/2)/BAUD;
@@ -51,9 +56,14 @@ module remote_debug_link #(
   // 残包等待上限取20ms与12个位时间中的较大者；packet_age 每个完整收到的
   // 字节清0，因此这是包内字节间超时，不是整包总时长，也不是1秒远程watchdog。
   localparam FRAGMENT_CYCLES=((CLK_HZ/50)>BIT_CYCLES*12)?(CLK_HZ/50):(BIT_CYCLES*12);
+  // UART位计时、残包超时和远程超时的量级不同，分别按门槛定宽。
+  // packet_age在丢弃残包同拍仍可能加到FRAGMENT_CYCLES，因此额外容纳该值。
+  localparam BIT_WIDTH=(BIT_CYCLES>1)?$clog2(BIT_CYCLES):1;
+  localparam FRAGMENT_WIDTH=(FRAGMENT_CYCLES>0)?$clog2(FRAGMENT_CYCLES+1):1;
+  localparam WATCHDOG_WIDTH=(TIMEOUT_CYCLES>1)?$clog2(TIMEOUT_CYCLES):1;
   reg rx_meta,rx_sync;
   reg [2:0] rx_state;
-  reg [31:0] rx_timer;
+  reg [BIT_WIDTH-1:0] rx_timer;
   reg [2:0] rx_bit;
   reg [7:0] rx_shift,rx_data;
   reg rx_valid,rx_error;
@@ -93,6 +103,21 @@ module remote_debug_link #(
     input [15:0] raw;
     begin clamp_adc=(raw>16'd26400)?16'd26400:raw;end
   endfunction
+
+  // 09仅用于触摸诊断/标定应答，原08虚拟控制协议逐字节不变。
+  // 查询flags=80，标定单项flags=81；两者都不接管输入，也不续期远程watchdog。
+  // 写应答diag2回显index/value，diag3=A100|index，主机可检查完整提交。
+  function [127:0] make_diag_reply;
+    input [7:0] seq,flags;
+    input [15:0] keys;
+    input [63:0] data;
+    reg [127:0] value;reg [7:0] check;integer i;
+    begin
+      value=make_reply(seq,flags,keys,data);value[23:16]=8'h09;
+      check=0;for(i=2;i<15;i=i+1)check=check^value[i*8+:8];
+      value[127:120]=check;make_diag_reply=value;
+    end
+  endfunction
   // 组装固定16字节回复，最低8位是线上最先发送的字节；16位键/ADC自然按
   // 低字节在前打包。XOR包括协议版本08、seq、flags、keys、ADC，不包括两字节帧头。
   function [127:0] make_reply;
@@ -113,7 +138,8 @@ module remote_debug_link #(
   reg [7:0] packet[0:15];
   reg [4:0] packet_count;
   reg [7:0] packet_xor;
-  reg [31:0] packet_age,watchdog;
+  reg [FRAGMENT_WIDTH-1:0] packet_age;
+  reg [WATCHDOG_WIDTH-1:0] watchdog;
   reg ack_start;
   reg [127:0] ack_payload;
   // 输入每路ADC小端重组后分别限幅；拼接最高字为A3，最低字为A0。
@@ -128,7 +154,7 @@ module remote_debug_link #(
   reg tx_frame_busy;
   reg [127:0] tx_frame;
   reg [1:0] tx_state;
-  reg [31:0] tx_timer;
+  reg [BIT_WIDTH-1:0] tx_timer;
   reg [3:0] tx_byte;
   reg [2:0] tx_bit;
   // 组包与控制状态提交：复位/残包/校验失败均不会提前激活半套虚拟输入。
@@ -140,8 +166,9 @@ module remote_debug_link #(
       velocity<=160;virtual_adc<=0;accepted<=0;last_seq<=0;
       packet_count<=0;packet_xor<=0;packet_age<=0;watchdog<=0;
       ack_start<=0;ack_payload<=0;
+      cal_write<=0;cal_index<=0;cal_value<=0;diagnostic_request<=0;
     end else begin
-      accepted<=0;ack_start<=0;
+      accepted<=0;ack_start<=0;cal_write<=0;diagnostic_request<=0;
       if(remote_active) begin
         // watchdog按系统时钟计距上次已接受命令的时间，仅remote_active期间运行。
         // 到1秒撤销远程/纯零/停驻及虚拟键；velocity/virtual_adc/last_seq仍保留，
@@ -168,7 +195,19 @@ module remote_debug_link #(
             // 第16字节是校验，不再参与累积；同时检查flags保留高位为0。
             // XOR或flags非法的帧静默丢弃，无accepted、无ACK，也不重置watchdog。
             packet_count<=0;packet_xor<=0;
-            if(rx_data==packet_xor && packet[3][7:3]==0) begin
+            if(DIAG_ENABLE && rx_data==packet_xor && packet[3]==8'h80) begin
+              diagnostic_request<=1;
+              ack_payload<=make_diag_reply(packet[2],status_flags,physical_keys,diagnostic_data);
+              ack_start<=1;
+            end else if(DIAG_ENABLE && CALIB_ENABLE && rx_data==packet_xor && packet[3]==8'h81 &&
+                packet[4][7:4]==0 && packet[8][7:4]==0 &&
+                {packet[8],packet[7]}>=8 && {packet[8],packet[7]}<4095) begin
+              diagnostic_request<=1;
+              cal_write<=1;cal_index<=packet[4][3:0];cal_value<={packet[8][3:0],packet[7]};
+              ack_payload<=make_diag_reply(packet[2],status_flags,physical_keys,
+                {12'ha10,packet[4][3:0],packet[4][3:0],packet[8][3:0],packet[7],diagnostic_data[31:0]});
+              ack_start<=1;
+            end else if(rx_data==packet_xor && packet[3][7:3]==0) begin
               // 单一提交点同时刷新全部字段，避免键与ADC来自不同半帧。
               // 若本拍也到watchdog门槛，靠后的本分支赋值优先，合法新命令立即接管。
               remote_active<=packet[3][0];

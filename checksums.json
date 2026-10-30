@@ -1,474 +1,321 @@
 {
-  ".gitattributes": {
-    "sha256": "f77daf0961763f7d91816a566e5b9cb309507a5a02cd46f42fee9084c829226a",
-    "bytes": 104
-  },
-  ".gitignore": {
-    "sha256": "6a449b212e35caca89a798fbb4a4c59e8dd54829a1de1cf87bce269ce0685012",
-    "bytes": 353
-  },
-  "README.md": {
-    "sha256": "faccc9201b87c078daacb2ec17b686a3dbd59bdf17f024776eb851542e494fe1",
-    "bytes": 2464
-  },
-  "assets/menu_layout.json": {
-    "sha256": "f1fe1eda254ea538ab3d6dff0355dea75036fa49d6b423439a73181fbd0aeaa8",
-    "bytes": 17885
-  },
-  "assets/ui_font_map.json": {
-    "sha256": "6dd1c641445999aa402b8d980eb47f9b0bce385b0c783a8d32cd9f76fe070fad",
-    "bytes": 114635
-  },
-  "assets/ui_texts.json": {
-    "sha256": "d0323c7d03348cc7eec7d41303bbc1584e6a8ea56b090e76e91601fa083015bd",
-    "bytes": 22236
-  },
-  "build.tcl": {
-    "sha256": "aada2f5b98808a545dff33596949324358a1395ad58fe8e1665f3376eae731cc",
-    "bytes": 189
-  },
-  "docs/AI快速上手.txt": {
-    "sha256": "4b0b8a88a35690efa046e06f31d35a761cd35ac89d32fa6a05e7409ad3caeee1",
-    "bytes": 14409
-  },
-  "docs/项目架构与模块说明.docx": {
-    "sha256": "46eb7098b913e1449130a3534b3d23939bfe4a091e93a2cb46ae58414c91aa64",
-    "bytes": 46139
-  },
-  "instrument_handoff.fs": {
-    "sha256": "20dbffca8677a5ce6091a6189f30489d0d019914f64e61ed178776ebde29d30c",
-    "bytes": 7264153
-  },
-  "instrument_handoff.gprj": {
-    "sha256": "4a725ff5aadf404a088f8477049653fefa37373002276b0dd53c553cc7e3994d",
-    "bytes": 2821
-  },
-  "manifest.json": {
-    "sha256": "66861bea72126c6e50a8ec5db8db5a437e2a70abda91e299e49cfe0773e317fa",
-    "bytes": 6882
-  },
-  "requirements.txt": {
-    "sha256": "0d8591fbb38d29c9457b1ecb01e415c737b258eecfbf01eade0e7d4b21f73eb3",
-    "bytes": 30
-  },
-  "scripts/analyze_rtl_pcm.py": {
-    "sha256": "3267cdc322e1bd4a4ff22cbd8a42f1f60d06dfbbec19e8f16c14ba5806fc73ee",
-    "bytes": 4817
-  },
-  "scripts/build.py": {
-    "sha256": "22820ca890f8a21ecb16cd312faebf9a1a2f1ee52209280073d651b6e19ef98f",
-    "bytes": 1743
-  },
-  "scripts/generate_ui_text.py": {
-    "sha256": "2fccec2ff7264ae877474a3b0e4314a47d1bebc84b402cd9665d1768957add99",
-    "bytes": 1606
-  },
-  "scripts/keypad_tests.py": {
-    "sha256": "0f9f97c5a72c2de4874f123429755af78cc923dafe7fcfe39d55e13be5e21e23",
-    "bytes": 11062
-  },
-  "scripts/menu_tests.py": {
-    "sha256": "bff794cebbf7399006b68cd94d2423e02b44611a46257732f06a85b54db2a7d6",
-    "bytes": 16011
-  },
-  "scripts/run_tests.py": {
-    "sha256": "46d9c57ad089f6852f96002ff1b748ab8e78f508d40b508b691a19364170afb8",
-    "bytes": 6268
-  },
-  "scripts/song_tests.py": {
-    "sha256": "8cbfcfbb35eb01782f307694f5f0baf079ab30394f995f87ae242560bde22429",
-    "bytes": 10162
-  },
-  "src/ads1115_reader.v": {
-    "sha256": "33d975aba2ea83018877efdf8abbdd64cc7be8761cac81d39a2fe08f8a932d20",
-    "bytes": 10101
-  },
-  "src/audio_cleanup.v": {
-    "sha256": "ed7a263a0ae96a060108a58a836c536115b2c4da2b5b9b66042ef20e9f9858b9",
-    "bytes": 3174
-  },
-  "src/audio_controls.v": {
-    "sha256": "00b5054606645d861a07e416e9b81b3430b8f647a5cd12846335d330a7e41040",
-    "bytes": 2563
-  },
-  "src/audio_mix.v": {
-    "sha256": "d2db0747ecf1f5488dd9f0a2b66b0bbc8e745d6fdfec4a34969210ed3192c546",
-    "bytes": 1625
-  },
-  "src/dc_blocker.v": {
-    "sha256": "746d834986dcec68e28de5e65d29c9c11f066fd20b406998cb8bbe351534c13f",
-    "bytes": 2866
-  },
-  "src/drum_voice.v": {
-    "sha256": "f8d81a9da85d9994ecb77513031a46f91697a60e2cafe1d063a7d750a6040dc2",
-    "bytes": 11010
-  },
-  "src/hdmi_clocks.v": {
-    "sha256": "510836bce77b742ad55ff83621e1647b579d065ea48ffef03a6a830268f6eac8",
-    "bytes": 2021
-  },
-  "src/hdmi_instrument_dashboard.v": {
-    "sha256": "d919f78a06253b102235f236785eb55b69051064486d3dca5583e9f79bbba44f",
-    "bytes": 60201
-  },
-  "src/hdmi_live_display.v": {
-    "sha256": "2543a1b363e7dc0ce7e5ee8c28034818889993dba265c44a2a89c6ff57c49019",
-    "bytes": 8636
-  },
-  "src/hdmi_status_cdc.v": {
-    "sha256": "44810dff14ae283b5fa8ac826c4283fafca4ab33ab59928586886095d6bef0e9",
-    "bytes": 2130
-  },
-  "src/hdmi_tx.v": {
-    "sha256": "0e5cf6a3aa2e5e982579733a4edb741433fc8986099182a6b8052705f7f2aefa",
-    "bytes": 2553
-  },
-  "src/hdmi_ui_font.v": {
-    "sha256": "5c75e9674d78fee13f0a6685078a18c82c58d185a4f40e635f50e991de6129e6",
-    "bytes": 1117
-  },
-  "src/hdmi_ui_text.vh": {
-    "sha256": "4071ac93351d727831aee63f21f524ed3363613ea995414937e5bac2b6ec6b1d",
-    "bytes": 17550
-  },
-  "src/headphone_mute_guard.v": {
-    "sha256": "fe5321a6f92279f96c2705c17f4ba49242b6e8e76f14873e519fa21d00fbb1ba",
-    "bytes": 2805
-  },
-  "src/i2c_bus_recovery.v": {
-    "sha256": "1fd96800ef2df4b107ae8b2a89fe6921058ea22c310972bb067939e41dc1bd5a",
-    "bytes": 5833
-  },
-  "src/i2c_byte_master.v": {
-    "sha256": "11d015102204336f51575053e34ef878ad9f8e399234e15902f6ab27e4f59164",
-    "bytes": 7452
-  },
-  "src/instrument_audio.v": {
-    "sha256": "f29d0acc5e100e76d5bb2c579e828bfc85c92cd6086be2d90d63bc50fd179562",
-    "bytes": 8376
-  },
-  "src/instrument_audio_top.v": {
-    "sha256": "7a726045b99be7be3019821cfbf7498dfc228931e23d39867ae8ccbb28e5d471",
-    "bytes": 7841
-  },
-  "src/instrument_inputs.v": {
-    "sha256": "1ab26b86ee3ddcbe3fe97e34a5f3b26e2f6f922266723d1e65592d6e8341a491",
-    "bytes": 8956
-  },
-  "src/instrument_status.v": {
-    "sha256": "57b05d8134a300af440c8fc9e24f39478bbb213cc7e27808a82767dea6900d61",
-    "bytes": 2749
-  },
-  "src/instrument_telemetry.v": {
-    "sha256": "ef88864180eefac17058ec69ee1ad1213826d12a4e7aa4b1158e7f6a06c6f77c",
-    "bytes": 9535
-  },
-  "src/instrument_ui_control.v": {
-    "sha256": "bec52aa9f49d822ac09a5a7c507de4147196a3b34852802e41c767ff97e1afda",
-    "bytes": 3684
-  },
-  "src/matrix_clock.sdc": {
-    "sha256": "9d8fa713eb26f64580fb167c33531e7d9aaedb481164e1b449434f0d032dfba9",
-    "bytes": 1428
-  },
-  "src/matrix_keypad.v": {
-    "sha256": "14b7858128e9639d2e2f6d462c4310e0ae80be81f6f38def81c5f6e399697af5",
-    "bytes": 15107
-  },
-  "src/multi_tone.cst": {
-    "sha256": "08b730a144e6e457ec5741f4b82ca7752e5d1e764f83bf965a783fc382c01354",
-    "bytes": 3647
-  },
-  "src/note_table.v": {
-    "sha256": "6597f860e7119b0996317ad3da524787efc4328aa4e887338c7aa2f0aaf21541",
-    "bytes": 4264
-  },
-  "src/oscillator_test_control.v": {
-    "sha256": "00e9d6aa6fc28742711cfa955e58406ba6a14e90c1ec66e01529c7e3afdc6c0f",
-    "bytes": 17451
-  },
-  "src/oscillator_test_frequencies.v": {
-    "sha256": "7b751337ab88d4b30a97db7d5e5e7b81212eb61d591ca9991e0eac30c23d56e0",
-    "bytes": 2362
-  },
-  "src/pressure_adaptive.v": {
-    "sha256": "46a76129ac7c26a065ef1890d5b78c2f0a1d76af464b0897841c8e09d6308c7b",
-    "bytes": 8710
-  },
-  "src/pt8211_driver.v": {
-    "sha256": "167e6619b3c7cbdb5fbd2b8e8e5c8f8415bac8d552d6717aedbbeb118ef19922",
-    "bytes": 3360
-  },
-  "src/remote_debug_link.v": {
-    "sha256": "8efb9138a09395b20a276cbb449b36e52fe7fdb195505e86a062a598871b9f9a",
-    "bytes": 13341
-  },
-  "src/slider_controls.v": {
-    "sha256": "940c248c053894c6bcfc24fb8051d16f3315d49e88830937265ef8558a3822a9",
-    "bytes": 4429
-  },
-  "src/snare_voice.v": {
-    "sha256": "b4680c709dd84e32218299d1cff151507c20920379c4a37524b95405bcf81ed5",
-    "bytes": 16097
-  },
-  "src/song_guide.v": {
-    "sha256": "7cb3c5572ab20218d14b81dc2895fed1cc9ce5210b945d4959234a5f0430f8fe",
-    "bytes": 13785
-  },
-  "src/test_sine.hex": {
-    "sha256": "99a7d0a335cd1fe5a62ade4188773927f226e86149a7cc1d923230c53ffc40a4",
-    "bytes": 6144
-  },
-  "src/timbre_soft.hex": {
-    "sha256": "9d003d4551c86f6b13fe45f2cd48d727bf716962feb6de29eed81ae39e19f253",
-    "bytes": 98304
-  },
-  "src/tmds_encoder.v": {
-    "sha256": "1b62664ef8aded769c8513c903ce7275501f2a19e6449a55b79bd10f6a5685b8",
-    "bytes": 2179
-  },
-  "src/top.v": {
-    "sha256": "83d82ec4084aa589814513e5ef7ac835da2c799bf9bd6829c93182a7955248a2",
-    "bytes": 6190
-  },
-  "src/ui_font.hex": {
-    "sha256": "307e173dfd2a42be58006327d203327c84d877bf78b85efcd18a6dda0fab5501",
-    "bytes": 24576
-  },
-  "src/video_timing.v": {
-    "sha256": "eeca51b4d70088a4356d7e08d48d7219c77a68bf4a865c6863ab234c42620eb9",
-    "bytes": 1246
-  },
-  "src/voice_allocator.v": {
-    "sha256": "cb948797b44b88ebc87d2316c2d8141900f664d676b5bc104dac1ca36ac5b507",
-    "bytes": 7663
-  },
-  "src/wave_scope.v": {
-    "sha256": "a5d4acdeaca9da3c1f351c24a1203db399dbca6dccc669ae98c51e45c35257bb",
-    "bytes": 4494
-  },
-  "src/wavetable_synth.v": {
-    "sha256": "c3f7381523a2f30e1083f5d25aab7f4f3e597259e60409d696d3a1486d156301",
-    "bytes": 13308
-  },
-  "tests/Python/test_analyze_oscillators.py": {
-    "sha256": "e0b7687c763c3828f7cc389f638b377fc9464ac79800dd990b1e554ce556336a",
-    "bytes": 8548
-  },
-  "tests/Python/test_capture_pipeline.py": {
-    "sha256": "afaefadb26dd8182cde43ae869bc2eea536ed9c14f494a1d4ee89fd0d67c7cfb",
-    "bytes": 5179
-  },
-  "tests/Python/test_evaluate_capture.py": {
-    "sha256": "8c2a98fb940162982785f212af0d551f1d22793c752d42b3f74fb45660ccb596",
-    "bytes": 19467
-  },
-  "tests/Python/test_launch_oscillator_test.py": {
-    "sha256": "83039c1ffeb63ddb7d57d6373a9fa13d8a5cedfd70e480c308725a186117a9ec",
-    "bytes": 8425
-  },
-  "tests/Python/test_oscillator_test.py": {
-    "sha256": "679e573242d54a007083051e1de7f9667f4f077bd9943ebd2fb48c59d60a791d",
-    "bytes": 22978
-  },
-  "tests/Python/test_remote_control.py": {
-    "sha256": "27c0896dc8fd742d6fcf1d2bb4ffaa6b988b42afb558fb7f06f3086c74599608",
-    "bytes": 19966
-  },
-  "tests/Python/test_verify_firmware_handoff.py": {
-    "sha256": "042061277b227c5e213a739d3cc74578008825c1483a3aa986d42d369b972d59",
-    "bytes": 2154
-  },
-  "tests/baseline_audio_top.v": {
-    "sha256": "7dd9af1466886d050b560b529a96f7a0f666a9ad4673cfb5c41a35df3020d2c9",
-    "bytes": 3175
-  },
-  "tests/baseline_instrument_audio.v": {
-    "sha256": "b71165c29d222ac2a6971c2ad0ed0a240e0fda65bb052b38b2b853c4b0cb38b4",
-    "bytes": 4344
-  },
-  "tests/fixtures/pressure_wave.hex": {
-    "sha256": "8a817630ef1bb5c89a01e15972e647ec777cc12fb71725c8139897a49848d924",
-    "bytes": 196608
-  },
-  "tests/legacy_diagnostic_frequency.v": {
-    "sha256": "86d784f959cd6c8b03888b582ce8bd385c97a03e931c76d784d368d75bccdaaf",
-    "bytes": 1845
-  },
-  "tests/legacy_shared_synth.v": {
-    "sha256": "3f5403e5e13e2034dbae26acc1a4344a4a31faa2f02948e5dd3cdc4ca73fb779",
-    "bytes": 9785
-  },
-  "tests/mock_ads1115.v": {
-    "sha256": "80553d7e2cda04dc8daa1931e6711c90befc01cdba69c6eeeb3db41601d9f26c",
-    "bytes": 2068
-  },
-  "tests/tb_audio_hdmi_equivalence.v": {
-    "sha256": "4d4f88ad1894efbbf11e2c9f4abcd4418fbe2730056bd2de647be4089daef357",
-    "bytes": 3202
-  },
-  "tests/tb_handoff_boundaries.v": {
-    "sha256": "7e9550d8def4b38172dc08a9f382e305a86e7f7b6ccfffbcd62654fb126b55a5",
-    "bytes": 26763
-  },
-  "tests/tb_hdmi_link.v": {
-    "sha256": "b431692b5f2f336d78d1c80b23dd57a31237d37e4627f37fcf5a19dc2069b8e3",
-    "bytes": 2208
-  },
-  "tests/tb_hdmi_live_preview.v": {
-    "sha256": "1ffe2719245b2b966d3f4a160d1c40961347a1d2033a380b94cf218d4a82db31",
-    "bytes": 24831
-  },
-  "tests/tb_hdmi_test_preview.v": {
-    "sha256": "3cb32bae294942ca4e654ee93fc82d998bf881c6ec7fae60fcf2c38afe13f5e0",
-    "bytes": 33817
-  },
-  "tests/tb_hdmi_zh_pipeline.v": {
-    "sha256": "c2c39f8a674ecf5c15fa12b8f7a7ae7ab5876bf03e88163d152248ae1bb0c455",
-    "bytes": 27654
-  },
-  "tests/tb_instrument_telemetry.v": {
-    "sha256": "a7357f3f1a75de6055e60519028b4926993591b7288b1998eff147ec78a080ef",
-    "bytes": 2747
-  },
-  "tests/tb_instrument_ui_control.v": {
-    "sha256": "f3f20adfd52a6c0af65c156a56852fb293cc7fa0cbc27616d75f58a52adb0186",
-    "bytes": 8513
-  },
-  "tests/tb_keypad_physical_map.v": {
-    "sha256": "ae4d7f0ac89f2ef0b63976a9cf0cf9fc399e6c459186b5251b32d10097647949",
-    "bytes": 18436
-  },
-  "tests/tb_menu_cdc.v": {
-    "sha256": "c0f7f50f16d0ffbcbb57bfabcdc7c3bc0ab4d8cdf016c743960ef3c0e5334b42",
-    "bytes": 9287
-  },
-  "tests/tb_menu_preview.v": {
-    "sha256": "d50caf6fdf3ea77ea1027f19def78ac38e87c70bba16977631d1cc787d195be2",
-    "bytes": 8044
-  },
-  "tests/tb_menu_top.v": {
-    "sha256": "56c1d9f6df515714ff4bd379d706ef4788275b99bd98d9364d2b20f66a8c202b",
-    "bytes": 3883
-  },
-  "tests/tb_noise_selectors.v": {
-    "sha256": "4e6e177d66b6657bd95169a59ba1b568c8e22eb971042c40af872d07393b049c",
-    "bytes": 3385
-  },
-  "tests/tb_oscillator_audio.v": {
-    "sha256": "9716f11fbde7c072bd34f52ffaf056a969d8805ac73f529dfc55866e81e46d70",
-    "bytes": 3771
-  },
-  "tests/tb_oscillator_integration.v": {
-    "sha256": "cfde3735a8bec5dc2405aca368b130a584db68d49fb3e58478cf91b9138ba13d",
-    "bytes": 3537
-  },
-  "tests/tb_oscillator_test_control.v": {
-    "sha256": "80226c7aaa52e97c651947885326f84113a231468b1adf8601f8c1e0476a47f0",
-    "bytes": 25799
-  },
-  "tests/tb_performance_keys.v": {
-    "sha256": "92c3e4f6789fbf067e0deaf2a731408202bdb86a2ef35ac2fd4b384c871936ca",
-    "bytes": 4535
-  },
-  "tests/tb_reliable_cadence.v": {
-    "sha256": "d3c21134de4561156df59eb58a5d8522a212e897fa6654c5643eece6fca9a63d",
-    "bytes": 1974
-  },
-  "tests/tb_reliable_controls.v": {
-    "sha256": "28d638d6bc3ed7a98d2631d169f8db86ac684721e772d9ecf698676b9dbcb8a7",
-    "bytes": 3528
-  },
-  "tests/tb_remote_link.v": {
-    "sha256": "f33d70cc25761c2523b977ea65f328fca2227b95686148e24909d6353d32dcd8",
-    "bytes": 23406
-  },
-  "tests/tb_song_guide.v": {
-    "sha256": "7f6c2727673870d9e76d058872c094aeac7a8de6b943487e232ee120fc96b8d5",
-    "bytes": 13417
-  },
-  "tests/tb_song_library.v": {
-    "sha256": "b2a70f9afb71c9eeadafccf6d4f815eaa4431d9dfce120ef40a9b3b7474e349c",
-    "bytes": 20800
-  },
-  "tests/tb_song_pause.v": {
-    "sha256": "0d8a1b3c55201c3fc8472fc8943adc04b36bf9222faea7d5ae3fd8a1ddeb9d05",
-    "bytes": 1550
-  },
-  "tests/tb_synth_equivalence.v": {
-    "sha256": "14fbdc7dc6cc3ecfd471c8a431268b519928243d5a4d91764f3787e48ef9ad50",
-    "bytes": 18701
-  },
-  "tests/tb_tmds_encoder.v": {
-    "sha256": "dd58fafd08024697a923af1486588f462595f782fac0ad5f98e3cba0e36ec188",
-    "bytes": 687
-  },
-  "tests/tb_video_timing.v": {
-    "sha256": "f4dc8f8b2334e72a644e77479db0aad637dc4f82ae0aacd9f71b01186023b97c",
-    "bytes": 1051
-  },
-  "tests/tb_wave_scope.v": {
-    "sha256": "db06f91c03e44cdebf1fa0d3fa3d64175cd82ba4b4695356999d9d44bedbf840",
-    "bytes": 2456
-  },
-  "tests/tmds_vectors.hex": {
-    "sha256": "b4477ed3ba8399c7d4606882b9366c232962f73e7215a9c750ebb9f1aa99170e",
-    "bytes": 32864
-  },
-  "tools/analyze_oscillators.py": {
-    "sha256": "6936c9750f3b4ebe8a1ed45dd947a3ee01388dc32f9677d9e81a9408b02e26bd",
-    "bytes": 15269
-  },
-  "tools/evaluate_capture.py": {
-    "sha256": "b999263a6b7eadd6f80b21b31f0408d83bc16dbc665ef086cf5a5469a4a91ba4",
-    "bytes": 38267
-  },
-  "tools/inspect_touch.py": {
-    "sha256": "ef3a10bfb9e23b2f5ab4b100b39f61a224814ee3322d19d2fa8324b05f2a6913",
-    "bytes": 1887
-  },
-  "tools/launch_oscillator_test.py": {
-    "sha256": "d3d569bc5c5f17035e4f513eadc2742b7617d7962b62b7c67802864780be09ac",
-    "bytes": 2865
-  },
-  "tools/list_audio_inputs.py": {
-    "sha256": "90a8a91bb8aef39dcf8bfcadffda01e6aed1a6b3f956f7c9b4c2e17b7b295777",
-    "bytes": 287
-  },
-  "tools/oscillator_test.py": {
-    "sha256": "738dc9a022f2996335a0e4b7baa1474dde423597300d5784622e43181d58cd84",
-    "bytes": 24844
-  },
-  "tools/remote_control.py": {
-    "sha256": "874027b687141c1fadd12904d82746d3760680a1853febef51aa8f5ffc42e39c",
-    "bytes": 25172
-  },
-  "tools/run_remote_capture.py": {
-    "sha256": "ffd8e5cd03e2e129c33bc735beef5c16740a1ebe7380495b2544768e0514fcb7",
-    "bytes": 8573
-  },
-  "tools/run_test_suite.py": {
-    "sha256": "b86e0487bf713e5fcdddcd3c7b4b8cd782f96e2fe4b55b42c1db1267978cf914",
-    "bytes": 6056
-  },
-  "tools/support/analyze_wav.py": {
-    "sha256": "a42f887130044fd14a77196ff05fac221eafedfa73f1237aaf3448c8a9b0e226",
-    "bytes": 4436
-  },
-  "tools/support/audio_devices.py": {
-    "sha256": "ee31838d951e869ecdaeadc4dd0be49630cc8e44251bab8217f71ff412843ad5",
-    "bytes": 1447
-  },
-  "tools/support/record_wav.py": {
-    "sha256": "1c6f5e9c6bcf5078d4a4df5a15493e60e2c9f188dad5c1232430b0378e367940",
-    "bytes": 11426
-  },
-  "tools/verify_firmware.py": {
-    "sha256": "47f72e550f11cc873624ceb5c495036959fee066f14d32b69908de019b03eec0",
-    "bytes": 3552
-  },
-  "verification/software_summary.json": {
-    "sha256": "55f41385a06e55cb1d78f56e7769d82ec7f77ad686c35a7898566c8f7a6a3c44",
-    "bytes": 1207
+  "schema_version": 2,
+  "version": "V034",
+  "algorithm": "SHA256",
+  "sha256": {
+    ".gitattributes": "7af19abeca22d222101525c7485da8b810e935f3544654343bed1875ce1fd61a",
+    ".gitignore": "32be84d7ff8b1a4fb955eff7f2be99036d816f98d5efb77bcbf73c08d6930c24",
+    "AGENTS.md": "5e21b6dd120fdc387c5621b2dc75e14c93188ab1e3f572655019aae1e8b14b0e",
+    "README.md": "f3d87f9b2247f4d5db959051a5643f2e03a18456e6b1da37caddda8928ad8b65",
+    "assets/menu_layout.json": "bd1c73c434c27f48563f61a267c6b21ef155a2d9976283f05dbe92a164f0f61b",
+    "assets/midi_tiny_mapping.json": "8973106b971a9829ce86df938acb2f82bdd6d6621609d340af757599242eb195",
+    "assets/pressure_expression_mapping.json": "4d57977ea0655acf3853b3732d1d87c66893d2dd1f65ab92651cd4a5456f5977",
+    "assets/timbres_dual.json": "0a162ef7a0563723bfb6f30d8babeb827f286a0fb8ba72a1bddc3a5d77feb126",
+    "assets/touch_calibration.json": "654a6148b75d2fbee237344e2410c0be4e6efdacddcdc61dacd425e88974c341",
+    "assets/ui_font_map.json": "6dd1c641445999aa402b8d980eb47f9b0bce385b0c783a8d32cd9f76fe070fad",
+    "assets/ui_texts.json": "ed863e7e57ec60bd3bbff3f03431bd543b22e0192b7b044d519809e4e46208f2",
+    "build.tcl": "aada2f5b98808a545dff33596949324358a1395ad58fe8e1665f3376eae731cc",
+    "docs/AI快速上手.md": "90dfed7d913dcf409fbe91fd81c88f158995bfa6009648f96c829c9cbc03264e",
+    "docs/ESP32接线与效果器使用.html": "554f1909ba24bbf70908f3535097cb6150123a7d5ef247cdceb6fe39d1b49ad3",
+    "docs/V015到V034更新说明.md": "529df5d82f431e04a5992a4c109e9e01852523af708a71c175626a0ef7f66d04",
+    "docs/V034_面板长按与键盘扫弦混合.html": "eca3489d2ca5b84af5243261abc5673442a08907e3da6a85b9edd039294a1dc5",
+    "docs/phone_protocol.md": "2eae4f2f45003a45f29580763f409f5f28d7aed264d429797ed1e4062e4ae79c",
+    "docs/光电扫弦测试与无滑杆接线.html": "5e8cdd9a258eb522d9791d19554acd0272d271580f32a11d75f12475031c92e6",
+    "docs/项目架构与模块说明.md": "e8801c9ae99af2b959f1ef7025c8b4dc3b5319a4fc7676bc974ff40680e5d7fa",
+    "esp32_phone/.gitignore": "79bd25368ea1885111b5fa5777a302b9bcd5cb8659b796c91035f92aa172df75",
+    "esp32_phone/README.md": "25134b6ed9aa866d699105504213c3d23d497e46a142020c7df65f0fafab970b",
+    "esp32_phone/bootstrap_toolchain.py": "9b73c35748709b04dfa5bb8ed785a278a5c1fdec8734680a6575bd10a413ef7e",
+    "esp32_phone/bridge_core.h": "4e652e314843682af33a733be08a351c0ea75c6154717d2181013a376002c98d",
+    "esp32_phone/build.ps1": "274c47aa36b0506e3d63d44d270c60245736d6fa37e2f125c98a91e958355db4",
+    "esp32_phone/esp32_phone.ino": "6492e4b2197d9534354924cea87e05fe5c0b093a1f806643bafb46c736ca3bf4",
+    "esp32_phone/preset.example.json": "d46926836e9e4aec3bbc3f0b3fcef4a971e73c9a91edc8e0d931e285c52acf45",
+    "esp32_phone/web_ui.h": "4127b539cb42d9d65a74076b55ebf43e23ef0b77e370d5f9e418ea510d6e8f85",
+    "firmware/esp32/esp32_phone.ino.bin": "f27d9eef301b3634b52818df4e9b34c96e19bd89fbe29661c3f3bccf5e38a6e3",
+    "firmware/esp32/esp32_phone.ino.bootloader.bin": "3d97b71a61331ebaddef2a74e090c35299650f395f1387f85130010e84e46563",
+    "firmware/esp32/esp32_phone.ino.partitions.bin": "148b959cbff1c38aa8e1d5c0ba9d612c54997b945e56a63f41223eef650653a1",
+    "impl/instrument_handoff_process_config.json": "8802e651d60e9f6fc0340ac9fa3a95f1ceb6f53ec78b26196baf065468dc7fdb",
+    "instrument_handoff.fs": "4286301056b4370119f9ec409b112ca28c9e51ae49c21700025ee66bf6c63831",
+    "instrument_handoff.gprj": "e9b051216b5301f0446489cac5ba182a86e3a14720875609fe5f780c8935786b",
+    "manifest.json": "e7c1def7338ed33923af61e159ca732686ad04182a07fe9d2c003bdcab89fc89",
+    "package-lock.json": "314a4138a03db10d66eaf7f49acd68ad36a53a8de2c51e9a6fdc643510db4039",
+    "package.json": "4db15b2f70548dc87519f92d29d220b092cf66fc66d329db0d00e374b0087cd8",
+    "requirements.txt": "3399d689ea820e48d0459152d8f372a5ee66867a6594005b7ae7b7bfc93aefcc",
+    "scripts/build.py": "de11731c03c1f4fc051a0ecdd6127dff21994efac42139738490605e58e28f16",
+    "scripts/check_midi_note_table.py": "24740c7f7f0aa8ec2765be62c0d714c0b092cf04d53b39d84e90c133f0dd29a4",
+    "scripts/generate_dual_timbres.py": "923bcd0b0c19fe464d8372935f8b3ee1635b89ffbb306e6b6a8fe1664f75dfae",
+    "scripts/generate_odd_half_rom.py": "b2d41ac7bd8aa21bb57d435bcb1f72a5a60cc22dc9a02d298cb72aa48961152f",
+    "scripts/generate_touch_centers.py": "1058102d2c1b5086cc0cb03fa913d07b56e9f8e6cfcdb730e4be173cba3bbfb0",
+    "scripts/generate_ui_lookup.py": "afbb476300e54868f6773c235eb1f1a6f0395b7556e8ae825eb47fc439d4d92d",
+    "scripts/generate_ui_text.py": "2fccec2ff7264ae877474a3b0e4314a47d1bebc84b402cd9665d1768957add99",
+    "scripts/run_four_key_ui_render.py": "214ab3486ee289e0dac8f9dcae86c5b1772c2be4c68661e0c015d9ba6d4f3b38",
+    "scripts/run_hdmi_hybrid_tests.py": "5d7ff8f68e7aad27edf70f7599e869059606ceec14ccf95da2367da088906c7d",
+    "scripts/run_piano_roll_render_tests.py": "daed6785443b1215d7b6e37428d39ff92d79728bb7932bb30d6aa35b5ab56007",
+    "scripts/run_piano_roll_source_tests.py": "8d390f9228de5afdf0ecfa2efab305cb10afa960e1325328079451f3ba034bb7",
+    "scripts/run_release_checks.py": "222313c9ad99705151433211b41f48523ee94a87009c52d71730f275ee40f7d9",
+    "scripts/run_v034_tests.py": "d9d4d8d31c51e0135020e723fc0e06ffa56c9cae013cad6b1524880ed07ac36e",
+    "scripts/summarize_build.py": "323c4b602a12bc34196f92b0e7df0a8b88f8da84e2f9d71155b297a374c8090c",
+    "scripts/toolchain.py": "51d7c6bf998ecea23dd1f5d49d7787e047d819cc6ca6f4e3659a63c485d5532f",
+    "scripts/verify_release.py": "290e575a306782a330c26a7fa6befcf6acdabfd20a16e04c261cb8a2f5726934",
+    "src/ads1115_reader.v": "ec52aacdf4417203841da7aa3d5e6f4a57b9f2b888349ca5471bf3ddff7f4c0b",
+    "src/analog_touch_keypad.v": "7ca06f7c3796e0ee71c7d50a46aafe44fa4c59b2f99214c61203e79dc8f01288",
+    "src/audio_cleanup.v": "83a6c880a621a72e66776df9afde82cbc9deb72365064dd2f86ad2aba50ac664",
+    "src/audio_controls.v": "00b5054606645d861a07e416e9b81b3430b8f647a5cd12846335d330a7e41040",
+    "src/audio_effects.v": "39229f889d50da3ecca6cde72cb9aa99ac6af4aa67dcb1f5b4df6a7bb05a9ed2",
+    "src/audio_mix.v": "d2db0747ecf1f5488dd9f0a2b66b0bbc8e745d6fdfec4a34969210ed3192c546",
+    "src/dc_blocker.v": "746d834986dcec68e28de5e65d29c9c11f066fd20b406998cb8bbe351534c13f",
+    "src/drum_voice.v": "f8d81a9da85d9994ecb77513031a46f91697a60e2cafe1d063a7d750a6040dc2",
+    "src/four_button_display_control.v": "e8f4177a2ef16464a525da5fc0e988e03727f468887dec2e9f9c096482449808",
+    "src/hat_voice.v": "c86497c85c89b4493839a5de8d1a0914e131008483440752e0c71dffc4aa3274",
+    "src/hdmi_clocks.v": "510836bce77b742ad55ff83621e1647b579d065ea48ffef03a6a830268f6eac8",
+    "src/hdmi_compact_dashboard.v": "12be68f7da122ad4a29236022d587f69e2fa3d4ec545ab75e1643042a9fd193f",
+    "src/hdmi_instrument_dashboard.v": "156eff670c23e8520b7160a53ed08f56649565900e7e7b18a70a411f815f6e93",
+    "src/hdmi_live_display.v": "3058a48f19f50b085cc66791d60244088d4a3c293d596684d968ccb12f232b26",
+    "src/hdmi_status_cdc.v": "406d9b5b0f52bcd73bad75b53abd223567146b5ea913bf937cbe53967e899bce",
+    "src/hdmi_tx.v": "0e5cf6a3aa2e5e982579733a4edb741433fc8986099182a6b8052705f7f2aefa",
+    "src/hdmi_ui_font.v": "5c75e9674d78fee13f0a6685078a18c82c58d185a4f40e635f50e991de6129e6",
+    "src/hdmi_ui_lookup.vh": "ce9061d29514031195beafa2dbf7d68726464c80775f81f53eb7da745fa23473",
+    "src/hdmi_ui_text.vh": "5fd07d1ddd4e3b2f23ac3664d1c433346cf50096c2ea11244b1413b8817a445f",
+    "src/headphone_mute_guard.v": "fe5321a6f92279f96c2705c17f4ba49242b6e8e76f14873e519fa21d00fbb1ba",
+    "src/i2c_bus_recovery.v": "4bf54cce4a65184a64f76f6c9712241d2e5907e0a9056e7af3e05948c61a27a7",
+    "src/i2c_byte_master.v": "0d264ffc3b0368a613393e7d7f05ef2c1bf1cc091f32bcdf2af4c59959de4a88",
+    "src/instrument_audio.v": "998b1394e9b74a1029a5d0f6be0672274aadc5283c28a5b548499b50b406d6a5",
+    "src/instrument_audio_top.v": "a679108271bc2145abc9f8e4895782b350f3a0d45fc8178bcb21716fd049b51c",
+    "src/instrument_inputs.v": "8ba5a8dc99ea24cf3798944da5177883d6d20482b78dccaba479189bf956a2b4",
+    "src/instrument_status.v": "8ee3e1ed83b31581b8f18cf3e14685d46ab0a400e9708bb33be984e901e16259",
+    "src/instrument_telemetry.v": "5342fb9a3deb812e3fe58d1318439e64a32a53c81429fcfd413f8a56bc6bc109",
+    "src/instrument_ui_control.v": "bec52aa9f49d822ac09a5a7c507de4147196a3b34852802e41c767ff97e1afda",
+    "src/matrix_clock.sdc": "9d8fa713eb26f64580fb167c33531e7d9aaedb481164e1b449434f0d032dfba9",
+    "src/matrix_keypad.v": "4473dc28748e4d520938b93d1b5c3930f4d6fc89525472a407ab9f88fb769ba4",
+    "src/mcp3208_reader.v": "c44bcbb9f6badf8f21bc8a3098486baa811ea6338d2e700e12b3fdd64431785a",
+    "src/midi_control_bank.v": "33b7ca00515ea6fceef1d4986df5cd7bf3b01033d93c12d3306cbe7d518f7b94",
+    "src/midi_keyboard.v": "428f04f18c5476e4c2360c1833c1760eee73368220f4e269e1e96eae1e5c5db6",
+    "src/midi_uart_rx.v": "3b7a51e848f26dd21caff5808978c03e2d50a4b5548e7dcde19aad114938bab9",
+    "src/multi_tone.cst": "9c2dcb788bb45a12de3717a817dddd383a2501c566af87a2aae053b545f5d590",
+    "src/note_table.v": "d393901396e25554a60c7ba4f8be11d90d36047fcfefe587f5e3bc15618bbb85",
+    "src/optical_strum.v": "638ffc94018fa7c93d54b97bda91a4a53ca0ab5f05b21d3896fcc114b1a6336e",
+    "src/oscillator_test_control.v": "00e9d6aa6fc28742711cfa955e58406ba6a14e90c1ec66e01529c7e3afdc6c0f",
+    "src/oscillator_test_frequencies.v": "7b751337ab88d4b30a97db7d5e5e7b81212eb61d591ca9991e0eac30c23d56e0",
+    "src/pcm5102a_i2s.v": "e3aedb38c36fe171ba6b4554d1d0443438888fae2c7fda80a5fb2a2123a86c37",
+    "src/performance_input_hub.v": "fadca6b68244819af22a2553d8a4bf2f6ae51aa8823f910b10d3a51d73d58d04",
+    "src/performance_mixer.v": "6d4425054855736ddc0cd4ce62c894e4a474bd255f1b55e619e361853e08b24d",
+    "src/phone_control_link.v": "edf7da49aa7b7f495f5e20f29d11bc6bf6de23e2a9ed95fcc5b01d9c49f7529c",
+    "src/piano_layout.vh": "8a12817352ecd8b2848bb17847c3733e167354796ed4ba8bb40ad2d126e3f233",
+    "src/piano_roll_guide.v": "535ffa9c9a1d1592643752716a750d44ed78fb9f78431ebbda6caaa87986086a",
+    "src/piano_roll_renderer.v": "f44104c6c1a8c324ce62689a70050438acb1250c030d7abaca2f0c95464f968f",
+    "src/piano_roll_score.v": "0850607ea71b05d42b457a71ab3678170f3c522385d725b01c019671b197c4ad",
+    "src/pressure_adaptive.v": "46a76129ac7c26a065ef1890d5b78c2f0a1d76af464b0897841c8e09d6308c7b",
+    "src/pressure_expression.v": "5c89d20c29040db3ef93d7fc939dd6b9cec93418dc603c228851733df0e3c70c",
+    "src/pt8211_driver.v": "167e6619b3c7cbdb5fbd2b8e8e5c8f8415bac8d552d6717aedbbeb118ef19922",
+    "src/remote_debug_link.v": "7ab231509f9037f9fe06ba780c3fb83d09cadd7d18437250bccb9aa24b39f63c",
+    "src/slider_controls.v": "9ce585fe6269abd299bcadd2ba3370e7beeaa526b4f946ea1863f9edf93956cf",
+    "src/snare_voice.v": "b4680c709dd84e32218299d1cff151507c20920379c4a37524b95405bcf81ed5",
+    "src/song_guide.v": "1b788a1193d9521fa5d57dd985bd5965cdab5deb0f4529152ef40fc9350ac3f6",
+    "src/strum_player.v": "673ba67dcc4dc12109c060c65c4b6adb7876ab8b17a08be0f4bfa9dac6bf1e10",
+    "src/test_sine.hex": "99a7d0a335cd1fe5a62ade4188773927f226e86149a7cc1d923230c53ffc40a4",
+    "src/timbre_dual.hex": "9fceefe32c67c10c01ba5bcdd2496ecb3345a74d9401278b66a680440d0465c9",
+    "src/timbre_dual_half.hex": "021f0db5272fc7826b0403e725b9a566b297fdd132ce96309e0c822f505223a6",
+    "src/timbre_odd_half.hex": "1f117905008b0553eb82fbe8a306d94273484e2ad66ba490cd673c36d1cad1c8",
+    "src/timbre_soft.hex": "9d003d4551c86f6b13fe45f2cd48d727bf716962feb6de29eed81ae39e19f253",
+    "src/tmds_encoder.v": "1b62664ef8aded769c8513c903ce7275501f2a19e6449a55b79bd10f6a5685b8",
+    "src/top.v": "ed1641fb8e9b36219cbfab88ea6dd20b7805887ad3e31729ecf825a4a5ad8bcc",
+    "src/touch_centers.hex": "a2b74a2431c6b00796d4c7824be1a1ffbd48978c2caf8dc62dcabc06e78a4469",
+    "src/touch_centers_init.vh": "80c51d8614ba8496e7fa08ef1854b6b2aa1d2d4f156604afab59687b202914cb",
+    "src/touch_display_control.v": "7e5bc683ef724f7b28cd7bda7c9d2cb7f84d9b5085463481bb72b6cfb7cdfd67",
+    "src/ui_font.hex": "307e173dfd2a42be58006327d203327c84d877bf78b85efcd18a6dda0fab5501",
+    "src/video_timing.v": "eeca51b4d70088a4356d7e08d48d7219c77a68bf4a865c6863ab234c42620eb9",
+    "src/voice_allocator.v": "cba3e2ece7a34c8cf67f2872a69f3c40c7dfc407e6c0440071c5afbd6570e3c1",
+    "src/wave_scope.v": "a5d4acdeaca9da3c1f351c24a1203db399dbca6dccc669ae98c51e45c35257bb",
+    "src/wavetable_synth.v": "a7966144ea2554193a5907bd4a34ed5697a64cb1c8d6ab25631fec86108a9b20",
+    "tests/Python/test_analyze_oscillators.py": "e0b7687c763c3828f7cc389f638b377fc9464ac79800dd990b1e554ce556336a",
+    "tests/Python/test_capture_pipeline.py": "afaefadb26dd8182cde43ae869bc2eea536ed9c14f494a1d4ee89fd0d67c7cfb",
+    "tests/Python/test_dual_timbre_assets.py": "f31d067b5047cf5d05f939fa0d2c269f001871adc788f1e75a3dbac706fc6dd5",
+    "tests/Python/test_evaluate_capture.py": "8c2a98fb940162982785f212af0d551f1d22793c752d42b3f74fb45660ccb596",
+    "tests/Python/test_input_monitor.py": "290dd3ce84be52bfb1fc49edfae37d9ace4dfbf55fdf88994b437b1af3593918",
+    "tests/Python/test_launch_oscillator_test.py": "83039c1ffeb63ddb7d57d6373a9fa13d8a5cedfd70e480c308725a186117a9ec",
+    "tests/Python/test_oscillator_test.py": "679e573242d54a007083051e1de7f9667f4f077bd9943ebd2fb48c59d60a791d",
+    "tests/Python/test_remote_control.py": "27c0896dc8fd742d6fcf1d2bb4ffaa6b988b42afb558fb7f06f3086c74599608",
+    "tests/Python/test_touch_calibrate.py": "f183d020b6fa7730edc373909678bbbba727b364266286ba122513ab3d9d01f7",
+    "tests/Python/test_verify_firmware_handoff.py": "042061277b227c5e213a739d3cc74578008825c1483a3aa986d42d369b972d59",
+    "tests/baseline_audio_top.v": "7dd9af1466886d050b560b529a96f7a0f666a9ad4673cfb5c41a35df3020d2c9",
+    "tests/baseline_instrument_audio.v": "b71165c29d222ac2a6971c2ad0ed0a240e0fda65bb052b38b2b853c4b0cb38b4",
+    "tests/fixtures/instrument_audio_v015_reference.v": "571a92efb1d21556232b8ff518fef7cb6526da0e9e46edb5eb1427080f79f525",
+    "tests/fixtures/iverilog_telemetry_startup.v": "5f862ac8086fa01e32c99a84e7ec2e8444b9aeccfe5416c06293f9b20d00fa4f",
+    "tests/fixtures/iverilog_timescale.v": "fd7a113f6cf450f8c2f7571aa960b170230681408c4f8c973c508f9e2f4090d2",
+    "tests/fixtures/iverilog_tmds_startup.v": "a6bb73ae0dee195dc7f55daf4118227a1a32b36228ea6f4b86429c603b09d4fa",
+    "tests/fixtures/note_table_v018.hex": "3d3e770f00a13463353adc5303127e737940982742c4420973d35a1e52e80ced",
+    "tests/fixtures/pressure_wave.hex": "8a817630ef1bb5c89a01e15972e647ec777cc12fb71725c8139897a49848d924",
+    "tests/fixtures/v015_dashboard_reference.v": "08c1505a26691e073480f9183590f804b23201a6574bb5438d00b6697e044d21",
+    "tests/fixtures/v015_i2c_reference.v": "5f0822e7980a1a9237787f09fad872ca56e7eb196fcdef29056afbcf933f5ebf",
+    "tests/fixtures/v016_instrument_audio_reference.v": "853301b41bb34f5c5aa2a1621ba437eae19d7280e76dfc7c0bae160105ff18a5",
+    "tests/fixtures/v016_voice_allocator_reference.v": "2bb422ebf276a8f343e782c88568702004b43433848e4b0295892e57582e8d69",
+    "tests/fixtures/v016_wavetable_synth_reference.v": "d6e7872fc4e77d7df539a09b70f62803a5ab4eb6f07b873ef1e9cfe48c007ba3",
+    "tests/fixtures/wavetable_synth_resource_reference.v": "8fa0f894395c2a4655fc942ca0261c28d1bae559f2e622386b896b034ea7aa3c",
+    "tests/fixtures/wavetable_synth_v015_reference.v": "29f2da0a1228ee56468b7d6d453beb4356554f7f2d38b2537dfe3e32160e2ee4",
+    "tests/golden_dashboard.v": "6e54ca55d6e3ce2f01b2cb485f2f2466b12bf2e972235d59e4d1f0f53b6efda3",
+    "tests/hdmi_display_stub.vh": "bbb54e35f0a7ad3cc1e6268efadd393f78d1b9fe9a30f0673a713fb1aa52fb7e",
+    "tests/legacy_audio_controls.v": "b7408c321ce0f642fb607b4de76f51df7b96d09aa41d943928dbb13266f994db",
+    "tests/legacy_diagnostic_frequency.v": "86d784f959cd6c8b03888b582ce8bd385c97a03e931c76d784d368d75bccdaaf",
+    "tests/legacy_shared_synth.v": "3f5403e5e13e2034dbae26acc1a4344a4a31faa2f02948e5dd3cdc4ca73fb779",
+    "tests/legacy_top.v": "aef21dd64678f3d1c0e08ca67d53a6e36797d31d47a72bb1185c61090d6e4822",
+    "tests/mock_ads1115.v": "80553d7e2cda04dc8daa1931e6711c90befc01cdba69c6eeeb3db41601d9f26c",
+    "tests/mock_ads1115_optional.v": "c0572f9785e26962e5ac6a3f869daf6059fc88b7902c76c83bbddf14257579da",
+    "tests/pcm5102a_serial_checker.vh": "f1e3a14cd6d25df69f9b22e6fb3a7ac4076c5d9a8654793b4183c435024ffd96",
+    "tests/phone_bridge/.gitignore": "c7cd0fc55d4b88bc4ed87b1cdc33670d9046174ab762188a0f2ce10290bb56e0",
+    "tests/phone_bridge/native_core.cpp": "80321078ed4d2706a7a754376fc73be07580e1804b4d221ac81161e1278ea578",
+    "tests/phone_bridge/run_native.cmd": "a78b701632836a6d3855ae00f4c03d8ff99ccab7eb424116d6e08f998b7f9db2",
+    "tests/phone_bridge/run_native.py": "9a73ea4a329a5bfd6f85d725f0a28306d217806c2675f92a4ad980643fec9f50",
+    "tests/phone_bridge/run_tests.ps1": "681c880a8fa7435dac187476a1b848feb40bfbd0dc93590ac5111a0542bfd5da",
+    "tests/phone_bridge/web_ui.test.cjs": "8d18e4842f499001f6d51e59e097cf386910ddea5a9f061890041a250e8d648f",
+    "tests/piano_roll_resource_top.v": "461873952bdd64e3191f3b8b7212b1f214ca33d7f0338e2a7c9e2e6a46523e78",
+    "tests/pressure_expression/tb_pressure_expression_preflight.v": "a7fbbf71be29669113e7ee14d7e00ce66ca8372af2927bb5c8cb65a73f23eb3e",
+    "tests/tb_analog_touch_keypad.v": "0af40e56370811f6c4d90b13eee3fe4aa583b0b2e776ea924c77b91904cd2fc5",
+    "tests/tb_audio_effects.v": "acfe654efb4b24d2b670c99bc194c867b16282b59814cefca0def36a7fcb54a6",
+    "tests/tb_audio_hdmi_equivalence.v": "4d4f88ad1894efbbf11e2c9f4abcd4418fbe2730056bd2de647be4089daef357",
+    "tests/tb_compact_dashboard.v": "2e3451d15499d34d2a629dc40fcbb1e6f2cad492e93c068597f305a587bc1d11",
+    "tests/tb_counter_resource_equivalence.v": "84f9143e8950e188434c4e6e94a0e827499eeb73c22595d7296287da5079a8f8",
+    "tests/tb_dashboard_resource_equivalence.v": "d669c9c3ab89f1c83b21760ade01da809963a7e434af97346ec7f44149dfa89d",
+    "tests/tb_digital_zero_source_release.v": "43509839e3ecca74313e952884e0c42bd685b367637d15e64d9cbf9eba214ef2",
+    "tests/tb_dual_timbre_audio.v": "acf8d747e2d25de1677a0fba76cd8f30da5b0b185706857299daa3a7e73204e2",
+    "tests/tb_dual_timbre_compat.v": "5b60b20f67d1392bb00a342042b6643a1de42b9dc0cd2c585e451ca723631dcf",
+    "tests/tb_dual_timbre_rom.v": "17bac17e9361cd6a5137d5e06bc62be4880ea6c31023eb56e453f41da81b0e38",
+    "tests/tb_dual_timbre_synth.v": "247cdb132e3e2b5b32abc3dc2b67f320452c29248e98bd4af4aacab4926d47ff",
+    "tests/tb_four_key_ui_render.v": "8471064ab7e5840e363419c39e57d780949c58a81241fd1054ec0a40809c6fbb",
+    "tests/tb_fourphone_arbitration.v": "131d7029bb65ccebab35d22b88494ebfe227ce8e5c5a0ed8945ace5a3e367535",
+    "tests/tb_fourphone_buttons.v": "ca3b425f301e47c0dab7f7dd62a761625e7275af83d3f2acdd7a90c32516d7bc",
+    "tests/tb_fourphone_system.v": "09b1655e73950f163de4959878dc5995318939fb6bb8ed8c457ff02f251fd94e",
+    "tests/tb_fsr_expression_integration.v": "2b7633e8376da2e24de226fad14ec19af2b4462a508b4615137ce2a28757a4f1",
+    "tests/tb_handoff_boundaries.v": "7e9550d8def4b38172dc08a9f382e305a86e7f7b6ccfffbcd62654fb126b55a5",
+    "tests/tb_hat_voice.v": "c5bad94d04a923e446232fcbc729e32924fd8095f1ba4595fa6bd1200f5e8ddf",
+    "tests/tb_hdmi_hybrid_cdc.v": "418097c4db3b8c486d4acdfc76da3332deed4d6be9cdc1238a563b9f98bea2df",
+    "tests/tb_hdmi_instrument_dashboard.v": "58407e56b0de9afb891bbb3edaf09e75c8dbf4d1f6c8fb6c3f92d0cab884a8ac",
+    "tests/tb_hdmi_link.v": "b431692b5f2f336d78d1c80b23dd57a31237d37e4627f37fcf5a19dc2069b8e3",
+    "tests/tb_hdmi_live_display.v": "f0419fa684df068228355f626e876b2746dbb474e1bdf8d0581db1b0652e4f3e",
+    "tests/tb_hdmi_live_preview.v": "1ffe2719245b2b966d3f4a160d1c40961347a1d2033a380b94cf218d4a82db31",
+    "tests/tb_hdmi_normal_miter.v": "7a46b517c98083195863f641f2a3e57a5ede8898c06908801252eae1128e64bc",
+    "tests/tb_hdmi_test_preview.v": "3cb32bae294942ca4e654ee93fc82d998bf881c6ec7fae60fcf2c38afe13f5e0",
+    "tests/tb_hdmi_zh_pipeline.v": "c2c39f8a674ecf5c15fa12b8f7a7ae7ab5876bf03e88163d152248ae1bb0c455",
+    "tests/tb_instrument_telemetry.v": "fd3621cfb20af5b35bab2fa7aeb03a9855bc4340fa102e0815f7ae298d96430c",
+    "tests/tb_instrument_ui_control.v": "f3f20adfd52a6c0af65c156a56852fb293cc7fa0cbc27616d75f58a52adb0186",
+    "tests/tb_keypad_physical_map.v": "ae4d7f0ac89f2ef0b63976a9cf0cf9fc399e6c459186b5251b32d10097647949",
+    "tests/tb_live_adsr.v": "8b67b5a7d59f6a6c66a8b5d127ebd8a7460a8b4043431b959bd50f3e483ef88e",
+    "tests/tb_mcp3208_reader.v": "925d0b9b07a302545b6a98411782e5cd73863435f5d2ca5aa359276f2865e65a",
+    "tests/tb_menu_cdc.v": "f8fe9d26fc28d2cccc3c702ade53fcd113aa4231a8917c0af98642fc558420f5",
+    "tests/tb_menu_preview.v": "d50caf6fdf3ea77ea1027f19def78ac38e87c70bba16977631d1cc787d195be2",
+    "tests/tb_menu_top.v": "56c1d9f6df515714ff4bd379d706ef4788275b99bd98d9364d2b20f66a8c202b",
+    "tests/tb_midi_audio_integration.v": "9195999e904251a70423ca460288ec509bf1fe9e9e46adf5ad54d07e6e362a99",
+    "tests/tb_midi_cc_events.v": "481fc6922c9ccd21b31db743880b592bc275732e45de06e27a8c8cf8f4681076",
+    "tests/tb_midi_control_bank.v": "f59ae8ac11cc86e9698740a3cc5f8a45b1d700290549dfa8edb332efbbfc5d7b",
+    "tests/tb_midi_expression_controls.v": "019eb019157cae950544e16b6ac95b7b9805751853f0625aeb6d9d0f4da4f605",
+    "tests/tb_midi_fx_phone.v": "1873128cd81915bd09e05ecf7f69b775a02041d70ba03bf352040382895e865e",
+    "tests/tb_midi_keyboard.v": "934bed75cc1af7d3004e38b2f993083fa832e02b351085d79959a559bd4c3380",
+    "tests/tb_midi_piano_notes.v": "025dc4a4de7979e9a3d90523f372bfda84497e119767c14d78ab157370e0d662",
+    "tests/tb_midi_production.v": "a94277518113cfd10723f09de6538596cc58b735f29db36f7152a6183f1a9220",
+    "tests/tb_midi_release.v": "ee31d32c3227861150f9384c18eb57e020398a5f4fa581b8261bc1f32562659d",
+    "tests/tb_midi_support.v": "c71f2101f7ac2462af0ce5178e54ce8832a805f9f0301f720cf45ebce1b259d6",
+    "tests/tb_midi_telemetry_range.v": "673489b82fa0a3eaaa0838684948092590161b0c7998eb6323419d235fcb0357",
+    "tests/tb_midi_uart_rx.v": "67b6556287c1bbfc7397fb7710566a6b103e10cbb4575436a58513ab6a0d567e",
+    "tests/tb_noise_selectors.v": "4e6e177d66b6657bd95169a59ba1b568c8e22eb971042c40af872d07393b049c",
+    "tests/tb_note_table_midi_range.v": "99ce9d5478e0de3a6db7a6460912226b0828c74cdf0b71dc71e0cddb32f74ded",
+    "tests/tb_optical_audio_integration.v": "d20dca0b9b59da7a935a651ad8b1ff6a304e1f4473f47491b4e3809f981cca47",
+    "tests/tb_optical_strum.v": "8121a6efdec40d32ef8c3c76614c211e22a6e23a1ce7e164ffd67b2540677186",
+    "tests/tb_oscillator_audio.v": "9716f11fbde7c072bd34f52ffaf056a969d8805ac73f529dfc55866e81e46d70",
+    "tests/tb_oscillator_integration.v": "cfde3735a8bec5dc2405aca368b130a584db68d49fb3e58478cf91b9138ba13d",
+    "tests/tb_oscillator_test_control.v": "80226c7aaa52e97c651947885326f84113a231468b1adf8601f8c1e0476a47f0",
+    "tests/tb_packed_rom_boundaries.v": "a832e02827b9f5777d5037058e1b69e545d8b874e3325444c9f3359ea9ac7c29",
+    "tests/tb_packed_rom_equivalence.v": "d64335de3b4eacce4f706b073fca6276d8c8a3c51a127ac598b92dc01fbdbd41",
+    "tests/tb_pcm5102a_i2s.v": "4dc838f199710f2580d57a90b05ab693e4fb77c39dccecf691fdb82e30bf98d9",
+    "tests/tb_performance_keys.v": "92c3e4f6789fbf067e0deaf2a731408202bdb86a2ef35ac2fd4b384c871936ca",
+    "tests/tb_phone_control_link.v": "73f278e4839579c38e39774a7c130006a884212f46a4ffe72b728bcc222ba461",
+    "tests/tb_piano_held_monitor.v": "c6c62c22de7468057cbd3f2ca610abacf484457624aadcc96ae8ac1e2f42c54c",
+    "tests/tb_piano_roll_cdc.v": "4f4060179866eeeacd88374001982d79e227a8de75fc1769b483ae51cdea297a",
+    "tests/tb_piano_roll_guide.v": "0dc4c69a8c4cd88e8a76b02ee627e00c4da088f6523fbab1fa93dbd502f4b4de",
+    "tests/tb_piano_roll_pixels.v": "2bfc5f316bcea16bcdbf1ae9852f377772876fc949d17c24a55ea8ec0efe812d",
+    "tests/tb_pressure_audio_expression.v": "e35e01d04aac87dd3889aea8db83b4d1ec41dfcc1aae25db2e90827fc39d3000",
+    "tests/tb_pressure_expression.v": "20dc97e2841e459523f7be4f39d120bf33c7e3f0838b98ae22308d1b542b6813",
+    "tests/tb_pressure_ui.v": "697d20b0eb5ec1b6058d05500c06e97abf887d67c9ef6f0815711beef8f965d0",
+    "tests/tb_reliable_cadence.v": "d3c21134de4561156df59eb58a5d8522a212e897fa6654c5643eece6fca9a63d",
+    "tests/tb_reliable_controls.v": "28d638d6bc3ed7a98d2631d169f8db86ac684721e772d9ecf698676b9dbcb8a7",
+    "tests/tb_remote_link.v": "f33d70cc25761c2523b977ea65f328fca2227b95686148e24909d6353d32dcd8",
+    "tests/tb_remote_top.v": "7de68af4384432560a1fe5d8d069c2c58e133e084ef55ece0c94f71e4ba15c5e",
+    "tests/tb_song_guide.v": "7f6c2727673870d9e76d058872c094aeac7a8de6b943487e232ee120fc96b8d5",
+    "tests/tb_song_library.v": "b2a70f9afb71c9eeadafccf6d4f815eaa4431d9dfce120ef40a9b3b7474e349c",
+    "tests/tb_song_pause.v": "0d8a1b3c55201c3fc8472fc8943adc04b36bf9222faea7d5ae3fd8a1ddeb9d05",
+    "tests/tb_song_rhythm.v": "5c12212d116482062ae76c2abee26db82115f21abf56f45fe38855a44093fc68",
+    "tests/tb_strum_player.v": "0ea59905ea57e24fbdf1506720583290dfffaac7207fafddb4610c44476205a5",
+    "tests/tb_synth_equivalence.v": "14fbdc7dc6cc3ecfd471c8a431268b519928243d5a4d91764f3787e48ef9ad50",
+    "tests/tb_synth_resource_equivalence.v": "83161ae247052f8277f86f021aef321a5c30ed59b89a524a330dea9fab019514",
+    "tests/tb_timbre2_inputs.v": "88a6e45726a2fd2147c8d0a57c3aed4de99a7414993f51202aa2b0dfbe4920ed",
+    "tests/tb_timbre2_keypad.v": "840021ce0b7922b75277642ed7d80d2fa4e9292398078b1360651f951cad0aa4",
+    "tests/tb_timbre2_ui.v": "f710e39ecee1c2c4f27dd125c41c6b7e7174833c531dce8548f56afc24c9d025",
+    "tests/tb_tmds_encoder.v": "dd58fafd08024697a923af1486588f462595f782fac0ad5f98e3cba0e36ec188",
+    "tests/tb_touch_diagnostic_link.v": "576e7c6bfdb2c1eccb01133cc97cf7998cde53e9be8a55d177682047f9f51ebe",
+    "tests/tb_touch_display_control.v": "79b508410a501670a96fc428a1bf0463864babe2167bf14877fbb4aff2f36228",
+    "tests/tb_touch_integration.v": "56e75cec30672ca75e1c77425ab8f8e1d57fdf040c968e7cccaa26b85768ff7d",
+    "tests/tb_touch_reset_constants.v": "e3842e14ddd8b67ec676212ee20b9b83b19461d16eb78318bd08e64027f2a91c",
+    "tests/tb_touch_selector_boundary.v": "cfb959e7087e8372c21ccefc1332a95ee6f219316638ded81e768614e3aabf71",
+    "tests/tb_ui_lookup_equivalence.v": "d306c9beece7cbc69eaa92857e1fa3a2904283ebf9c195353da2cbbbcb194945",
+    "tests/tb_v021_hub_safety.v": "a94948286923ec8493c621b056a80411939480d138c668a198d1ff51920f7b13",
+    "tests/tb_v021_test_abort.v": "6996cbc6482993e127bacddd2a7584af6f55dcbda69652d31e73ffb1278669e2",
+    "tests/tb_v021_touch_midi_integration.v": "0b130f5095b45380f6ba8e91778687a1def2635682de2017491bbb8dabd295e7",
+    "tests/tb_v023_system.v": "33fcbdf5b6ab2ce5adc16fcae26d9c0a0605f42e83d26fa50ea3eb45dd5d087c",
+    "tests/tb_v024_system.v": "598725f5782f9f483757b942a4def6f279e4b6e9fe7c14bdbd80fbadc6b229c5",
+    "tests/tb_v033_no_sliders.v": "14c049746ebb31ef9a8373f919bba88be33b72b342a5f9a55a4ac11f99d7616a",
+    "tests/tb_v034_buttons.v": "8d18be39a30e0987f01165ff06e87e0cadcc4c0b6b0f323147113e3c8c2955a6",
+    "tests/tb_v034_hybrid_audio.v": "bcd65556920ad3fcb7fed65f1310815804a43ae2663b7b9f65a734f5150306de",
+    "tests/tb_v034_top_phone.v": "f1e2902b78a2437dfe19f52721c9ffce65d0f7dea35e87614b9ee09add4e206f",
+    "tests/tb_video_timing.v": "f4dc8f8b2334e72a644e77479db0aad637dc4f82ae0aacd9f71b01186023b97c",
+    "tests/tb_wave_scope.v": "db06f91c03e44cdebf1fa0d3fa3d64175cd82ba4b4695356999d9d44bedbf840",
+    "tests/test_piano_pitch.py": "673002b12ecb67c28531bb3ef2fdc952fd38fd56b05b60ae085c343c12593881",
+    "tests/tmds_vectors.hex": "b4477ed3ba8399c7d4606882b9366c232962f73e7215a9c750ebb9f1aa99170e",
+    "tools/analyze_oscillators.py": "6936c9750f3b4ebe8a1ed45dd947a3ee01388dc32f9677d9e81a9408b02e26bd",
+    "tools/evaluate_capture.py": "b999263a6b7eadd6f80b21b31f0408d83bc16dbc665ef086cf5a5469a4a91ba4",
+    "tools/input_monitor.py": "eb01e0c0d89ea02fd78b6169409ff0379c905e53eaef490dd266ccc5bd9275e1",
+    "tools/launch_oscillator_test.py": "d3d569bc5c5f17035e4f513eadc2742b7617d7962b62b7c67802864780be09ac",
+    "tools/list_audio_inputs.py": "90a8a91bb8aef39dcf8bfcadffda01e6aed1a6b3f956f7c9b4c2e17b7b295777",
+    "tools/optical_monitor.py": "b8cbe5331646417df8e38463dc55a7e715402f27f924efa473d4db98eec60f1c",
+    "tools/oscillator_test.py": "738dc9a022f2996335a0e4b7baa1474dde423597300d5784622e43181d58cd84",
+    "tools/remote_control.py": "874027b687141c1fadd12904d82746d3760680a1853febef51aa8f5ffc42e39c",
+    "tools/run_remote_capture.py": "ffd8e5cd03e2e129c33bc735beef5c16740a1ebe7380495b2544768e0514fcb7",
+    "tools/run_test_suite.py": "4c87ca28bfc08460d1ea602f4278603df6051e4de2b3825f2e574d4d6ebbe39e",
+    "tools/support/analyze_wav.py": "a42f887130044fd14a77196ff05fac221eafedfa73f1237aaf3448c8a9b0e226",
+    "tools/support/audio_devices.py": "ee31838d951e869ecdaeadc4dd0be49630cc8e44251bab8217f71ff412843ad5",
+    "tools/support/record_wav.py": "1c6f5e9c6bcf5078d4a4df5a15493e60e2c9f188dad5c1232430b0378e367940",
+    "tools/touch_calibrate.py": "c2bac656deec662c8d77a5e1fc2bae84dfa6990cc9887578f3cd71e91c8f951d",
+    "tools/verify_firmware.py": "66451d4ab5b0e2a1c0af49ffb30102b3bb4eeedee082d2655f4b85dff47431a8",
+    "verification/README.md": "e8a63d1db46923865801905e38f75338824939ae6222c43d753b64cdeaa06226",
+    "verification/build_summary.json": "32f77f6f4d2897a516ae523773702fb027f4c71d1696ba3532cc7b24c39d9aab",
+    "verification/core_checks.json": "836bce94bdb6f1afe35f33e780b1cac782c9ae3307269e247e0c8ae6a085f973",
+    "verification/esp32_build_summary.json": "a10c8cc81e608d2b4a5ae4d58db61a9b0b78871469e085e397d0aff6313c10ce",
+    "verification/esp32_compile.txt": "5558f1a463abafdfed5d47d09ddbb73b452ae61a419dee71779407bc0214d8e5",
+    "verification/hdmi_checks.json": "5ccadf354112b60c5f681a1e186d3caee8559b45242372efe1150368b830c530",
+    "verification/hybrid_piano.png": "8673f03006805a6446477f418d9e4d6ec3591ba4eb96b38f671d93c83d635efe",
+    "verification/mode_headers.png": "c49c1767706626ad472fbbe10dba41fec5b12f8c69fd6e5e703b0b7a4087c2d0",
+    "verification/original_hdmi_validation.json": "e271d4dc9ee108b6eca5caa9d6b23e6d2b48497460a968949c89b962864c121b",
+    "verification/page0_mode0_header.png": "cada6b74dc6137d0509211495ebad14c8c5bb73403955adc520e8dbe78de78c8",
+    "verification/page0_mode1_header.png": "5aaf2b242e74c146a180e343ff12f7f280a750806d4f890e76b9c3a713c55e49",
+    "verification/page0_mode2_full.png": "8673f03006805a6446477f418d9e4d6ec3591ba4eb96b38f671d93c83d635efe",
+    "verification/page0_mode2_header.png": "73c2ee0e7bda4916f856a3116a4388cfb54a32581fb8ba1c1d9d7f2dec64ef0b",
+    "verification/page1_mode0_header.png": "3494fa7b2a57eea406c1514e8b13d4cd0f356498d02825235e5ee10ad8d28324",
+    "verification/page1_mode1_header.png": "425c6f90d5a287bb27a17dcd146daa3191e2aac463ab87dc6be8522ac315dc25",
+    "verification/page1_mode2_header.png": "c6dd004846e452cace184f9430cc4218419ae49d1f775a729a86a306fb7fc950",
+    "verification/page2_mode0_header.png": "1240621cd6a000c3af606ff6d668077b25c4f811fe1d5863672bb592add0bc10",
+    "verification/page2_mode1_header.png": "c222cdcc704de51a2bc6730870acdeef6a399c96fdfcadef4b6cd9d7bbdd1ed8",
+    "verification/page2_mode2_full.png": "d95cb59a3e650e06341ac7369a25936dc33875eaa52443778dcc9063e8e3bd30",
+    "verification/page2_mode2_header.png": "658c5d7f4cc3d13c7fb334776da35833b40cc455652f887c0eae7b41641bffff",
+    "verification/page3_mode0_header.png": "2f05ebe85b02687f795e74e825d96bb33b93cbd5f21830391b0209202ac64a88",
+    "verification/page3_mode1_header.png": "050fc59971cd5b05c7d28b1837107146b4602855d890ce1e339ec247050fb320",
+    "verification/page3_mode2_header.png": "b5d59bf2e8ad4d0c4564c4e8f66596be2ce97c0796489e16004550bca2150e17",
+    "verification/page4_mode0_header.png": "48d42cb0167fa755516696fa5c46b493d86e64ae01506e3d44ed97dc355a860f",
+    "verification/page4_mode1_header.png": "1efe7c65875fea1fdb4c99f8bec3dfa55ddf1ffeb201faba85ae8e84d730cacd",
+    "verification/page4_mode2_header.png": "798d6e44a7e4b59206ad49f425947004a81eeda0fddb35099e8af8f3190c1b96",
+    "verification/phone_native_checks.json": "72c05bcc8a8c7360ee2a0dc370fdc2dc8434fdc9ea3af68087ab1af0f295ea35",
+    "verification/phone_web_checks.json": "5c848d4b8618108bb59edd40808c0b4b25709c8f9c777cc3e10a7d01a36cbeac",
+    "verification/place_route_log.txt": "68274bfe38e6a09b6a6bb8cd3aace52057ce5fcfacc020385a6844e511b214d2",
+    "verification/place_route_report.txt": "8dde8f9841c504b68a9d301fbf35b146f348240d464a0da97be32cd358d9b9dd",
+    "verification/portable_checks.json": "8cee7b7420bd62c32face4889af47a11ababdc0cd05c102e71d9961ae48ce0c4",
+    "verification/release_checks.json": "2177331b56c95bf19aef73c6826b8fcc054197c56e63000f45d97700e415bc72",
+    "verification/software_summary.json": "706b5ce3ff61d19d38d413113dd715a39d776f9c98ee49ed13b66a9034eda09a",
+    "verification/source_delta_v015_v034.json": "a39611529844a575c7a6d02ea13e3f8d6744bd90ea34acbef025d80783c211ca",
+    "verification/timing_report.txt": "8f13de3dcc0063f4c8273a53f46b95c96970fe6eba02fef778be33b5225c4fc2"
   }
 }

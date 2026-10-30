@@ -6,7 +6,7 @@
 // 以 A4（note=69）为 440 Hz、十二平均律计算 f=440*2^((note-69)/12)，
 // 表内增量 = round(f*2^24/93750)。round 是生成表时的取整，不是运行时硬件运算。
 // 实际 DDS 频率由 phase_inc*93750/2^24 决定，整数增量存在量化误差。
-// 所列范围为 note=21..108（A0..C8），共 88 个条目；未列编号输出 0。
+// 所列范围为MIDI note=0..127，Fs=93750Hz；原21..108条目不变。
 // 增量为 0 只表示相位不前进，不会在这里自动清除合成器的包络或输出 PCM。
 module note_table(input [6:0] note,output reg [23:0] phase_inc);
 // 每个 case 分支完整赋值，default 覆盖其他编号，因此该组合查表不需要锁存器。
@@ -106,7 +106,48 @@ always @(*) begin case(note)
 7'd105:phase_inc=24'd629929;
 7'd106:phase_inc=24'd667386;
 7'd107:phase_inc=24'd707071;
-// C8 为最高已列音符；更高或更低的未列编号均走 default。
+// C8条目保持；其余MIDI边界在后面补齐。
 7'd108:phase_inc=24'd749115;
-// 未支持音符明确给出零增量；没有 MIDI note_off 或静音状态机语义。
+// default只防仿真未知输入；note_off语义由事件管理器处理。
+// V019扩展完整MIDI 0..127，原21..108常量逐字保留。
+7'd0:phase_inc=24'd1463;
+7'd1:phase_inc=24'd1550;
+7'd2:phase_inc=24'd1642;
+7'd3:phase_inc=24'd1740;
+7'd4:phase_inc=24'd1843;
+7'd5:phase_inc=24'd1953;
+7'd6:phase_inc=24'd2069;
+7'd7:phase_inc=24'd2192;
+7'd8:phase_inc=24'd2323;
+7'd9:phase_inc=24'd2461;
+7'd10:phase_inc=24'd2607;
+7'd11:phase_inc=24'd2762;
+7'd12:phase_inc=24'd2926;
+7'd13:phase_inc=24'd3100;
+7'd14:phase_inc=24'd3285;
+7'd15:phase_inc=24'd3480;
+7'd16:phase_inc=24'd3687;
+7'd17:phase_inc=24'd3906;
+7'd18:phase_inc=24'd4138;
+7'd19:phase_inc=24'd4384;
+7'd20:phase_inc=24'd4645;
+7'd109:phase_inc=24'd793660;
+7'd110:phase_inc=24'd840854;
+7'd111:phase_inc=24'd890853;
+7'd112:phase_inc=24'd943826;
+7'd113:phase_inc=24'd999949;
+7'd114:phase_inc=24'd1059409;
+7'd115:phase_inc=24'd1122405;
+7'd116:phase_inc=24'd1189147;
+7'd117:phase_inc=24'd1259857;
+7'd118:phase_inc=24'd1334772;
+7'd119:phase_inc=24'd1414142;
+7'd120:phase_inc=24'd1498231;
+7'd121:phase_inc=24'd1587320;
+7'd122:phase_inc=24'd1681707;
+7'd123:phase_inc=24'd1781707;
+7'd124:phase_inc=24'd1887653;
+7'd125:phase_inc=24'd1999898;
+7'd126:phase_inc=24'd2118819;
+7'd127:phase_inc=24'd2244810;
 default:phase_inc=0;endcase end endmodule

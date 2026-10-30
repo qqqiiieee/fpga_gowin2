@@ -1,55 +1,37 @@
 {
-  "version": "V015",
-  "scope": "Software validation only; no conversation or hardware operation logs",
-  "build_and_timing": "PASS",
-  "core_rtl": {
-    "count": 14,
-    "status": "PASS"
+  "version": "V034",
+  "fpga_build": "PASS",
+  "esp32_build": "PASS",
+  "fpga_programmed": false,
+  "esp32_uploaded": false,
+  "physical_hybrid_tested": false,
+  "current_release_scope": "Latest V034 only; preceding public release V015",
+  "original_validation": {
+    "core": "5/5 directed suites: buttons DB2/DB5, legacy shorts, real UART phone, real synth hybrid source isolation",
+    "core_latest_report": "20261030T184433_290556Z",
+    "phone_top_checks": 98,
+    "hybrid_checks": 32,
+    "hdmi": "six packet widths and17 captures, zero mismatched pixels",
+    "four_key_ui": "12 scenes and8192 pipeline vectors",
+    "esp_bridge": "native andofflinebrowser suites PASS"
   },
-  "boundary_rtl": {
-    "count": 9,
-    "status": "PASS"
+  "boundary": "Core integrations stub the HDMI physical boundary; render tests generate actual RTL RGB offline; no new physical flash/analog/optical claim",
+  "repository_retest": {
+    "passed": true,
+    "location": "isolated publication worktree",
+    "production_unchanged": true,
+    "portable_suites": [
+      "core",
+      "HDMI",
+      "four-key UI",
+      "piano-render",
+      "native",
+      "web"
+    ],
+    "umbrella_default_passed": true,
+    "ui_web_tested_directly": true,
+    "linux_execution_verified": false,
+    "details": "portable_checks.json"
   },
-  "song_variants": {
-    "count": 12,
-    "status": "PASS"
-  },
-  "keypad_model": {
-    "pairs": 120,
-    "ghost_cases": 144,
-    "status": "PASS"
-  },
-  "ui_oracle": {
-    "pixel_checks": 4232705,
-    "status": "PASS"
-  },
-  "host_mock_tests": {
-    "count": 131,
-    "status": "PASS"
-  },
-  "portable_rom_and_boundary_checks": "PASS",
-  "resources": {
-    "Logic": 14873.0,
-    "Register": 6638.0,
-    "CLS": 9357.0,
-    "BSRAM": 23.0,
-    "DSP": 11.5
-  },
-  "timing_violations": {
-    "Setup": 0,
-    "Hold": 0
-  },
-  "fmax_mhz": {
-    "clk27": 32.469,
-    "pixel25_2": 25.64,
-    "serial126": 1238.658
-  },
-  "runtime_scope": "RTL and mocks, not analog audio or board validation",
-  "github_checkout_full_suite": {
-    "status": "PASS",
-    "completed_local": "2026-10-12T23:42:27.934168+08:00",
-    "aggregate_entries": 19,
-    "host_tests": 131,
-    "physical_devices_opened": false
-  }
+  "evidence_note": "Original build text paths normalized to PROJECT_ROOT; exact RTL/build inputs and firmware bytes retain SHA256 identities in manifest.json"
 }

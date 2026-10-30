@@ -760,7 +760,7 @@
       "y": 224,
       "width": 256,
       "height": 16,
-      "text": "鼓1 000",
+      "text": "明亮000",
       "ink": "TEXT",
       "number": "{1'b0,pressure0}",
       "start": 4,
@@ -773,7 +773,7 @@
       "y": 256,
       "width": 256,
       "height": 16,
-      "text": "鼓2 000",
+      "text": "VIB 000",
       "ink": "TEXT",
       "number": "{1'b0,pressure1}",
       "start": 4,
@@ -890,7 +890,7 @@
       "y": 464,
       "width": 256,
       "height": 16,
-      "text": "S13/S14 选择16音色",
+      "text": "S13/S14 选择2音色",
       "ink": "MUTED",
       "number": null,
       "start": 0,
@@ -947,5 +947,919 @@
     "小星星",
     "欢乐颂",
     "两只老虎"
-  ]
+  ],
+  "compact": {
+    "schema": 1,
+    "pages": [
+      "演奏",
+      "曲库",
+      "操作说明",
+      "接线诊断"
+    ],
+    "description": "COMPACT_UI=1 使用共享2048x9同步字符ROM，再复用现有字体ROM。原fields/pages/songs及旧hex冻结参考均原样保留。",
+    "text_regions": {
+      "left_x": 32,
+      "right_x": 320,
+      "y_origin": 16,
+      "band_stride": 32,
+      "width": 256,
+      "height": 16,
+      "bands": 15
+    },
+    "wave_window": {
+      "left": 32,
+      "right_exclusive": 544,
+      "top": 144,
+      "bottom_exclusive": 280,
+      "center_y": 212,
+      "max_displacement": 60,
+      "pixels_per_sample": 2,
+      "pages": [
+        "演奏",
+        "32测试"
+      ]
+    },
+    "timing": {
+      "renderer_pixel_clocks": 2,
+      "wrapper_total_pixel_clocks": 4,
+      "legacy_renderer_pixel_clocks": 1,
+      "reason": "同步字符ROM与字体ROM各一拍，背景、字色、字符像素位号和DE/HS/VS全部同行延迟。"
+    },
+    "control_page": {
+      "0": "MAIN: K1 master volume, K2 melody/drum balance, K3 base brightness, K4 dry/wet",
+      "1": "ADSR: K1 Attack, K2 Decay, K3 Sustain, K4 Release",
+      "2": "FX: K1 Time, K2 Feedback, K3 Modulation, K4 dry/wet"
+    },
+    "knob_values_order": "[7:0]=K1,[15:8]=K2,[23:16]=K3,[31:24]=K4，显示当前页参数目标0..255，不是尚未接管的物理旋钮位置。",
+    "panic": "S13干净单键立即触发一拍；测试期间也有效；主层静音并退出测试。",
+    "oracle_replacement": {
+      "scope": "仅COMPACT_UI=1生产新布局。COMPACT_UI=0保留旧测试，未修改旧bench或冻结hex。",
+      "replaces_for_compact": [
+        "tb_menu_preview",
+        "tb_hdmi_live_preview",
+        "tb_hdmi_test_preview",
+        "tb_hdmi_zh_pipeline",
+        "tb_hdmi_instrument_dashboard"
+      ],
+      "new_oracle": "tb_compact_dashboard + run_touch_display_tests.py: 本JSON的最终行文字/颜色、独立字体存储和独立波形公式产生逐像素预期；tb_compact_display_link检查289位CDC与4拍RGB/DE/HS/VS。"
+    },
+    "oracle_scenes": [
+      {
+        "name": "live_main",
+        "status": {
+          "ui_page": 0,
+          "ui_cursor": 0,
+          "ui_song": 0,
+          "control_page": 0,
+          "fx_mode": 0,
+          "strum_mode": 0,
+          "knob_values": 168362240,
+          "keys": 0,
+          "ui_controls": 0,
+          "timbre": 0,
+          "note": 60,
+          "note_valid": 1,
+          "frequency_bcd": 610,
+          "volume_percent": 73,
+          "level_dbfs": -30,
+          "peak_percent": 99,
+          "voices": 8,
+          "flags": 36,
+          "cue_mask": 2049,
+          "next_mask": 16,
+          "wrong_mask": 0,
+          "guide_step": 6,
+          "guide_total": 42,
+          "wave_current": 512,
+          "wave_previous": -1024,
+          "scope_gain": 0,
+          "wave_valid": 1,
+          "test_active": 0,
+          "test_requested": 0,
+          "test_busy": 0,
+          "test_gate": 0,
+          "test_sweep": 0,
+          "test_index": 0,
+          "test_overrun": 0
+        },
+        "rows": {
+          "0": {
+            "left": "多音色乐器",
+            "right": "MODE KEYBOARD",
+            "left_ink": "CYAN",
+            "right_ink": "CYAN"
+          },
+          "1": {
+            "left": "TIMBRE FLUTE",
+            "right": "NOTE 060 FREQ 0262Hz",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "2": {
+            "left": "VOL 073% RMS -030dBFS PK 099%",
+            "right": "VOICES 08 FLAGS 0x24",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "3": {
+            "left": "SONG 1 STEP 06/42",
+            "right": "CUE 0x801 NEXT 0x010 BAD 0x000",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "9": {
+            "left": "MAIN",
+            "right": "FX MODE 0 FILTER 1 ZERO 0",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "10": {
+            "left": "MAIN K1 VOL K2 BAL K3 BR K4 MIX",
+            "right": "K1 000 K2 001 K3 009 K4 010",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "11": {
+            "left": "MAIN",
+            "right": "S3 CONFIRM / S4 BACK",
+            "left_ink": "AMBER",
+            "right_ink": "TEXT"
+          },
+          "12": {
+            "left": "S7 PLAY/PAUSE S8 RESTART",
+            "right": "S9 FLUTE S10 PLUCK",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "13": {
+            "left": "S11 KEY/STRUM S12 FX CYCLE",
+            "right": "S13 PANIC (IMMEDIATE)",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "14": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S5 PREV PAGE S6 NEXT PAGE",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          }
+        }
+      },
+      {
+        "name": "library_selection",
+        "status": {
+          "ui_page": 1,
+          "ui_cursor": 1,
+          "ui_song": 2,
+          "control_page": 0,
+          "fx_mode": 1,
+          "strum_mode": 0,
+          "knob_values": 2155832419,
+          "keys": 0,
+          "ui_controls": 0,
+          "timbre": 0,
+          "note": 60,
+          "note_valid": 1,
+          "frequency_bcd": 610,
+          "volume_percent": 73,
+          "level_dbfs": -30,
+          "peak_percent": 99,
+          "voices": 8,
+          "flags": 37,
+          "cue_mask": 2049,
+          "next_mask": 16,
+          "wrong_mask": 0,
+          "guide_step": 6,
+          "guide_total": 42,
+          "wave_current": 512,
+          "wave_previous": -1024,
+          "scope_gain": 0,
+          "wave_valid": 1,
+          "test_active": 0,
+          "test_requested": 0,
+          "test_busy": 0,
+          "test_gate": 0,
+          "test_sweep": 0,
+          "test_index": 0,
+          "test_overrun": 0
+        },
+        "rows": {
+          "0": {
+            "left": "曲库",
+            "right": "MODE KEYBOARD",
+            "left_ink": "CYAN",
+            "right_ink": "CYAN"
+          },
+          "1": {
+            "left": "S1/S2 SELECT SONG",
+            "right": "03 两只老虎",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "2": {
+            "left": "01 小星星",
+            "right": "",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "3": {
+            "left": "02 欢乐颂",
+            "right": "",
+            "left_ink": "AMBER",
+            "right_ink": "TEXT"
+          },
+          "4": {
+            "left": "03 两只老虎",
+            "right": "",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "5": {
+            "left": "S3 START SELECTED SONG",
+            "right": "S7 PLAY/PAUSE S8 RESTART",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "7": {
+            "left": "K1 099 K2 100 K3 127 K4 128",
+            "right": "FX MODE 1 FILTER 1 ZERO 1",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "9": {
+            "left": "TOUCH IS DISPLAY CONTROL ONLY",
+            "right": "MIDI / OPTICAL: MUSICAL INPUT",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "12": {
+            "left": "S14 FILTER / HOLD 1.2s ZERO",
+            "right": "S15 HOLD 2s: 32 OSC TEST",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "13": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S16 EXIT / BACK",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "14": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S5 PREV PAGE S6 NEXT PAGE",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          }
+        }
+      },
+      {
+        "name": "help_strum",
+        "status": {
+          "ui_page": 2,
+          "ui_cursor": 0,
+          "ui_song": 0,
+          "control_page": 0,
+          "fx_mode": 2,
+          "strum_mode": 1,
+          "knob_values": 269418751,
+          "keys": 0,
+          "ui_controls": 0,
+          "timbre": 0,
+          "note": 60,
+          "note_valid": 1,
+          "frequency_bcd": 610,
+          "volume_percent": 73,
+          "level_dbfs": -30,
+          "peak_percent": 99,
+          "voices": 8,
+          "flags": 128,
+          "cue_mask": 2049,
+          "next_mask": 16,
+          "wrong_mask": 0,
+          "guide_step": 6,
+          "guide_total": 42,
+          "wave_current": 512,
+          "wave_previous": -1024,
+          "scope_gain": 0,
+          "wave_valid": 1,
+          "test_active": 0,
+          "test_requested": 0,
+          "test_busy": 0,
+          "test_gate": 0,
+          "test_sweep": 0,
+          "test_index": 0,
+          "test_overrun": 0
+        },
+        "rows": {
+          "0": {
+            "left": "操作说明",
+            "right": "MODE STRUM",
+            "left_ink": "CYAN",
+            "right_ink": "CYAN"
+          },
+          "1": {
+            "left": "TOUCH IS DISPLAY CONTROL ONLY",
+            "right": "MIDI / OPTICAL: MUSICAL INPUT",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "2": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S5 PREV PAGE S6 NEXT PAGE",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "3": {
+            "left": "S7 PLAY/PAUSE S8 RESTART",
+            "right": "S9 FLUTE S10 PLUCK",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "4": {
+            "left": "S11 KEY/STRUM S12 FX CYCLE",
+            "right": "S13 PANIC (IMMEDIATE)",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "5": {
+            "left": "S14 FILTER / HOLD 1.2s ZERO",
+            "right": "S15 HOLD 2s: 32 OSC TEST",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "6": {
+            "left": "S16 EXIT / BACK",
+            "right": "G/V/S -> MCP3208 CH0",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "7": {
+            "left": "ADSR: K1 A K2 D K3 S K4 R",
+            "right": "FX: K1 TIME K2 FB K3 MOD K4 MIX",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "8": {
+            "left": "K1 255 K2 000 K3 015 K4 016",
+            "right": "FX MODE 2 FILTER 0 ZERO 0",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "9": {
+            "left": "S1..S5: 1 / 4 / 8 / 16 / 32",
+            "right": "S6 SWEEP / S16 EXIT",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "11": {
+            "left": "S1/S2 SELECT MAIN / ADSR / FX",
+            "right": "S3 CONFIRM / S4 BACK",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "13": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S16 EXIT / BACK",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "14": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S5 PREV PAGE S6 NEXT PAGE",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "10": {
+            "left": "FX 0 OFF 1 DELAY 2 CHOR 3 REV",
+            "right": "",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          }
+        }
+      },
+      {
+        "name": "diagnostic_extremes",
+        "status": {
+          "ui_page": 3,
+          "ui_cursor": 0,
+          "ui_song": 0,
+          "control_page": 0,
+          "fx_mode": 0,
+          "strum_mode": 0,
+          "knob_values": 17465599,
+          "keys": 1408,
+          "ui_controls": 10,
+          "timbre": 0,
+          "note": 60,
+          "note_valid": 1,
+          "frequency_bcd": 610,
+          "volume_percent": 255,
+          "level_dbfs": -128,
+          "peak_percent": 255,
+          "voices": 32,
+          "flags": 255,
+          "cue_mask": 2048,
+          "next_mask": 1,
+          "wrong_mask": 291,
+          "guide_step": 6,
+          "guide_total": 42,
+          "wave_current": 512,
+          "wave_previous": -1024,
+          "scope_gain": 0,
+          "wave_valid": 1,
+          "test_active": 0,
+          "test_requested": 0,
+          "test_busy": 4294901760,
+          "test_gate": 2147483649,
+          "test_sweep": 0,
+          "test_index": 0,
+          "test_overrun": 0
+        },
+        "rows": {
+          "0": {
+            "left": "接线诊断",
+            "right": "MODE KEYBOARD",
+            "left_ink": "CYAN",
+            "right_ink": "CYAN"
+          },
+          "1": {
+            "left": "G/V/S -> MCP3208 CH0",
+            "right": "KEYS 0xA580",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "2": {
+            "left": "VOL 255% RMS -128dBFS PK 255%",
+            "right": "VOICES 32 FLAGS 0xFF",
+            "left_ink": "TEXT",
+            "right_ink": "ALERT"
+          },
+          "3": {
+            "left": "FILTER 1 ZERO 1 ADC 1",
+            "right": "K1 255 K2 128 K3 010 K4 001",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "4": {
+            "left": "GATE 0x80000001",
+            "right": "BUSY 0xFFFF0000",
+            "left_ink": "GREEN",
+            "right_ink": "GREEN"
+          },
+          "5": {
+            "left": "ADSR: K1 A K2 D K3 S K4 R",
+            "right": "FX: K1 TIME K2 FB K3 MOD K4 MIX",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "6": {
+            "left": "CUE 0x800 NEXT 0x001 BAD 0x123",
+            "right": "FX MODE 0 FILTER 1 ZERO 1",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "8": {
+            "left": "TOUCH IS DISPLAY CONTROL ONLY",
+            "right": "MIDI / OPTICAL: MUSICAL INPUT",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "10": {
+            "left": "S14 FILTER / HOLD 1.2s ZERO",
+            "right": "S15 HOLD 2s: 32 OSC TEST",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "12": {
+            "left": "S11 KEY/STRUM S12 FX CYCLE",
+            "right": "S13 PANIC (IMMEDIATE)",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "13": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S16 EXIT / BACK",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "14": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S5 PREV PAGE S6 NEXT PAGE",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "7": {
+            "left": "FX 0 OFF 1 DELAY 2 CHOR 3 REV",
+            "right": "",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          }
+        }
+      },
+      {
+        "name": "live_adsr_gain15",
+        "status": {
+          "ui_page": 0,
+          "ui_cursor": 1,
+          "ui_song": 0,
+          "control_page": 1,
+          "fx_mode": 3,
+          "strum_mode": 1,
+          "knob_values": 4286611200,
+          "keys": 0,
+          "ui_controls": 0,
+          "timbre": 0,
+          "note": 60,
+          "note_valid": 1,
+          "frequency_bcd": 610,
+          "volume_percent": 73,
+          "level_dbfs": -30,
+          "peak_percent": 99,
+          "voices": 8,
+          "flags": 36,
+          "cue_mask": 2049,
+          "next_mask": 16,
+          "wrong_mask": 0,
+          "guide_step": 6,
+          "guide_total": 42,
+          "wave_current": 32767,
+          "wave_previous": -32768,
+          "scope_gain": 15,
+          "wave_valid": 1,
+          "test_active": 0,
+          "test_requested": 0,
+          "test_busy": 0,
+          "test_gate": 0,
+          "test_sweep": 0,
+          "test_index": 0,
+          "test_overrun": 0
+        },
+        "rows": {
+          "0": {
+            "left": "多音色乐器",
+            "right": "MODE STRUM",
+            "left_ink": "CYAN",
+            "right_ink": "CYAN"
+          },
+          "1": {
+            "left": "TIMBRE FLUTE",
+            "right": "NOTE 060 FREQ 0262Hz",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "2": {
+            "left": "VOL 073% RMS -030dBFS PK 099%",
+            "right": "VOICES 08 FLAGS 0x24",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "3": {
+            "left": "SONG 1 STEP 06/42",
+            "right": "CUE 0x801 NEXT 0x010 BAD 0x000",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "9": {
+            "left": "ADSR",
+            "right": "FX MODE 3 FILTER 1 ZERO 0",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "10": {
+            "left": "ADSR: K1 A K2 D K3 S K4 R",
+            "right": "K1 000 K2 127 K3 128 K4 255",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "11": {
+            "left": "ADSR",
+            "right": "S3 CONFIRM / S4 BACK",
+            "left_ink": "AMBER",
+            "right_ink": "TEXT"
+          },
+          "12": {
+            "left": "S7 PLAY/PAUSE S8 RESTART",
+            "right": "S9 FLUTE S10 PLUCK",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "13": {
+            "left": "S11 KEY/STRUM S12 FX CYCLE",
+            "right": "S13 PANIC (IMMEDIATE)",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "14": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S5 PREV PAGE S6 NEXT PAGE",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          }
+        }
+      },
+      {
+        "name": "live_fx_invalid_note",
+        "status": {
+          "ui_page": 0,
+          "ui_cursor": 2,
+          "ui_song": 0,
+          "control_page": 2,
+          "fx_mode": 0,
+          "strum_mode": 0,
+          "knob_values": 1684212233,
+          "keys": 0,
+          "ui_controls": 0,
+          "timbre": 0,
+          "note": 60,
+          "note_valid": 0,
+          "frequency_bcd": 65535,
+          "volume_percent": 73,
+          "level_dbfs": -30,
+          "peak_percent": 99,
+          "voices": 8,
+          "flags": 0,
+          "cue_mask": 2049,
+          "next_mask": 16,
+          "wrong_mask": 0,
+          "guide_step": 6,
+          "guide_total": 42,
+          "wave_current": 512,
+          "wave_previous": -1024,
+          "scope_gain": 0,
+          "wave_valid": 0,
+          "test_active": 0,
+          "test_requested": 0,
+          "test_busy": 0,
+          "test_gate": 0,
+          "test_sweep": 0,
+          "test_index": 0,
+          "test_overrun": 0
+        },
+        "rows": {
+          "0": {
+            "left": "多音色乐器",
+            "right": "MODE KEYBOARD",
+            "left_ink": "CYAN",
+            "right_ink": "CYAN"
+          },
+          "1": {
+            "left": "TIMBRE FLUTE",
+            "right": "NOTE --- FREQ ----Hz",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "2": {
+            "left": "VOL 073% RMS -030dBFS PK 099%",
+            "right": "VOICES 08 FLAGS 0x00",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "3": {
+            "left": "SONG 1 STEP 06/42",
+            "right": "CUE 0x801 NEXT 0x010 BAD 0x000",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "9": {
+            "left": "FX",
+            "right": "FX MODE 0 FILTER 0 ZERO 0",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "10": {
+            "left": "FX: K1 TIME K2 FB K3 MOD K4 MIX",
+            "right": "K1 009 K2 010 K3 099 K4 100",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "11": {
+            "left": "FX",
+            "right": "S3 CONFIRM / S4 BACK",
+            "left_ink": "AMBER",
+            "right_ink": "TEXT"
+          },
+          "12": {
+            "left": "S7 PLAY/PAUSE S8 RESTART",
+            "right": "S9 FLUTE S10 PLUCK",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "13": {
+            "left": "S11 KEY/STRUM S12 FX CYCLE",
+            "right": "S13 PANIC (IMMEDIATE)",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "14": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S5 PREV PAGE S6 NEXT PAGE",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          }
+        }
+      },
+      {
+        "name": "test_priority_sweep",
+        "status": {
+          "ui_page": 2,
+          "ui_cursor": 0,
+          "ui_song": 0,
+          "control_page": 0,
+          "fx_mode": 0,
+          "strum_mode": 0,
+          "knob_values": 168362240,
+          "keys": 0,
+          "ui_controls": 0,
+          "timbre": 0,
+          "note": 60,
+          "note_valid": 1,
+          "frequency_bcd": 610,
+          "volume_percent": 73,
+          "level_dbfs": -30,
+          "peak_percent": 99,
+          "voices": 31,
+          "flags": 36,
+          "cue_mask": 2049,
+          "next_mask": 16,
+          "wrong_mask": 0,
+          "guide_step": 6,
+          "guide_total": 42,
+          "wave_current": 32767,
+          "wave_previous": -32768,
+          "scope_gain": 1,
+          "wave_valid": 1,
+          "test_active": 1,
+          "test_requested": 32,
+          "test_busy": 4294967294,
+          "test_gate": 4294967293,
+          "test_sweep": 1,
+          "test_index": 31,
+          "test_overrun": 1
+        },
+        "rows": {
+          "0": {
+            "left": "32路验证",
+            "right": "MODE KEYBOARD",
+            "left_ink": "CYAN",
+            "right_ink": "CYAN"
+          },
+          "1": {
+            "left": "REQUEST 32 ACTIVE 31 INDEX 31",
+            "right": "SWEEP 1 OVERRUN 1",
+            "left_ink": "GREEN",
+            "right_ink": "ALERT"
+          },
+          "2": {
+            "left": "GATE 0xFFFFFFFD",
+            "right": "BUSY 0xFFFFFFFE",
+            "left_ink": "GREEN",
+            "right_ink": "GREEN"
+          },
+          "3": {
+            "left": "VOL 073% RMS -030dBFS PK 099%",
+            "right": "PCM WAVE x2^01",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "9": {
+            "left": "S1..S5: 1 / 4 / 8 / 16 / 32",
+            "right": "S6 SWEEP / S16 EXIT",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "10": {
+            "left": "PCM WAVE x2^01",
+            "right": "TOUCH IS DISPLAY CONTROL ONLY",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "11": {
+            "left": "REQUEST 32 ACTIVE 31 INDEX 31",
+            "right": "VOICES 31 FLAGS 0x24",
+            "left_ink": "GREEN",
+            "right_ink": "TEXT"
+          },
+          "12": {
+            "left": "GATE 0xFFFFFFFD",
+            "right": "BUSY 0xFFFFFFFE",
+            "left_ink": "GREEN",
+            "right_ink": "GREEN"
+          },
+          "13": {
+            "left": "S6 SWEEP / S16 EXIT",
+            "right": "S16 EXIT / BACK",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "14": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S5 PREV PAGE S6 NEXT PAGE",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          }
+        }
+      },
+      {
+        "name": "test_release_tail",
+        "status": {
+          "ui_page": 3,
+          "ui_cursor": 0,
+          "ui_song": 0,
+          "control_page": 0,
+          "fx_mode": 0,
+          "strum_mode": 0,
+          "knob_values": 168362240,
+          "keys": 0,
+          "ui_controls": 0,
+          "timbre": 0,
+          "note": 60,
+          "note_valid": 1,
+          "frequency_bcd": 610,
+          "volume_percent": 73,
+          "level_dbfs": -30,
+          "peak_percent": 99,
+          "voices": 1,
+          "flags": 36,
+          "cue_mask": 2049,
+          "next_mask": 16,
+          "wrong_mask": 0,
+          "guide_step": 6,
+          "guide_total": 42,
+          "wave_current": 512,
+          "wave_previous": -1024,
+          "scope_gain": 0,
+          "wave_valid": 0,
+          "test_active": 1,
+          "test_requested": 0,
+          "test_busy": 2147483648,
+          "test_gate": 0,
+          "test_sweep": 0,
+          "test_index": 0,
+          "test_overrun": 0
+        },
+        "rows": {
+          "0": {
+            "left": "32路验证",
+            "right": "MODE KEYBOARD",
+            "left_ink": "CYAN",
+            "right_ink": "CYAN"
+          },
+          "1": {
+            "left": "REQUEST 00 ACTIVE 01 INDEX 00",
+            "right": "SWEEP 0 OVERRUN 0",
+            "left_ink": "GREEN",
+            "right_ink": "TEXT"
+          },
+          "2": {
+            "left": "GATE 0x00000000",
+            "right": "BUSY 0x80000000",
+            "left_ink": "GREEN",
+            "right_ink": "GREEN"
+          },
+          "3": {
+            "left": "VOL 073% RMS -030dBFS PK 099%",
+            "right": "PCM WAVE x2^00",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "9": {
+            "left": "S1..S5: 1 / 4 / 8 / 16 / 32",
+            "right": "S6 SWEEP / S16 EXIT",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "10": {
+            "left": "PCM: WAIT",
+            "right": "TOUCH IS DISPLAY CONTROL ONLY",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "11": {
+            "left": "REQUEST 00 ACTIVE 01 INDEX 00",
+            "right": "VOICES 01 FLAGS 0x24",
+            "left_ink": "GREEN",
+            "right_ink": "TEXT"
+          },
+          "12": {
+            "left": "GATE 0x00000000",
+            "right": "BUSY 0x80000000",
+            "left_ink": "GREEN",
+            "right_ink": "GREEN"
+          },
+          "13": {
+            "left": "S6 SWEEP / S16 EXIT",
+            "right": "S16 EXIT / BACK",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          },
+          "14": {
+            "left": "S1 UP S2 DOWN S3 OK S4 BACK",
+            "right": "S5 PREV PAGE S6 NEXT PAGE",
+            "left_ink": "TEXT",
+            "right_ink": "TEXT"
+          }
+        }
+      }
+    ]
+  }
 }

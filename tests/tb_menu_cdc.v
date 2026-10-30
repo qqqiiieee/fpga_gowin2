@@ -59,9 +59,9 @@ module tb_menu_cdc;
                 dut.d_beats,dut.d_clip,dut.d_test_active,dut.d_test_requested,
                 dut.d_test_busy,dut.d_test_gate,dut.d_test_sweep,dut.d_test_index,dut.d_test_overrun}
                  !==dut.display_status[241:0])$fatal(1,"Old fields unpack incorrectly");
-            if({dut.u_dashboard.ui_page,dut.u_dashboard.ui_cursor,dut.u_dashboard.ui_song,
-                dut.u_dashboard.ui_controls}!==dut.display_status[251:242])$fatal(1,"UI renderer ports tear");
-            if(dut.u_dashboard.flags!==(dut.display_status[146:139] | (dut.display_status[78] ? 8'h80 : 8'h00)))
+            if({dut.legacy_ui.u_dashboard.ui_page,dut.legacy_ui.u_dashboard.ui_cursor,dut.legacy_ui.u_dashboard.ui_song,
+                dut.legacy_ui.u_dashboard.ui_controls}!==dut.display_status[251:242])$fatal(1,"UI renderer ports tear");
+            if(dut.legacy_ui.u_dashboard.flags!==(dut.display_status[146:139] | (dut.display_status[78] ? 8'h80 : 8'h00)))
                 $fatal(1,"Physical clip flag OR lost");
             if(sampled_frame)begin
                 frames=frames+1;found=0;
@@ -136,7 +136,7 @@ module tb_menu_cdc;
         verify(stimulus);
         @(negedge clk27);stimulus[76:71]=0;stimulus[38:7]=0;stimulus[70:39]=32'h80000000;stimulus[168:163]=1;
         verify(stimulus);
-        if(!dut.u_dashboard.test_active || dut.u_dashboard.test_gate!==0 || dut.u_dashboard.test_busy!==32'h80000000)
+        if(!dut.legacy_ui.u_dashboard.test_active || dut.legacy_ui.u_dashboard.test_gate!==0 || dut.legacy_ui.u_dashboard.test_busy!==32'h80000000)
             $fatal(1,"Exit handover lost test ownership or release tail");
         @(negedge clk27);stimulus[70:39]=0;stimulus[168:163]=0;verify(stimulus);
         @(negedge clk27);stimulus[77]=0;verify(stimulus);

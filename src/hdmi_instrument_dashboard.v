@@ -4,7 +4,9 @@
 // 固定布局640×480，普通图形/数码组合生成，中文8×16半字单元经字模ROM一拍输出。
 // 页/游标/曲目均2bit；keys仅S1..S12，ui_controls为S13..S16，诊断页组合成完整16键。
 // 位0对应逻辑S1；实体第二第三行的调整在CST，renderer和虚拟协议不重复换行。
-// UI文本常量在hdmi_ui_text.vh，由assets/ui_texts.json生成，保留原288bit编码。
+// UI文本由assets/ui_texts.json生成：8位ID和列优先共享译码，避免288位整行选择器。
+// 原hdmi_ui_text.vh保留作独立参考；同步字模的一拍延迟保持不变。
+// 两音色版只显示新ID0/1；旧音色TXID槽保留编号但清空内容，避免遗留名称进入译码。
 // 颜色/坐标/数字占位和优先级是显示契约；修改后须过独立布局/字体像素预期检查。
 // 按键/包络busy/gate/超时均显示源域状态，屏幕32格亮起不等于32个模拟谱峰验证。
 // wave_*与scope_gain只用于绘图，显示dBFS是数字PCM统计，不是声压计或模拟噪声测量。
@@ -270,8 +272,8 @@ module hdmi_instrument_dashboard #(parameter UI_ENABLE=0)(
         end
     endfunction
 
-    // 文本编码由 assets/ui_texts.json 生成，32 个 9-bit 半字字符单元。
-    `include "src/hdmi_ui_text.vh"
+    // 文本选择只传播8位ID；列优先译码合并相同半字符，减少宽mux和变长移位。
+    `include "src/hdmi_ui_lookup.vh"
 
     reg [23:0] pixel, ink, key_fill, progress_ink;
     reg [255:0] label_text;
@@ -291,38 +293,27 @@ module hdmi_instrument_dashboard #(parameter UI_ENABLE=0)(
     reg [15:0] test_frequency_digits;
     reg test_cell_text, test_frequency_text;
 
-    function [287:0] timbre_label;
+    function [7:0] timbre_label;
         input [3:0] value;
         begin
             case(value)
-                0: timbre_label=TXT_000; // 00 正弦
-                1: timbre_label=TXT_001; // 01 柔和长笛
-                2: timbre_label=TXT_002; // 02 木管
-                3: timbre_label=TXT_003; // 03 暖音风琴
-                4: timbre_label=TXT_004; // 04 空心管
-                5: timbre_label=TXT_005; // 05 柔和铜管
-                6: timbre_label=TXT_006; // 06 木琴
-                7: timbre_label=TXT_007; // 07 拨弦
-                8: timbre_label=TXT_008; // 08 柔和弦乐
-                9: timbre_label=TXT_009; // 09 簧片
-                10: timbre_label=TXT_010; // 10 明亮风琴
-                11: timbre_label=TXT_011; // 11 钟声
-                12: timbre_label=TXT_012; // 12 口琴
-                13: timbre_label=TXT_013; // 13 厚合成
-                14: timbre_label=TXT_014; // 14 金属
-                15: timbre_label=TXT_015; // 15 明亮合成
-                default: timbre_label=TXT_016;
+                // 文本槽编号与音色ID不是同一概念：保持旧TXID_001/007位置，
+                // 让136个文本ID及136*32=4352字符的独立对照继续稳定。
+                0: timbre_label=TXID_001; // 00 柔和长笛，来自旧音色ID1。
+                1: timbre_label=TXID_007; // 01 拨弦，来自旧音色ID7。
+                // 非法音色不借用旧名称；生产输入保证只产生0/1。
+                default: timbre_label=TXID_BLANK;
             endcase
         end
     endfunction
 
     // 曲库名称与song_guide的0/1/2索引严格对应，超范围回退小星星。
-    function [287:0] song_label;
+    function [7:0] song_label;
         input [1:0] id;
         begin case(id)
-            1:song_label=TXT_017;
-            2:song_label=TXT_018;
-            default:song_label=TXT_019;
+            1:song_label=TXID_017;
+            2:song_label=TXID_018;
+            default:song_label=TXID_019;
         endcase end
     endfunction
     // UI_ENABLE=0 保留旧组件测试接口；生产顶层显式启用四页界面。
@@ -332,7 +323,7 @@ module hdmi_instrument_dashboard #(parameter UI_ENABLE=0)(
     reg [1:0] library_row;
     reg zh_enable;
     reg [9:0] zh_x,zh_y;
-    reg [287:0] zh_label;
+    reg [7:0] zh_label; // 文本编号，不是整行字符向量。
     reg [8:0] zh_character;
     reg [4:0] zh_index,zh_digit_start;
     reg [2:0] zh_digit_count,zh_kind;
@@ -367,7 +358,7 @@ module hdmi_instrument_dashboard #(parameter UI_ENABLE=0)(
     end
     always @* begin
         diagnostic_x=x-10'd32;diagnostic_y=y-10'd160;diagnostic_index=0;library_row=0;
-        zh_enable=0; zh_x=0; zh_y=0; zh_label=0; zh_character=32;
+        zh_enable=0; zh_x=0; zh_y=0; zh_label=TXID_BLANK; zh_character=32;
         zh_index=0; zh_digit_start=0; zh_digit_count=0; zh_kind=0;
         selected_note=midi_name(note); current_pad=mask_name(cue_mask); next_pad=mask_name(next_mask);
         font_address=0; frequency_digit=0;
@@ -566,352 +557,352 @@ module hdmi_instrument_dashboard #(parameter UI_ENABLE=0)(
             // 明确页优先级；验证所有权总是覆盖普通菜单。
             if(ui_page==1) begin
             if(x>=32 && x<288 && y>=16 && y<32) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd16;zh_label=TXT_020;ink=CYAN;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd16;zh_label=TXID_020;ink=CYAN;
             end
             else if(x>=368 && x<624 && y>=16 && y<32) begin
-                zh_enable=1;zh_x=x-10'd368;zh_y=y-10'd16;zh_label=TXT_021;ink=AMBER;
+                zh_enable=1;zh_x=x-10'd368;zh_y=y-10'd16;zh_label=TXID_021;ink=AMBER;
             end
             else if(x>=56 && x<312 && y>=112 && y<128) begin
-                zh_enable=1;zh_x=x-10'd56;zh_y=y-10'd112;zh_label=TXT_022;ink=ui_cursor==0 ? AMBER : TEXT;
+                zh_enable=1;zh_x=x-10'd56;zh_y=y-10'd112;zh_label=TXID_022;ink=ui_cursor==0 ? AMBER : TEXT;
             end
             else if(x>=384 && x<608 && y>=112 && y<128) begin
-                zh_enable=1;zh_x=x-10'd384;zh_y=y-10'd112;zh_label=TXT_023;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd384;zh_y=y-10'd112;zh_label=TXID_023;ink=MUTED;
             end
             else if(x>=56 && x<312 && y>=192 && y<208) begin
-                zh_enable=1;zh_x=x-10'd56;zh_y=y-10'd192;zh_label=TXT_024;ink=ui_cursor==1 ? AMBER : TEXT;
+                zh_enable=1;zh_x=x-10'd56;zh_y=y-10'd192;zh_label=TXID_024;ink=ui_cursor==1 ? AMBER : TEXT;
             end
             else if(x>=384 && x<608 && y>=192 && y<208) begin
-                zh_enable=1;zh_x=x-10'd384;zh_y=y-10'd192;zh_label=TXT_025;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd384;zh_y=y-10'd192;zh_label=TXID_025;ink=MUTED;
             end
             else if(x>=56 && x<312 && y>=272 && y<288) begin
-                zh_enable=1;zh_x=x-10'd56;zh_y=y-10'd272;zh_label=TXT_026;ink=ui_cursor==2 ? AMBER : TEXT;
+                zh_enable=1;zh_x=x-10'd56;zh_y=y-10'd272;zh_label=TXID_026;ink=ui_cursor==2 ? AMBER : TEXT;
             end
             else if(x>=384 && x<608 && y>=272 && y<288) begin
-                zh_enable=1;zh_x=x-10'd384;zh_y=y-10'd272;zh_label=TXT_025;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd384;zh_y=y-10'd272;zh_label=TXID_025;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=352 && y<368) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd352;zh_label=TXT_027;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd352;zh_label=TXID_027;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=376 && y<392) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd376;zh_label=TXT_028;ink=AMBER;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd376;zh_label=TXID_028;ink=AMBER;
             end
             else if(x>=320 && x<576 && y>=352 && y<368) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd352;zh_label=TXT_029;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd352;zh_label=TXID_029;ink=TEXT;
             end
             else if(x>=320 && x<576 && y>=376 && y<392) begin
                 zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd376;zh_label=song_label(ui_song);ink=GREEN;
             end
             else if(x>=32 && x<288 && y>=424 && y<440) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd424;zh_label=TXT_030;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd424;zh_label=TXID_030;ink=MUTED;
             end
             else if(x>=320 && x<576 && y>=424 && y<440) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd424;zh_label=TXT_031;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd424;zh_label=TXID_031;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=464 && y<480) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd464;zh_label=TXT_032;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd464;zh_label=TXID_032;ink=MUTED;
             end
             end else if(ui_page==2) begin
             if(x>=32 && x<288 && y>=16 && y<32) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd16;zh_label=TXT_033;ink=CYAN;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd16;zh_label=TXID_033;ink=CYAN;
             end
             else if(x>=368 && x<624 && y>=16 && y<32) begin
-                zh_enable=1;zh_x=x-10'd368;zh_y=y-10'd16;zh_label=TXT_034;ink=AMBER;
+                zh_enable=1;zh_x=x-10'd368;zh_y=y-10'd16;zh_label=TXID_034;ink=AMBER;
                 number_value={7'd0,ui_cursor}+9'd1;zh_digit_start=0;zh_digit_count=2;
             end
             else begin
                 if(ui_cursor==0) begin
                 if(x>=32 && x<288 && y>=80 && y<96) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd80;zh_label=TXT_035;ink=CYAN;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd80;zh_label=TXID_035;ink=CYAN;
             end
             else if(x>=32 && x<288 && y>=112 && y<128) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd112;zh_label=TXT_036;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd112;zh_label=TXID_036;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=144 && y<160) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd144;zh_label=TXT_037;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd144;zh_label=TXID_037;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=176 && y<192) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd176;zh_label=TXT_038;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd176;zh_label=TXID_038;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=208 && y<224) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd208;zh_label=TXT_039;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd208;zh_label=TXID_039;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=240 && y<256) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd240;zh_label=TXT_040;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd240;zh_label=TXID_040;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=272 && y<288) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd272;zh_label=TXT_041;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd272;zh_label=TXID_041;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=304 && y<320) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd304;zh_label=TXT_042;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd304;zh_label=TXID_042;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=336 && y<352) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd336;zh_label=TXT_043;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd336;zh_label=TXID_043;ink=MUTED;
             end
                 end else if(ui_cursor==1) begin
                 if(x>=32 && x<288 && y>=80 && y<96) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd80;zh_label=TXT_044;ink=CYAN;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd80;zh_label=TXID_044;ink=CYAN;
             end
             else if(x>=32 && x<288 && y>=112 && y<128) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd112;zh_label=TXT_045;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd112;zh_label=TXID_045;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=144 && y<160) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd144;zh_label=TXT_046;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd144;zh_label=TXID_046;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=176 && y<192) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd176;zh_label=TXT_047;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd176;zh_label=TXID_047;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=208 && y<224) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd208;zh_label=TXT_048;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd208;zh_label=TXID_048;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=240 && y<256) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd240;zh_label=TXT_049;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd240;zh_label=TXID_049;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=272 && y<288) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd272;zh_label=TXT_050;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd272;zh_label=TXID_050;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=304 && y<320) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd304;zh_label=TXT_051;ink=AMBER;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd304;zh_label=TXID_051;ink=AMBER;
             end
             else if(x>=32 && x<288 && y>=336 && y<352) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd336;zh_label=TXT_052;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd336;zh_label=TXID_052;ink=MUTED;
             end
                 end else begin
                 if(x>=32 && x<288 && y>=80 && y<96) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd80;zh_label=TXT_053;ink=CYAN;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd80;zh_label=TXID_053;ink=CYAN;
             end
             else if(x>=32 && x<288 && y>=112 && y<128) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd112;zh_label=TXT_054;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd112;zh_label=TXID_054;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=144 && y<160) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd144;zh_label=TXT_055;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd144;zh_label=TXID_055;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=176 && y<192) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd176;zh_label=TXT_056;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd176;zh_label=TXID_056;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=208 && y<224) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd208;zh_label=TXT_057;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd208;zh_label=TXID_057;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=240 && y<256) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd240;zh_label=TXT_058;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd240;zh_label=TXID_058;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=272 && y<288) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd272;zh_label=TXT_059;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd272;zh_label=TXID_059;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=304 && y<320) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd304;zh_label=TXT_060;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd304;zh_label=TXID_060;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=336 && y<352) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd336;zh_label=TXT_061;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd336;zh_label=TXID_061;ink=MUTED;
             end
                 end
                 if(x>=32 && x<288 && y>=400 && y<416) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd400;zh_label=TXT_062;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd400;zh_label=TXID_062;ink=TEXT;
                 zh_kind=5;
             end
             else if(x>=320 && x<576 && y>=400 && y<416) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd400;zh_label=TXT_063;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd400;zh_label=TXID_063;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=448 && y<464) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd448;zh_label=TXT_027;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd448;zh_label=TXID_027;ink=TEXT;
             end
             else if(x>=320 && x<576 && y>=448 && y<464) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd448;zh_label=TXT_029;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd448;zh_label=TXID_029;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=464 && y<480) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd464;zh_label=TXT_064;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd464;zh_label=TXID_064;ink=MUTED;
             end
             end
             end else begin
             if(x>=32 && x<288 && y>=16 && y<32) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd16;zh_label=TXT_065;ink=CYAN;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd16;zh_label=TXID_065;ink=CYAN;
             end
             else if(x>=368 && x<624 && y>=16 && y<32) begin
-                zh_enable=1;zh_x=x-10'd368;zh_y=y-10'd16;zh_label=TXT_066;ink=AMBER;
+                zh_enable=1;zh_x=x-10'd368;zh_y=y-10'd16;zh_label=TXID_066;ink=AMBER;
             end
             else if(x>=32 && x<288 && y>=64 && y<80) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd64;zh_label=TXT_062;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd64;zh_label=TXID_062;ink=TEXT;
                 zh_kind=5;
             end
             else if(x>=320 && x<576 && y>=64 && y<80) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd64;zh_label=TXT_067;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd64;zh_label=TXID_067;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=96 && y<112) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd96;zh_label=TXT_068;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd96;zh_label=TXID_068;ink=MUTED;
             end
             else if(x>=320 && x<576 && y>=96 && y<112) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd96;zh_label=TXT_069;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd96;zh_label=TXID_069;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=128 && y<144) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd128;zh_label=TXT_070;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd128;zh_label=TXID_070;ink=MUTED;
             end
             else if(x>=320 && x<576 && y>=160 && y<176) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd160;zh_label=TXT_071;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd160;zh_label=TXID_071;ink=TEXT;
                 number_value={1'b0,volume_percent};zh_digit_start=5;zh_digit_count=3;
             end
             else if(x>=320 && x<576 && y>=192 && y<208) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd192;zh_label=pitch[8] ? TXT_072 : TXT_073;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd192;zh_label=pitch[8] ? TXID_072 : TXID_073;ink=TEXT;
                 number_value=pitch[8] ? (~pitch+9'd1) : pitch;zh_digit_start=6;zh_digit_count=3;
             end
             else if(x>=320 && x<576 && y>=224 && y<240) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd224;zh_label=TXT_074;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd224;zh_label=TXID_074;ink=TEXT;
                 number_value={1'b0,pressure0};zh_digit_start=4;zh_digit_count=3;
             end
             else if(x>=320 && x<576 && y>=256 && y<272) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd256;zh_label=TXT_075;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd256;zh_label=TXID_075;ink=TEXT;
                 number_value={1'b0,pressure1};zh_digit_start=4;zh_digit_count=3;
             end
             else if(x>=320 && x<576 && y>=288 && y<304) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd288;zh_label=flags[3] || flags[4] ? TXT_076 : TXT_077;ink=flags[3] || flags[4] ? ALERT : GREEN;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd288;zh_label=flags[3] || flags[4] ? TXID_076 : TXID_077;ink=flags[3] || flags[4] ? ALERT : GREEN;
             end
             else if(x>=320 && x<576 && y>=320 && y<336) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd320;zh_label=flags[1] ? TXT_078 : TXT_079;ink=flags[1] ? AMBER : CYAN;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd320;zh_label=flags[1] ? TXID_078 : TXID_079;ink=flags[1] ? AMBER : CYAN;
             end
             else if(x>=32 && x<288 && y>=384 && y<400) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd384;zh_label=TXT_080;ink=AMBER;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd384;zh_label=TXID_080;ink=AMBER;
             end
             else if(x>=320 && x<576 && y>=384 && y<400) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd384;zh_label=TXT_081;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd384;zh_label=TXID_081;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=416 && y<432) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd416;zh_label=TXT_082;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd416;zh_label=TXID_082;ink=MUTED;
             end
             else if(x>=320 && x<576 && y>=416 && y<432) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd416;zh_label=TXT_083;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd416;zh_label=TXID_083;ink=MUTED;
             end
             else if(x>=32 && x<288 && y>=448 && y<464) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd448;zh_label=TXT_029;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd448;zh_label=TXID_029;ink=TEXT;
             end
             else if(x>=320 && x<576 && y>=448 && y<464) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd448;zh_label=TXT_DIAG_EXIT;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd448;zh_label=TXID_DIAG_EXIT;ink=TEXT;
             end
             else if(x>=32 && x<288 && y>=464 && y<480) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd464;zh_label=TXT_084;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd464;zh_label=TXID_084;ink=MUTED;
             end
             end
         end else if(test_active) begin
             if (x >= 32 && x < 288 && y >= 16 && y < 32) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd16;
-                zh_label=TXT_044; ink=CYAN;
+                zh_label=TXID_044; ink=CYAN;
             end
             else if (x >= 368 && x < 624 && y >= 16 && y < 32) begin
                 zh_enable=1; zh_x=x-10'd368; zh_y=y-10'd16;
-                zh_label=TXT_085; ink=AMBER;
+                zh_label=TXID_085; ink=AMBER;
             end
             else if (x >= 32 && x < 240 && y >= 40 && y < 56) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd40;
-                zh_label=TXT_086; ink=TEXT;
+                zh_label=TXID_086; ink=TEXT;
                 number_value={3'd0,test_requested}; zh_digit_start=5; zh_digit_count=2;
             end
             else if (x >= 256 && x < 432 && y >= 40 && y < 56) begin
                 zh_enable=1; zh_x=x-10'd256; zh_y=y-10'd40;
-                zh_label=TXT_087; ink=GREEN;
+                zh_label=TXID_087; ink=GREEN;
                 number_value={3'd0,voices}; zh_digit_start=5; zh_digit_count=2;
             end
             else if (x >= 448 && x < 632 && y >= 40 && y < 56) begin
                 zh_enable=1; zh_x=x-10'd448; zh_y=y-10'd40;
-                zh_label=test_sweep ? TXT_088 : TXT_089; ink=test_sweep ? CYAN : MUTED;
+                zh_label=test_sweep ? TXID_088 : TXID_089; ink=test_sweep ? CYAN : MUTED;
             end
             else if (x >= 32 && x < 240 && y >= 64 && y < 80) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd64;
-                zh_label=level_dbfs[7] ? TXT_090 : TXT_091; ink=TEXT;
+                zh_label=level_dbfs[7] ? TXID_090 : TXID_091; ink=TEXT;
                 number_value=level_dbfs[7] ? {1'b0,(~level_dbfs+8'd1)} : {1'b0,level_dbfs}; zh_digit_start=5; zh_digit_count=3;
             end
             else if (x >= 256 && x < 432 && y >= 64 && y < 80) begin
                 zh_enable=1; zh_x=x-10'd256; zh_y=y-10'd64;
-                zh_label=TXT_092; ink=TEXT;
+                zh_label=TXID_092; ink=TEXT;
                 number_value={1'b0,peak_percent}; zh_digit_start=5; zh_digit_count=3;
             end
             else if (x >= 448 && x < 632 && y >= 64 && y < 80) begin
                 zh_enable=1; zh_x=x-10'd448; zh_y=y-10'd64;
-                zh_label=TXT_093; ink=TEXT;
+                zh_label=TXID_093; ink=TEXT;
             end
             else if (x >= 32 && x < 288 && y >= 88 && y < 104) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd88;
-                zh_label=TXT_050; ink=MUTED;
+                zh_label=TXID_050; ink=MUTED;
             end
             else if (x >= 320 && x < 576 && y >= 88 && y < 104) begin
                 zh_enable=1; zh_x=x-10'd320; zh_y=y-10'd88;
-                zh_label=TXT_094; ink=TEXT;
+                zh_label=TXID_094; ink=TEXT;
             end
             else if (x >= 32 && x < 208 && y >= 112 && y < 128) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd112;
-                zh_label=TXT_095; ink=test_sweep ? CYAN : MUTED;
+                zh_label=TXID_095; ink=test_sweep ? CYAN : MUTED;
                 number_value={4'd0,test_index}; zh_digit_start=5; zh_digit_count=2;
             end
             else if (x >= 224 && x < 432 && y >= 112 && y < 128) begin
                 zh_enable=1; zh_x=x-10'd224; zh_y=y-10'd112;
-                zh_label=TXT_096; ink=MUTED;
+                zh_label=TXID_096; ink=MUTED;
                 zh_kind=4;
             end
             else if (x >= 448 && x < 632 && y >= 112 && y < 128) begin
                 zh_enable=1; zh_x=x-10'd448; zh_y=y-10'd112;
-                zh_label=test_overrun ? TXT_097 : TXT_098; ink=test_overrun ? ALERT : GREEN;
+                zh_label=test_overrun ? TXID_097 : TXID_098; ink=test_overrun ? ALERT : GREEN;
             end
             else if (x >= 32 && x < 288 && y >= 128 && y < 144) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd128;
-                zh_label=TXT_099; ink=CYAN;
+                zh_label=TXID_099; ink=CYAN;
                 number_value={5'd0,scope_gain}; zh_digit_start=11; zh_digit_count=2;
             end
             else if (x >= 552 && x < 632 && y >= 128 && y < 144) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd128;
-                zh_label=TXT_100; ink=MUTED;
+                zh_label=TXID_100; ink=MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 144 && y < 160) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd144;
-                zh_label=TXT_101; ink=test_overrun ? ALERT : MUTED;
+                zh_label=TXID_101; ink=test_overrun ? ALERT : MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 160 && y < 176) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd160;
-                zh_label=TXT_102; ink=(test_overrun || flags[7] || flags[3]) ? ALERT : MUTED;
+                zh_label=TXID_102; ink=(test_overrun || flags[7] || flags[3]) ? ALERT : MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 176 && y < 192) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd176;
-                zh_label=TXT_103; ink=flags[7] ? ALERT : MUTED;
+                zh_label=TXID_103; ink=flags[7] ? ALERT : MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 192 && y < 208) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd192;
-                zh_label=TXT_104; ink=flags[3] ? ALERT : MUTED;
+                zh_label=TXID_104; ink=flags[3] ? ALERT : MUTED;
             end
             else if (!wave_valid && x >= 256 && x < 336 && y >= 204 && y < 220) begin
                 zh_enable=1; zh_x=x-10'd256; zh_y=y-10'd204;
-                zh_label=TXT_105; ink=AMBER;
+                zh_label=TXID_105; ink=AMBER;
             end
             else if (x >= 32 && x < 288 && y >= 280 && y < 296) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd280;
-                zh_label=TXT_106; ink=MUTED;
+                zh_label=TXID_106; ink=MUTED;
             end
             else if (x >= 32 && x < 288 && y >= 432 && y < 448) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd432;
-                zh_label=TXT_107; ink=TEXT;
+                zh_label=TXID_107; ink=TEXT;
             end
             else if (x >= 320 && x < 576 && y >= 432 && y < 448) begin
                 zh_enable=1; zh_x=x-10'd320; zh_y=y-10'd432;
-                zh_label=TXT_108; ink=MUTED;
+                zh_label=TXID_108; ink=MUTED;
             end
             else if (x >= 32 && x < 288 && y >= 448 && y < 464) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd448;
-                zh_label=TXT_050; ink=MUTED;
+                zh_label=TXID_050; ink=MUTED;
             end
             else if (x >= 320 && x < 576 && y >= 448 && y < 464) begin
                 zh_enable=1; zh_x=x-10'd320; zh_y=y-10'd448;
-                zh_label=TXT_051; ink=AMBER;
+                zh_label=TXID_051; ink=AMBER;
             end
             else if (x >= 32 && x < 288 && y >= 464 && y < 480) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd464;
-                zh_label=TXT_109; ink=MUTED;
+                zh_label=TXID_109; ink=MUTED;
             end
             else if (x >= 320 && x < 576 && y >= 464 && y < 480) begin
                 zh_enable=1; zh_x=x-10'd320; zh_y=y-10'd464;
-                zh_label=TXT_110; ink=MUTED;
+                zh_label=TXID_110; ink=MUTED;
             end
         end else begin
             if (x >= 32 && x < 288 && y >= 16 && y < 32) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd16;
-                zh_label=TXT_111; ink=CYAN;
+                zh_label=TXID_111; ink=CYAN;
             end
             else if (x >= 368 && x < 624 && y >= 16 && y < 32) begin
                 zh_enable=1; zh_x=x-10'd368; zh_y=y-10'd16;
-                zh_label=guide_done ? TXT_112 : (guided ? (UI_ENABLE ? song_label(ui_song) : TXT_019) : TXT_035); ink=guide_done ? GREEN : (guided ? AMBER : CYAN);
+                zh_label=guide_done ? TXID_112 : (guided ? (UI_ENABLE ? song_label(ui_song) : TXID_019) : TXID_035); ink=guide_done ? GREEN : (guided ? AMBER : CYAN);
             end
             else if (x >= 32 && x < 288 && y >= 40 && y < 56) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd40;
@@ -920,166 +911,166 @@ module hdmi_instrument_dashboard #(parameter UI_ENABLE=0)(
             end
             else if (x >= 304 && x < 560 && y >= 40 && y < 56) begin
                 zh_enable=1; zh_x=x-10'd304; zh_y=y-10'd40;
-                zh_label=TXT_113; ink=TEXT;
+                zh_label=TXID_113; ink=TEXT;
                 zh_kind=1;
             end
             else if (x >= 32 && x < 208 && y >= 64 && y < 80) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd64;
-                zh_label=TXT_071; ink=TEXT;
+                zh_label=TXID_071; ink=TEXT;
                 number_value={1'b0,volume_percent}; zh_digit_start=5; zh_digit_count=3;
             end
             else if (x >= 224 && x < 432 && y >= 64 && y < 80) begin
                 zh_enable=1; zh_x=x-10'd224; zh_y=y-10'd64;
-                zh_label=level_dbfs[7] ? TXT_090 : TXT_091; ink=TEXT;
+                zh_label=level_dbfs[7] ? TXID_090 : TXID_091; ink=TEXT;
                 number_value=level_dbfs[7] ? {1'b0,(~level_dbfs+8'd1)} : {1'b0,level_dbfs}; zh_digit_start=5; zh_digit_count=3;
             end
             else if (x >= 448 && x < 632 && y >= 64 && y < 80) begin
                 zh_enable=1; zh_x=x-10'd448; zh_y=y-10'd64;
-                zh_label=TXT_092; ink=TEXT;
+                zh_label=TXID_092; ink=TEXT;
                 number_value={1'b0,peak_percent}; zh_digit_start=5; zh_digit_count=3;
             end
             else if (x >= 32 && x < 144 && y >= 88 && y < 104) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd88;
-                zh_label=TXT_114; ink=TEXT;
+                zh_label=TXID_114; ink=TEXT;
                 number_value={3'd0,voices}; zh_digit_start=5; zh_digit_count=2;
             end
             else if (x >= 160 && x < 272 && y >= 88 && y < 104) begin
                 zh_enable=1; zh_x=x-10'd160; zh_y=y-10'd88;
-                zh_label=TXT_074; ink=TEXT;
+                zh_label=TXID_074; ink=TEXT;
                 number_value={1'b0,pressure0}; zh_digit_start=4; zh_digit_count=3;
             end
             else if (x >= 288 && x < 400 && y >= 88 && y < 104) begin
                 zh_enable=1; zh_x=x-10'd288; zh_y=y-10'd88;
-                zh_label=TXT_075; ink=TEXT;
+                zh_label=TXID_075; ink=TEXT;
                 number_value={1'b0,pressure1}; zh_digit_start=4; zh_digit_count=3;
             end
             else if (x >= 432 && x < 624 && y >= 88 && y < 104) begin
                 zh_enable=1; zh_x=x-10'd432; zh_y=y-10'd88;
-                zh_label=pitch[8] ? TXT_072 : TXT_073; ink=TEXT;
+                zh_label=pitch[8] ? TXID_072 : TXID_073; ink=TEXT;
                 number_value=pitch[8] ? (~pitch+9'd1) : pitch; zh_digit_start=6; zh_digit_count=3;
             end
             else if (x >= 32 && x < 288 && y >= 112 && y < 128) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd112;
-                zh_label=TXT_115; ink=MUTED;
+                zh_label=TXID_115; ink=MUTED;
             end
             else if (x >= 448 && x < 632 && y >= 112 && y < 128) begin
                 zh_enable=1; zh_x=x-10'd448; zh_y=y-10'd112;
-                zh_label=TXT_094; ink=MUTED;
+                zh_label=TXID_094; ink=MUTED;
             end
             else if (x >= 32 && x < 288 && y >= 128 && y < 144) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd128;
-                zh_label=TXT_099; ink=CYAN;
+                zh_label=TXID_099; ink=CYAN;
                 number_value={5'd0,scope_gain}; zh_digit_start=11; zh_digit_count=2;
             end
             else if (x >= 552 && x < 632 && y >= 128 && y < 144) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd128;
-                zh_label=TXT_100; ink=MUTED;
+                zh_label=TXID_100; ink=MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 144 && y < 160) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd144;
-                zh_label=TXT_103; ink=flags[7] ? ALERT : MUTED;
+                zh_label=TXID_103; ink=flags[7] ? ALERT : MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 160 && y < 176) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd160;
-                zh_label=TXT_116; ink=flags[6] ? AMBER : MUTED;
+                zh_label=TXID_116; ink=flags[6] ? AMBER : MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 176 && y < 192) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd176;
-                zh_label=TXT_117; ink=flags[5] ? GREEN : MUTED;
+                zh_label=TXID_117; ink=flags[5] ? GREEN : MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 192 && y < 208) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd192;
-                zh_label=TXT_118; ink=flags[4] ? AMBER : MUTED;
+                zh_label=TXID_118; ink=flags[4] ? AMBER : MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 208 && y < 224) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd208;
-                zh_label=TXT_104; ink=flags[3] ? ALERT : MUTED;
+                zh_label=TXID_104; ink=flags[3] ? ALERT : MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 224 && y < 240) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd224;
-                zh_label=TXT_119; ink=flags[2] ? CYAN : MUTED;
+                zh_label=TXID_119; ink=flags[2] ? CYAN : MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 240 && y < 256) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd240;
-                zh_label=TXT_078; ink=flags[1] ? CYAN : MUTED;
+                zh_label=TXID_078; ink=flags[1] ? CYAN : MUTED;
             end
             else if (x >= 552 && x < 632 && y >= 256 && y < 272) begin
                 zh_enable=1; zh_x=x-10'd552; zh_y=y-10'd256;
-                zh_label=TXT_120; ink=flags[0] ? AMBER : MUTED;
+                zh_label=TXID_120; ink=flags[0] ? AMBER : MUTED;
             end
             else if (!wave_valid && x >= 256 && x < 336 && y >= 204 && y < 220) begin
                 zh_enable=1; zh_x=x-10'd256; zh_y=y-10'd204;
-                zh_label=TXT_105; ink=AMBER;
+                zh_label=TXID_105; ink=AMBER;
             end
             else if (x >= 32 && x < 288 && y >= 280 && y < 296) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd280;
-                zh_label=TXT_121; ink=MUTED;
+                zh_label=TXID_121; ink=MUTED;
             end
             else if (x >= 304 && x < 560 && y >= 296 && y < 312) begin
                 zh_enable=1; zh_x=x-10'd304; zh_y=y-10'd296;
-                zh_label=UI_ENABLE ? song_label(ui_song) : TXT_019; ink=AMBER;
+                zh_label=UI_ENABLE ? song_label(ui_song) : TXID_019; ink=AMBER;
             end
             else if (x >= 304 && x < 560 && y >= 320 && y < 336) begin
                 zh_enable=1; zh_x=x-10'd304; zh_y=y-10'd320;
-                zh_label=TXT_122; ink=TEXT;
+                zh_label=TXID_122; ink=TEXT;
                 zh_kind=2;
             end
             else if (x >= 304 && x < 416 && y >= 344 && y < 360) begin
                 zh_enable=1; zh_x=x-10'd304; zh_y=y-10'd344;
-                zh_label=TXT_123; ink=TEXT;
+                zh_label=TXID_123; ink=TEXT;
                 number_value={7'd0,target_beats}; zh_digit_start=5; zh_digit_count=1;
             end
             else if (x >= 432 && x < 624 && y >= 344 && y < 360) begin
                 zh_enable=1; zh_x=x-10'd432; zh_y=y-10'd344;
-                zh_label=guide_done ? TXT_124 : (!guided ? TXT_035 : (guide_wrong ? TXT_125 : (guide_hold ? TXT_126 : TXT_105))); ink=guide_done ? GREEN : (!guided ? CYAN : (guide_wrong ? ALERT : (guide_hold ? GREEN : AMBER)));
+                zh_label=guide_done ? TXID_124 : (!guided ? TXID_035 : (guide_wrong ? TXID_125 : (guide_hold ? TXID_126 : TXID_105))); ink=guide_done ? GREEN : (!guided ? CYAN : (guide_wrong ? ALERT : (guide_hold ? GREEN : AMBER)));
             end
             else if (x >= 304 && x < 560 && y >= 400 && y < 416) begin
                 zh_enable=1; zh_x=x-10'd304; zh_y=y-10'd400;
-                zh_label=TXT_127; ink=TEXT;
+                zh_label=TXID_127; ink=TEXT;
                 zh_kind=3;
             end
             else if (x >= 304 && x < 560 && y >= 416 && y < 432) begin
                 zh_enable=1; zh_x=x-10'd304; zh_y=y-10'd416;
-                zh_label=TXT_128; ink=MUTED;
+                zh_label=TXID_128; ink=MUTED;
             end
             else if (x >= 304 && x < 560 && y >= 432 && y < 448) begin
                 zh_enable=1; zh_x=x-10'd304; zh_y=y-10'd432;
-                zh_label=TXT_129; ink=MUTED;
+                zh_label=TXID_129; ink=MUTED;
             end
             else if (x >= 32 && x < 288 && y >= 448 && y < 464) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd448;
-                zh_label=TXT_040; ink=TEXT;
+                zh_label=TXID_040; ink=TEXT;
             end
             else if (x >= 320 && x < 576 && y >= 448 && y < 464) begin
                 zh_enable=1; zh_x=x-10'd320; zh_y=y-10'd448;
-                zh_label=TXT_041; ink=TEXT;
+                zh_label=TXID_041; ink=TEXT;
             end
             else if (x >= 32 && x < 288 && y >= 464 && y < 480) begin
                 zh_enable=1; zh_x=x-10'd32; zh_y=y-10'd464;
-                zh_label=TXT_130; ink=MUTED;
+                zh_label=TXID_130; ink=MUTED;
             end
             else if (x >= 320 && x < 576 && y >= 464 && y < 480) begin
                 zh_enable=1; zh_x=x-10'd320; zh_y=y-10'd464;
-                zh_label=TXT_131; ink=MUTED;
+                zh_label=TXID_131; ink=MUTED;
             end
         end
 
         if(UI_ENABLE && !test_active && ui_page==0) begin
             if(x>=32 && x<288 && y>=448 && y<464) begin
-                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd448;zh_label=TXT_132;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd32;zh_y=y-10'd448;zh_label=TXID_132;ink=TEXT;
             end
             else if(x>=320 && x<576 && y>=448 && y<464) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd448;zh_label=TXT_133;ink=TEXT;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd448;zh_label=TXID_133;ink=TEXT;
             end
             else if(x>=320 && x<576 && y>=464 && y<480) begin
-                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd464;zh_label=TXT_134;ink=MUTED;
+                zh_enable=1;zh_x=x-10'd320;zh_y=y-10'd464;zh_label=TXID_134;ink=MUTED;
             end
         end
         // 两套文字共享字段墨色，但中文只在独立矩形范围内显示。
         // 8px宽半字符地址：一汉字由左右两个半字组成，没有UTF8硬件解析。
         if(zh_enable) begin
             zh_index=zh_x[7:3];
-            zh_character=zh_label[287-({4'd0,zh_index,3'b000}+{7'd0,zh_index}) -: 9];
+            zh_character=ui_text_cell(zh_label,zh_index);
             if(zh_kind==2) begin // 进度 00/00
                 number_value=zh_index>=8 ? {3'd0,guide_total} : {3'd0,guide_step};
                 zh_digit_start=zh_index>=8 ? 8 : 5; zh_digit_count=2;
