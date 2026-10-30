@@ -16,7 +16,8 @@
 // TRANSITION_INPUT_ENABLE默认0兼容旧独立调用；生产顶层为1并连控制器的normal_input_ready。
 module instrument_audio #(parameter LOWPASS_ENABLE=1,parameter NUM_VOICES=32,
     parameter TRANSITION_INPUT_ENABLE=0,parameter REDUCED_TIMBRES=0,
-    parameter SOURCE_TAG_ENABLE=0,parameter PHASE_RAM=0,parameter PRESSURE_EXPRESSION_ENABLE=0)(
+    parameter SOURCE_TAG_ENABLE=0,parameter PHASE_RAM=0,parameter PRESSURE_EXPRESSION_ENABLE=0,
+    parameter CONTROL_BANK_ENABLE=0,parameter LIVE_ADSR_ENABLE=0,parameter EFFECTS_ENABLE=0)(
     input clk,input rst_n,input note_on,input note_off,input [6:0] note,
     input [7:0] velocity,input [3:0] timbre,
     input [7:0] slider_volume,input signed [8:0] slider_pitch,
@@ -30,7 +31,10 @@ module instrument_audio #(parameter LOWPASS_ENABLE=1,parameter NUM_VOICES=32,
     output signed [8:0] monitor_pitch,output [NUM_VOICES-1:0] monitor_busy,
     output [NUM_VOICES-1:0] monitor_test_busy,
     input [1:0] event_source,
-    input [7:0] pressure_brightness,input pressure_brightness_ready
+    input [7:0] pressure_brightness,input pressure_brightness_ready,
+    input [7:0] attack_ctrl,decay_ctrl,sustain_ctrl,release_ctrl,damping,mix_balance,
+    input hat_closed_hit,hat_open_hit,input [7:0] hat_closed_velocity,hat_open_velocity,
+    input [1:0] fx_mode,input [7:0] fx_amount,fx_time,fx_feedback,fx_mod
 );
     wire fs_tick,frame_done;
     wire [NUM_VOICES-1:0] gate,retrigger,voice_busy,voice_audible;
@@ -45,6 +49,8 @@ module instrument_audio #(parameter LOWPASS_ENABLE=1,parameter NUM_VOICES=32,
     wire [15:0] mixed,kick_sample,snare_sample,mix_sample;
     wire [15:0] dc_sample,clean_sample,sample;
     wire kick_busy,snare_busy;
+    wire [15:0] closed_hat_sample,open_hat_sample,effected_sample;
+    wire closed_hat_busy,open_hat_busy,fx_tail_busy;
     // 只复位声音状态，不停止PT8211位时钟，也不复位ADC、串口或HDMI。
     // 控制器在淡出到零后发同clk域clear脉冲，防止测试音/旧尾音互相残留。
     wire audio_rst_n=rst_n && !test_clear;
@@ -76,6 +82,7 @@ module instrument_audio #(parameter LOWPASS_ENABLE=1,parameter NUM_VOICES=32,
     // 生产仅实例化2x512点半表；原16音色表只作冻结基准，不占用生产ROM。
     wavetable_synth #(.NUM_VOICES(NUM_VOICES),.COMPACT_ROM(1),
         .PHASE_RAM(PHASE_RAM),
+        .LIVE_ADSR_ENABLE(LIVE_ADSR_ENABLE),
         .TIMBRE_BITS(TIMBRE_BITS),.NUM_TIMBRES(REDUCED_TIMBRES?2:16),
         .DUAL_PROFILE(REDUCED_TIMBRES),
         .FILE(REDUCED_TIMBRES?"src/timbre_dual.hex":"src/timbre_soft.hex"),
@@ -87,21 +94,39 @@ module instrument_audio #(parameter LOWPASS_ENABLE=1,parameter NUM_VOICES=32,
         .note_bus(note_bus),.vel_bus(synth_velocity),.timbre_bus(synth_timbre),
         .pitch(test_mode?9'sd0:pitch_smooth),
         .sample(mixed),.frame_done(frame_done),.overrun(overrun),
-        .voice_busy(voice_busy),.voice_audible(voice_audible));
+        .voice_busy(voice_busy),.voice_audible(voice_audible),
+        .attack_ctrl(attack_ctrl),.decay_ctrl(decay_ctrl),.sustain_ctrl(sustain_ctrl),
+        .release_ctrl(release_ctrl),.damping(damping));
     drum_voice kick(.clk(clk),.rst_n(audio_rst_n),.fs_tick(fs_tick),
         .clear(digital_zero_test || test_mode),
         .hit(hit0 && accept_normal_input),.velocity(velocity0),.sample(kick_sample),.busy(kick_busy));
     snare_voice snare(.clk(clk),.rst_n(audio_rst_n),.fs_tick(fs_tick),
         .clear(digital_zero_test || test_mode),
         .hit(hit1 && accept_normal_input),.velocity(velocity1),.sample(snare_sample),.busy(snare_busy));
-    audio_mix mixer(.melody(mixed),.kick(kick_sample),.snare(snare_sample),.sample(mix_sample));
+    generate if(CONTROL_BANK_ENABLE) begin:production_mixing
+      hat_voice #(.OPEN(0)) closed_hat(.clk(clk),.rst_n(audio_rst_n),.fs_tick(fs_tick),
+        .clear(digital_zero_test || test_mode),.hit(hat_closed_hit && accept_normal_input),
+        .velocity(hat_closed_velocity),.sample(closed_hat_sample),.busy(closed_hat_busy));
+      hat_voice #(.OPEN(1)) open_hat(.clk(clk),.rst_n(audio_rst_n),.fs_tick(fs_tick),
+        .clear(digital_zero_test || test_mode),.hit(hat_open_hit && accept_normal_input),
+        .velocity(hat_open_velocity),.sample(open_hat_sample),.busy(open_hat_busy));
+      performance_mixer mixer(.clk(clk),.rst_n(audio_rst_n),.tick(frame_done),
+        .melody(mixed),.kick(kick_sample),.snare(snare_sample),
+        .closed_hat(closed_hat_sample),.open_hat(open_hat_sample),.balance(mix_balance),.sample(mix_sample));
+    end else begin:legacy_mixing
+      assign closed_hat_sample=0;assign open_hat_sample=0;
+      assign closed_hat_busy=0;assign open_hat_busy=0;
+      audio_mix mixer(.melody(mixed),.kick(kick_sample),.snare(snare_sample),.sample(mix_sample));
+    end endgenerate
 
     // quiet 等待旋律尾音和鼓衰减结束，再等待 128 个采样帧。
     // 不能只看松键，否则会截断尾音并产生突变声。
     reg [7:0] idle_frames;
     reg quiet;
     wire sound_active=(|synth_gate) || (|voice_busy) ||
-        (accept_normal_input && (note_on || hit0 || hit1)) || kick_busy || snare_busy;
+        (accept_normal_input && (note_on || hit0 || hit1 ||
+          (CONTROL_BANK_ENABLE && (hat_closed_hit || hat_open_hit)))) ||
+        kick_busy || snare_busy || closed_hat_busy || open_hat_busy;
     always @(posedge clk or negedge audio_rst_n) begin
         if(!audio_rst_n) begin idle_frames<=128;quiet<=1;end
         else if(sound_active) begin idle_frames<=0;quiet<=0;end
@@ -118,14 +143,24 @@ module instrument_audio #(parameter LOWPASS_ENABLE=1,parameter NUM_VOICES=32,
         .tick(frame_done),.quiet(quiet),.enable(filter_enable),
         .sample_in(dc_sample),.sample_out(clean_sample),
         .expression(pressure_brightness),.expression_ready(pressure_brightness_ready));
+    generate if(EFFECTS_ENABLE) begin:global_effects
+      // 效果尾音属于发声结果，不能在主声部quiet时立刻截断；测试/数字零才清缓存元数据。
+      audio_effects fx(.clk(clk),.rst_n(audio_rst_n),.tick(frame_done),
+        .clear(digital_zero_test || test_mode),.input_active(sound_active || !quiet),
+        .mode(fx_mode),.amount(fx_amount),.time_control(fx_time),
+        .feedback_control(fx_feedback),.mod_control(fx_mod),.sample_in(clean_sample),
+        .sample_out(effected_sample),.tail_busy(fx_tail_busy));
+    end else begin:no_effects
+      assign effected_sample=clean_sample;assign fx_tail_busy=0;
+    end endgenerate
     audio_controls controls(.clk(clk),.rst_n(audio_rst_n),.fs_tick(fs_tick),
-        .sample_in(clean_sample),.volume(test_owned?saved_volume:slider_volume),
+        .sample_in(effected_sample),.volume(test_owned?saved_volume:slider_volume),
         .pitch_in(test_owned?saved_pitch:slider_pitch),
         .pitch_smooth(pitch_smooth),.sample_out(sample));
     // 空闲/诊断强制送数字零；DAC、耳机模拟级和电脑输入仍可能产生噪声。
     // 测试正弦仍经同一PT8211串行器/DAC输出。只在验证模式选择线性测试PCM，
     // 避开双鼓混音、软限幅后的演奏滤波/音量通路，减少额外谱峰和幅度变化。
-    wire [15:0] normal_sample=quiet?16'd0:sample;
+    wire [15:0] normal_sample=(quiet && !fx_tail_busy)?16'd0:sample;
     wire [15:0] mode_sample=test_mode?mixed:normal_sample;
     // 9位gain可表示256，乘法前补0成正的10位，防止256被当作负数。
     wire signed [25:0] faded=$signed(mode_sample)*$signed({1'b0,test_master_gain});

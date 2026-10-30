@@ -65,6 +65,11 @@ def render_hex(data):
     return "".join(f"{value:03x}\n" for value in validate(data))
 
 
+def render_init(data):
+    packed=''.join(f'{v:03x}' for v in reversed(validate(data)))
+    return '// Generated from touch calibration JSON; word0 occupies bits[11:0].\n'+f"localparam [191:0] TOUCH_DEFAULT_CENTERS = 192'h{packed};\n"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", "--calibration", dest="calibration", type=Path,
@@ -78,13 +83,18 @@ def main():
     try:
         data = reference_defaults() if args.from_reference else json.loads(args.calibration.read_text(encoding="utf-8-sig"))
         expected = render_hex(data)
+        init_path=args.output.with_name(args.output.stem+'_init.vh')
+        expected_init=render_init(data)
         if args.check:
             if args.output.read_text(encoding="utf-8") != expected:
                 raise ValueError("hex与校准JSON不一致，请重新生成")
+            if init_path.read_text(encoding='ascii') != expected_init:
+                raise ValueError('复位常量与校准JSON不一致，请重新生成hex和init.vh')
         else:
             if args.from_reference:
                 args.calibration.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             args.output.write_text(expected, encoding="ascii")
+            init_path.write_text(expected_init,encoding='ascii')
         print(json.dumps({"status": "pass", "check_only": args.check,
                           "centers": data["centers"], "hex": str(args.output)}, ensure_ascii=False))
     except (OSError, ValueError, TypeError) as exc:

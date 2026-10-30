@@ -1,5 +1,6 @@
 // 输入层：把实体/虚拟键盘、ADS1115、滑杆和压力转成演奏事件，不生成 PCM。
-// A0/A1 是压力，A2 是音量，A3 是音高；ADC 数据是码值，不是电压或 kg。
+// A0/A1 是压力，A2 是音量。旧版 A3 为弯音；DISPLAY_TOUCH_ONLY=1 时停用A3。
+// V021：FSR1明亮度，FSR2拨弦阻尼；ADC 数据是码值，不是电压或 kg。
 // clk=27MHz，rst_n 异步低有效。默认实体输入，完整 UART 命令才开启虚拟输入。
 // 无外部音频 clock enable；键盘按扫描帧更新，控制由完整 adc_valid 事件推进，
 // 失联年龄、模式检测和 UART 仍每 clk 工作，不能把 ADC 采样率当音频帧率。
@@ -18,7 +19,8 @@
 // suppress_controls 交由相关子模块屏蔽选择/诊断操作，不停止扫描或 ADC 采集。
 module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_ENABLE=0,
     parameter PRESSURE_EXPRESSION_ENABLE=0,
-    parameter MIDI_ENABLE=0,parameter OPTICAL_ENABLE=0,parameter MIDI_CHANNEL=0)(
+    parameter MIDI_ENABLE=0,parameter OPTICAL_ENABLE=0,parameter MIDI_CHANNEL=0,
+    parameter DISPLAY_TOUCH_ONLY=0,parameter TOUCH_DIAG_HOLD_CYCLES=13500000)(
     input clk,input rst_n,
     output [3:0] matrix_rows,input [3:0] matrix_cols,
     inout adc_scl,inout adc_sda,input uart_rx,output uart_tx,
@@ -35,7 +37,20 @@ module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_EN
     output [1:0] note_source,output panic_audio,output [11:0] performance_keys,
     output [6:0] external_note,output external_note_valid,
     output [7:0] pressure_brightness,output [7:0] pressure_vibrato,
-    output [1:0] pressure_calibrated
+    output [1:0] pressure_calibrated,
+    // UI事件是参数/诊断命令，不作为本地演奏键输入。
+    input ui_panic,input ui_strum_mode,input ui_timbre_set_valid,
+    input [3:0] ui_timbre_set_value,input ui_filter_enable,input ui_zero_mode,
+    input [1:0] control_page,input ui_fx_cycle,
+    output filter_enable,output hat_closed_hit,hat_open_hit,
+    output [7:0] hat_closed_velocity,hat_open_velocity,
+    output [7:0] mix_balance,brightness_base,attack_ctrl,decay_ctrl,sustain_ctrl,release_ctrl,
+    output [1:0] fx_mode,output [7:0] fx_amount,fx_time,fx_feedback,fx_mod,
+    output [31:0] knob_values,output touch_calibrating,output touch_diagnostic_pulse,
+    input phone_set_valid,input [7:0] phone_param,phone_value,phone_query_param,
+    output [7:0] phone_query_value,output [13:0] monitor_external_diagnostic,
+    // 直通物理MIDI held监视：48..79半音键位与范围外标志，仅供钢琴卷帘显示。
+    output [31:0] monitor_piano_keys32,output monitor_piano_outside
 );
     localparam ADC_STALE_CYCLES=13500000; // 0.5s 没有完整 ADC 结果视为失联。
     wire remote_active,remote_zero,remote_park,physical_zero_test;
@@ -68,9 +83,24 @@ module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_EN
     wire [7:0] midi_velocity0,midi_velocity1;
     wire program_valid;wire [3:0] program_timbre;
     wire [13:0] external_diagnostic;
+    assign monitor_external_diagnostic=external_diagnostic;
+    wire cc_valid;wire [6:0] cc_number,cc_value;
+    wire knob_volume_valid;wire [7:0] knob_volume;
+    localparam DIAG_HOLD_LIMIT=TOUCH_DIAG_HOLD_CYCLES<1?1:TOUCH_DIAG_HOLD_CYCLES;
+    localparam DIAG_HOLD_WIDTH=DIAG_HOLD_LIMIT<2?1:$clog2(DIAG_HOLD_LIMIT+1);
+    reg [DIAG_HOLD_WIDTH-1:0] diagnostic_hold;
+    wire diagnostic_request;
+    // 标定器连续0x80/0x81诊断期间，暂停触摸菜单而不接管MIDI演奏。
+    // 否则采集#键的长按原始码可能误入32频测试。停止轮询0.5s后等待全松再恢复UI。
+    always @(posedge clk or negedge rst_n)
+      if(!rst_n)diagnostic_hold<=0;
+      else if(diagnostic_request)diagnostic_hold<=DIAG_HOLD_LIMIT;
+      else if(diagnostic_hold!=0)diagnostic_hold<=diagnostic_hold-1'b1;
+    assign touch_calibrating=DISPLAY_TOUCH_ONLY && diagnostic_hold!=0;
+    assign touch_diagnostic_pulse=DISPLAY_TOUCH_ONLY && diagnostic_request;
 
     // G/V/S触摸板只有一路模拟编码：经MCP3208 CH0读取，不冒充数字矩阵列。
-    // 单键触摸负责演奏，原矩阵可选保留菜单组合键；ADC的采集不依赖ADS1115。
+    // V021生产中单键触摸专职HDMI菜单；ADC采集不依赖ADS1115，触摸绝不送Note事件。
     wire [15:0] touch_keys;
     wire [11:0] touch_raw;
     wire touch_valid,touch_fault,touch_sample_valid;
@@ -149,11 +179,18 @@ module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_EN
         .remote_active(remote_active),.zero_mode(remote_zero),.park_i2c(remote_park),
         .virtual_keys(remote_keys),.velocity(remote_velocity),.virtual_adc(remote_adc),
         .accepted(),.last_seq(),.diagnostic_data(touch_diagnostic),
-        .cal_write(cal_write),.cal_index(cal_index),.cal_value(cal_value));
+        .cal_write(cal_write),.cal_index(cal_index),.cal_value(cal_value),
+        .diagnostic_request(diagnostic_request));
 
     // S15+S16 持续按住进入零 PCM 参考；鬼键不能触发。UART 也可直接请求。
-    headphone_mute_guard mute_guard(.clk(clk),.rst_n(rst_n),.key_state(suppress_controls?16'd0:key_state),
-        .ghost(keypad_ghost),.mute_active(physical_zero_test));
+    generate if(DISPLAY_TOUCH_ONLY) begin:display_mute
+      assign physical_zero_test=ui_zero_mode;
+      assign filter_enable=ui_filter_enable;
+    end else begin:legacy_mute
+      headphone_mute_guard mute_guard(.clk(clk),.rst_n(rst_n),.key_state(suppress_controls?16'd0:key_state),
+          .ghost(keypad_ghost),.mute_active(physical_zero_test));
+      assign filter_enable=1'b1;
+    end endgenerate
     ads1115_reader #(.PRESSURE_PRIORITY(1)) adc(
         .clk(clk),.rst_n(rst_n && !digital_zero_test && !(remote_active && remote_park)),
         .scl(adc_scl),.sda(adc_sda),.sample_valid(hw_adc_valid),
@@ -176,7 +213,7 @@ module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_EN
         end
     end
     assign pads_ready=(&pad_seen) && !adc_fault && !adc_stale && !digital_zero_test;
-    slider_controls sliders(.clk(clk),.rst_n(controls_rst_n),.adc_valid(adc_valid),
+    slider_controls #(.PITCH_ENABLE(!DISPLAY_TOUCH_ONLY)) sliders(.clk(clk),.rst_n(controls_rst_n),.adc_valid(adc_valid),
         .adc_channel(adc_channel),.adc_data(adc_data),.volume(physical_volume),
         .pitch(physical_pitch),.ready(sliders_ready));
     // V020生产将FSR改为连续表情：A0开合音色，A1揉弦深度；不再生成鼓击。
@@ -203,6 +240,23 @@ module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_EN
     // 松开才确认选择，给诊断组合留出识别时间，避免误改音色。
     // 触摸前端3次稳定采样后，还经过1ms矩阵帧消抖；缩短旧4ms扫描帧的等待。
     // 未启用触摸的独立旧调用仍保持原27000clk/行，不改变历史参数语义。
+    generate if(DISPLAY_TOUCH_ONLY) begin:display_only_keys
+      // 不实例化矩阵扫描器，不占八根矩阵IO，也不依赖任何多键组合。
+      // 保留虚拟键仅用于USB诊断界面测试，所有触摸/虚拟键都不产生本地NoteOn/Off。
+      reg [3:0] display_timbre;
+      always @(posedge clk or negedge rst_n)
+        if(!rst_n)display_timbre<=0;
+        else if(!suppress_controls) begin
+          if(ui_timbre_set_valid)display_timbre<=ui_timbre_set_value==1?4'd1:4'd0;
+          else if(program_valid)display_timbre<=program_timbre==1?4'd1:4'd0;
+        end
+      assign selected_timbre=display_timbre;
+      assign key_state=remote_active?remote_keys:touch_keys;
+      assign keypad_ghost=(remote_active?1'b0:touch_fault) || touch_calibrating;
+      assign matrix_rows=4'bzzzz;
+      assign local_on=0;assign local_off=0;assign local_note=0;
+      assign local_velocity=0;assign local_timbre=display_timbre;
+    end else begin:legacy_keys
     matrix_keypad #(.ROW_CYCLES(TOUCH_ENABLE?6750:27000),
         .DEBOUNCE_FRAMES(3),.PERFORMANCE_MODE(1),.SELECT_ON_RELEASE(1),
         .TWO_BUTTON_SELECT(1),.TIMBRE_COUNT(2),.EXTERNAL_KEYS_ENABLE(TOUCH_ENABLE),
@@ -214,14 +268,35 @@ module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_EN
         .timbre_out(local_timbre),.key_state(key_state),.ghost_active(keypad_ghost),
         .selected_timbre(selected_timbre),.external_keys(touch_keys),
         .timbre_set_valid(program_valid),.timbre_set_value(program_timbre));
+    end endgenerate
+    generate if(DISPLAY_TOUCH_ONLY) begin:control_bank
+      midi_control_bank controls(.clk(clk),.rst_n(rst_n),.cc_valid(cc_valid),
+        .cc_number(cc_number),.cc_value(cc_value),.control_page(control_page),
+        .ui_fx_cycle(ui_fx_cycle),.current_master_volume(slider_volume),
+        .phone_set_valid(phone_set_valid),.phone_param(phone_param),.phone_value(phone_value),
+        .phone_query_param(phone_query_param),.phone_query_value(phone_query_value),
+        .master_volume(knob_volume),.master_volume_valid(knob_volume_valid),
+        .mix_balance(mix_balance),.brightness_base(brightness_base),
+        .attack_ctrl(attack_ctrl),.decay_ctrl(decay_ctrl),.sustain_ctrl(sustain_ctrl),.release_ctrl(release_ctrl),
+        .fx_mode(fx_mode),.fx_amount(fx_amount),.fx_time(fx_time),
+        .fx_feedback(fx_feedback),.fx_mod(fx_mod),.knob_values(knob_values));
+    end else begin:no_control_bank
+      assign knob_volume=160;assign knob_volume_valid=0;
+      assign mix_balance=128;assign brightness_base=0;
+      assign attack_ctrl=0;assign decay_ctrl=0;assign sustain_ctrl=192;assign release_ctrl=0;
+      assign fx_mode=0;assign fx_amount=0;assign fx_time=128;assign fx_feedback=64;assign fx_mod=64;
+      assign knob_values=0;assign phone_query_value=0;
+    end endgenerate
     performance_input_hub #(.MIDI_ENABLE(MIDI_ENABLE),.OPTICAL_ENABLE(OPTICAL_ENABLE),
         .PRESSURE_EXPRESSION_ENABLE(PRESSURE_EXPRESSION_ENABLE),
-        .MIDI_CHANNEL(MIDI_CHANNEL)) performance(
+        .MIDI_CHANNEL(MIDI_CHANNEL),.CONTROL_BANK_ENABLE(DISPLAY_TOUCH_ONLY),
+        .PHONE_VOLUME_ENABLE(DISPLAY_TOUCH_ONLY)) performance(
         .clk(clk),.rst_n(rst_n),.sample_tick(sample_tick),.allow_performance(allow_performance),
         .suppress_controls(suppress_controls),.remote_active(remote_active),.digital_zero(digital_zero_test),
         .midi_rx(midi_rx),.optical_beams(optical_beams),
         .local_on(local_on),.local_off(local_off),.local_note(local_note),.local_velocity(local_velocity),
-        .local_timbre(local_timbre),.selected_timbre(selected_timbre),.local_keys(key_state),
+        .local_timbre(local_timbre),.selected_timbre(selected_timbre),
+        .local_keys(DISPLAY_TOUCH_ONLY?16'd0:key_state),
         .physical_volume(physical_volume),.physical_pitch(physical_pitch),
         .pressure_vibrato(pressure_vibrato),
         .note_on(note_on),.note_off(note_off),.note(note),.velocity(velocity),.timbre(timbre),
@@ -230,7 +305,13 @@ module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_EN
         .midi_hit0(midi_hit0),.midi_hit1(midi_hit1),.midi_drum_velocity0(midi_velocity0),
         .midi_drum_velocity1(midi_velocity1),.panic_audio(panic_audio),
         .performance_keys(performance_keys),.primary_note(external_note),.primary_valid(external_note_valid),
-        .diagnostic_status(external_diagnostic));
+        .diagnostic_status(external_diagnostic),
+        .monitor_piano_keys32(monitor_piano_keys32),.monitor_piano_outside(monitor_piano_outside),
+        .strum_mode(ui_strum_mode),.manual_panic(ui_panic),
+        .knob_volume_valid(knob_volume_valid),.knob_volume(knob_volume),
+        .cc_valid(cc_valid),.cc_number(cc_number),.cc_value(cc_value),
+        .hat_closed_hit(hat_closed_hit),.hat_open_hit(hat_open_hit),
+        .hat_closed_velocity(hat_closed_velocity),.hat_open_velocity(hat_open_velocity));
     assign hit0=local_hit0 || midi_hit0;
     assign hit1=local_hit1 || midi_hit1;
     // 同一鼓同拍双输入取较大力度；两路鼓仍各只有一个独立鼓声部。

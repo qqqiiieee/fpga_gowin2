@@ -15,7 +15,6 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
 import subprocess
 import sys
 import time
@@ -113,10 +112,6 @@ def main():
     suffix = ".exe" if os.name == "nt" else ""
     iverilog = runtime / "bin" / ("iverilog" + suffix)
     vvp = runtime / "bin" / ("vvp" + suffix)
-    # Cloud Linux uses the distribution Icarus; bundled Windows binaries are excluded.
-    if os.name != "nt":
-        iverilog = Path(os.environ.get("IVERILOG") or shutil.which("iverilog") or "/missing/iverilog")
-        vvp = Path(os.environ.get("VVP") or shutil.which("vvp") or "/missing/vvp")
     start = time.monotonic()
     report = {
         "status": "FAIL", "scope": "standalone offline RTL simulation only",
@@ -164,10 +159,8 @@ def main():
         # retain more than the small executable front end in the audit trail.
         report["runtime"] = {
             "iverilog": str(iverilog), "vvp": str(vvp),
-            "files_sha256": ({path.relative_to(runtime).as_posix(): digest(path)
-                              for path in sorted(runtime.rglob("*")) if path.is_file()}
-                             if os.name == "nt" else
-                             {"iverilog": digest(iverilog), "vvp": digest(vvp)}),
+            "files_sha256": {path.relative_to(runtime).as_posix(): digest(path)
+                             for path in sorted(runtime.rglob("*")) if path.is_file()},
             "iverilog_version": command([iverilog, "-V"], run_dir, args.timeout, logs / "iverilog_version.json"),
             "vvp_version": command([vvp, "-V"], run_dir, args.timeout, logs / "vvp_version.json"),
         }

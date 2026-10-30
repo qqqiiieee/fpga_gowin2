@@ -13,7 +13,7 @@ module tb_optical_strum;
     wire trigger, reverse, ready;
     wire [7:0] velocity;
     wire [3:0] gap_ms;
-    wire [1:0] blocked;
+    wire [1:0] blocked,electrical_level;
     optical_strum #(.CLK_HZ(HZ),.FILTER_CYCLES(F),.STARTUP_CYCLES(S),
         .PAIR_WINDOW_CYCLES(P)) dut(.*);
     integer cycles=0, events=0, checks=0;

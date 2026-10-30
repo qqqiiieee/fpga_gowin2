@@ -53,10 +53,6 @@ def main():
     suffix = ".exe" if os.name == "nt" else ""
     runtime = ROOT / "tools/vendor/iverilog-v12/app/bin"
     iverilog, vvp = runtime / ("iverilog" + suffix), runtime / ("vvp" + suffix)
-    # Cloud Linux uses the distribution Icarus; bundled Windows binaries are excluded.
-    if os.name != "nt":
-        iverilog = Path(os.environ.get("IVERILOG") or shutil.which("iverilog") or "/missing/iverilog")
-        vvp = Path(os.environ.get("VVP") or shutil.which("vvp") or "/missing/vvp")
     report = {
         "schema_version": 1, "status": "fail", "source_stable": False,
         "started_utc": datetime.now(timezone.utc).isoformat(), "project": str(ROOT),

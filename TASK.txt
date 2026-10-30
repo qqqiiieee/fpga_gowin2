@@ -1,0 +1,14 @@
+用户任务：修正下落式演奏指示的屏幕琴键，使其对应实物 MIDIPLUS TINY+ 32键键盘；给出ESP32手机通讯接线。用户正在打游戏，所有代码修改、回归和渲染在云端执行，本地只做轻量检查、拉取成果和提醒，不在本地编译/烧录。
+
+基线：本分支V030，FPGA GW2A-18C，UserCode 0x00003366，固件SHA256 64eefa7df44d5b46baf8aa6874a28d29ac8f2446b4e5e92d6b8e3c7058b86ac7，Flash写入校验及重载通过。用户确认前一版PMOD3四键可用。当前所有音频与通信功能保持。
+
+实物照片观察：32键，19白键/13黑键；从左开始是三黑键组，即F开头，最后C。白键从左至右应为 F G A B C D E F G A B C D E F G A B C。黑键组为3、2、3、2、3。旧屏幕从C开始，是C3..G5（MIDI48..79），因此位置不对应。
+原照片是用户个人照片，未放到公开GitHub；以上是可用于实现的几何转录。不要臆造照片未能给出的当前MIDI八度/移调状态。键盘的八度可能改变实际MIDI音符号；应说明采用的显示音域基准，尽可能用一个明确可配置的F起始MIDI基准统一renderer、held monitor、标签及tests。当前任务重点是物理布局，不改变声音的十二平均律音高映射。若选默认F3(53)..C6(84)，必须说明这是假定显示窗口，未经当前键盘最低键实际MIDI验证；不要说已经一一实测。不要引入自动猜测八度或大规模新功能。
+
+需检查文件：src/piano_roll_renderer.v（当前ROM几何白键起C）；src/performance_input_hub.v（held[79:48]、outside范围）；src/hdmi_compact_dashboard.v（C3/C4/C5固定标签）；tests/tb_piano_roll_pixels.v、tb_piano_held_monitor.v、tb_midi_piano_notes.v、tb_four_key_ui_render.v及相关runner。
+要求：真实黑白键遮挡关系、黑键位于适当白键边界、E-F和B-C无黑键；32键按下高亮、下落音符、命中线均使用统一映射。保持两级像素流水线，暂停、重播、选曲和4KEY状态行正常；不增加每键振荡器或运行时除法。测试全部32键映射、白/黑键重叠区域、范围外音符、按下与延音区别、边界/空白期、两级延迟和音符下落对齐。冻结输入哈希，给出至少完整演奏页、部分黑白键按下、两个不同时间点下落预览。
+
+ESP32：经典ESP32-WROOM32。GPIO17/TX2 -> PMOD3 L9(phone_uart_rx)；GPIO16/RX2 <- PMOD3 N8(phone_uart_tx)；GND共地。ESP32独立USB供电，不并联双方3V3稳压输出；115200 8N1 3.3V TTL。N9/N7曾被否决，不可用旧资料覆盖L9/N8。手机连接Tang20K-Music，密码fpga2026，http://192.168.4.1/；ESP32须先部署esp32_phone固件，网页出现不等于FPGA协议已回读。此任务不要宣称已烧录ESP32。
+
+执行：检查cloud/setup.sh后准备Icarus/Pillow，仅在云端安装；把需要的测试脚本适配Linux，不调用gw_sh.exe。跑与修改相关的实际RTL测试和渲染，保留失败及修复记录。没有Gowin许可证不能生成新.fs，也不能把V030旧.fs改名。
+交付：提交代码、docs/ESP32接线与使用.html（或可打印SVG）、cloud_results/report.json及中文报告TXT、cloud_results/previews/*.png（实际RTL输出）、必要的可复现实验脚本。报告明确仿真/编译/上板三者状态和已知限制。只操作本任务分支，禁止覆盖main。若可推送，推送任务分支；若平台只返回diff，确保上述交付纳入diff。完成后主会话会拉取到Windows独立目录并提醒用户。

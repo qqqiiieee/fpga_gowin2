@@ -1,5 +1,5 @@
 // 整包跨时钟域握手，适用于慢状态快照而非逐拍无损事件队列。
-// WIDTH是状态总位数（默认60，生产252）；两域均异步低有效复位，各域同步释放由父层负责。
+// WIDTH是状态总位数（默认60，旧UI252，compact289）；两域均异步低有效复位，各域同步释放由父层负责。
 // pixel帧边界翻转request，source双级同步后冻结held_status并回送ack。
 // ack跨回pixel的两拍稳定期保证held_status不变，随后一次性拷贝pending_status。
 // display_status在下一帧边界发布；变化可能合并，最迟约两帧，不撕裂当前帧。

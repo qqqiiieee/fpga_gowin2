@@ -17,7 +17,7 @@ module optical_strum #(
     input clk, input rst_n, input [1:0] beams, input suppress,
     output reg trigger, output reg reverse,
     output reg [7:0] velocity, output reg [3:0] gap_ms,
-    output [1:0] blocked, output reg ready
+    output [1:0] blocked, output reg ready,output [1:0] electrical_level
 );
     function integer bits_for;
         input integer n;
@@ -46,6 +46,7 @@ module optical_strum #(
     localparam CLEAR=0, ARMED=1, PAIR=2, RELEASE=3;
     reg [1:0] state;
     wire [1:0] rising_blocked=blocked & ~previous_blocked;
+    assign electrical_level=filtered;
     assign blocked=ready ? (filtered ^ idle_level) : 2'b00;
     integer i;
     always @(posedge clk or negedge rst_n) begin

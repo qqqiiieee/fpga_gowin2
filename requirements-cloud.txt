@@ -1,4 +1,1 @@
-# Optional image/audio analysis used by existing offline tools.
-numpy==2.3.5
-Pillow==12.3.0
-pyserial==3.5
+Pillow>=10,<12

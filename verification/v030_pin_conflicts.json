@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "unique_pin_count": 37,
+  "signals": {
+    "ui_buttons_n[0]": {
+      "pin": "A11",
+      "direction": "in",
+      "io_type": "LVCMOS33",
+      "pull": "UP"
+    },
+    "ui_buttons_n[1]": {
+      "pin": "B11",
+      "direction": "in",
+      "io_type": "LVCMOS33",
+      "pull": "UP"
+    },
+    "ui_buttons_n[2]": {
+      "pin": "N6",
+      "direction": "in",
+      "io_type": "LVCMOS33",
+      "pull": "UP"
+    },
+    "ui_buttons_n[3]": {
+      "pin": "D11",
+      "direction": "in",
+      "io_type": "LVCMOS33",
+      "pull": "UP"
+    },
+    "phone_uart_rx": {
+      "pin": "L9",
+      "direction": "in",
+      "io_type": "LVCMOS33",
+      "pull": "UP"
+    },
+    "phone_uart_tx": {
+      "pin": "N8",
+      "direction": "out",
+      "io_type": "LVCMOS33",
+      "pull": "UP"
+    }
+  },
+  "verified_against": "actual Gowin post-route pin report"
+}

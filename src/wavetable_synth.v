@@ -35,7 +35,8 @@ module wavetable_synth #(
     parameter TIMBRE_BITS=4,
     parameter NUM_TIMBRES=(1<<TIMBRE_BITS),
     parameter DUAL_PROFILE=0,
-    parameter PHASE_RAM=0 // 1: synchronous block RAM; 0: legacy observable phases[].
+    parameter PHASE_RAM=0, // 1: synchronous block RAM; 0: legacy observable phases[].
+    parameter LIVE_ADSR_ENABLE=0 // 默认保持历史逐拍行为；生产实例显式设为1。
 )(
     input clk,input rst_n,input fs_tick,input test_mode,
     input [NUM_VOICES-1:0] gate,input [NUM_VOICES-1:0] retrigger,
@@ -45,7 +46,9 @@ module wavetable_synth #(
     input signed [8:0] pitch,
     output reg [15:0] sample,output reg frame_done,output reg overrun,
     output [NUM_VOICES-1:0] voice_busy,
-    output [NUM_VOICES-1:0] voice_audible
+    output [NUM_VOICES-1:0] voice_audible,
+    input [7:0] attack_ctrl,input [7:0] decay_ctrl,
+    input [7:0] sustain_ctrl,input [7:0] release_ctrl,input [7:0] damping
 );
     localparam IW=$clog2(NUM_VOICES);
     // 每 8 clk 最多注入一个样本，4 级流水线在 fs_tick 时最多残留一个。
@@ -70,6 +73,7 @@ module wavetable_synth #(
     reg [NUM_VOICES*8-1:0] velocities_frame;
     reg [NUM_VOICES*TIMBRE_BITS-1:0] timbres_frame;
     reg signed [8:0] pitch_frame;
+    reg [7:0] attack_frame,decay_frame,sustain_frame,release_frame,damping_frame;
     reg test_frame; // 与音符/门控同时冻结，单帧内不切换波形或频率。
     reg running;
     reg [IW-1:0] voice_index;
@@ -188,10 +192,85 @@ module wavetable_synth #(
     reg [7:0] env_next;
     reg [2:0] state_next;
 
+    // 实时ADSR用无符号Q8.12幅度（255.0为最大力度），整数部仍沿用envelopes[]。
+    // 32声部只轮流使用下方一条加减/比较链；不是32套包络乘法器。
+    // 小数部用同步RAM，无整RAM复位；只复位32位有效掩码，避免综合展开成复位FF。
+    // 与相位RAM相同，在fs_tick/前一声部slot7预取，slot0写回，不增加8拍时隙。
+    wire [11:0] live_fraction;
+    reg [19:0] live_level_next;
+    generate if(LIVE_ADSR_ENABLE) begin:live_envelope_ram
+        reg [11:0] ram[0:NUM_VOICES-1] /* synthesis syn_ramstyle="block_ram" */;
+        reg [11:0] read_q;
+        reg [NUM_VOICES-1:0] valid;
+        reg read_valid_q;
+        wire [IW-1:0] next_voice=(voice_index==NUM_VOICES-1)?{IW{1'b0}}:
+                                 (voice_index+1'b1);
+        wire [IW-1:0] read_address=fs_tick?{IW{1'b0}}:
+                                  ((running && slot==7)?next_voice:voice_index);
+        wire write_enable=rst_n && !fs_tick && running && slot==0;
+        always @(posedge clk) begin
+            read_q<=ram[read_address];
+            // 测试帧清小数部，但绝不改变旧整数包络/分频器规则。
+            if(write_enable) ram[voice_index]<=test_frame?12'd0:live_level_next[11:0];
+        end
+        always @(posedge clk or negedge rst_n) begin
+            if(!rst_n) begin valid<=0;read_valid_q<=0;end
+            else begin
+                read_valid_q<=valid[read_address];
+                if(write_enable) valid[voice_index]<=1'b1;
+            end
+        end
+        assign live_fraction=read_valid_q?read_q:12'd0;
+    end else begin:no_live_envelope_ram
+        assign live_fraction=12'd0;
+    end endgenerate
+
+    // A/D/R旋钮越大越慢，0最快、255最慢；每帧直接重算，按住音符也可编辑。
+    // rate=max(1, ((31-(ctrl%16))*2048) >> (ctrl/16))，单位Q8.12码/音频帧。
+    // 只有常量拼接/移位，没有运行时除法。低4位细调，高4位选择约2倍时间档。
+    // Fs=93750Hz、力度255、幅度跨越0..255时，0为17帧≈0.181ms，255为
+    // 1044480帧≈11.141s（另有触发/阶段转换的至多一帧延迟）。中间时间单调不减，
+    // 极慢档受定点量化会有相邻旋钮码同速。低力度/较小幅度差按比例缩短；Release
+    // 从松键当时的实际幅度下降，因此不是每次松键都固定走满上述全幅时间。
+    function [15:0] live_rate;
+        input [7:0] control;
+        reg [15:0] shifted;
+        begin
+            shifted={1'b1,~control[3:0],11'b0} >> control[7:4];
+            live_rate=(shifted==0)?16'd1:shifted;
+        end
+    endfunction
+    wire [15:0] live_attack_rate=live_rate(attack_frame);
+    wire [15:0] live_decay_rate=live_rate(decay_frame);
+    wire [15:0] live_release_rate=live_rate(release_frame);
+    // Sustain是力度峰值的比例，不是MIDI CC64延音踏板；本模块没有CC64输入。
+    // floor(velocity*(S+1)/256)：S=0严格静音，S=255严格等于力度峰值。
+    // 这一只8x9位乘法器由所有声部共用，PCM仍复用原来的有符号幅度乘法器。
+    wire [8:0] live_sustain_gain={1'b0,sustain_frame}+9'd1;
+    wire [16:0] live_sustain_product=velocity*live_sustain_gain;
+    wire [19:0] live_target={live_sustain_product[15:8],12'd0};
+    wire [19:0] live_peak={velocity,12'd0};
+    wire [19:0] live_level={current_env,live_fraction};
+    wire [20:0] live_rise={1'b0,live_level}+{5'd0,live_attack_rate};
+    // FSR2仅对生产双音色的id1拨弦生效，id0长笛及历史16音色都不受影响。
+    // 非零压力使Decay/Sustain音符进入不可自行回到Attack的Release；持续每帧额外减
+    // damping*8个Q8.12码。值越大制音越快，不是只在压力边沿执行一次。
+    // 例如R=255、峰值255时：压力0约11.14s，64约21.7ms，255约5.46ms。
+    // 松开FSR只移除额外减量，Release/Idle不抬升；只有新NoteOn/重触发可再起音。
+    // 新NoteOn独立开始Attack；Attack中只扣压力减量，仍允许新拨弦起音，再在
+    // 到达峰值后进入受阻尼的Release。极慢Attack若小于压力减量会被直接闷住。
+    wire live_damping_active=DUAL_PROFILE && timbre==1 && damping_frame!=0;
+    wire [19:0] live_damping_step={9'd0,damping_frame,3'b0};
+    wire [16:0] live_fall_rate={1'b0,live_release_rate}+
+                             (live_damping_active?{6'd0,damping_frame,3'b0}:17'd0);
+    wire note_start=selected_gate && (!previous_gates[voice_index] ||
+                    selected_note!=previous_notes[voice_index] || pending_triggers[voice_index]);
+
     // 持续音 ADSR：按下进入 attack，按住时 decay 到 sustain，松开才 release。
     // 复触发、门控从 0→1 或声部音符被替换，都会重新开始 attack。
     always @(*) begin
         env_next=current_env;state_next=current_state;
+        live_level_next=live_level;
         if(selected_gate && (!previous_gates[voice_index] ||
            selected_note!=previous_notes[voice_index] || pending_triggers[voice_index])) begin
             env_next=0;state_next=ATTACK;
@@ -213,6 +292,50 @@ module wavetable_synth #(
             end
             default:begin env_next=0;state_next=IDLE;end
         endcase
+        // test_frame无条件走上方冻结的历史ADSR，频率、正弦插值、PCM缩放也未改。
+        // 参数为0时整个实时分支在展开时被消除，旧实例可不连接末尾新增端口。
+        if(LIVE_ADSR_ENABLE && !test_frame) begin
+            state_next=current_state;
+            if(note_start) begin live_level_next=0;state_next=ATTACK;end
+            else if(live_damping_active && current_state!=IDLE && current_state!=ATTACK) begin
+                if(live_level<={3'd0,live_fall_rate}) begin
+                    live_level_next=0;state_next=IDLE;
+                end else begin
+                    live_level_next=live_level-live_fall_rate;state_next=RELEASE;
+                end
+            end else case(current_state)
+                IDLE:live_level_next=0;
+                ATTACK:if(!selected_gate) state_next=RELEASE;
+                    else begin
+                        if(live_rise>={1'b0,live_peak}) begin
+                            live_level_next=live_peak;state_next=DECAY;
+                        end else live_level_next=live_rise[19:0];
+                        // 不从零包络直接强制Release，否则持续任意非零FSR会吞掉
+                        // 所有新NoteOn。只从本帧的Attack结果扣压力，运算链仍然共享。
+                        if(live_damping_active) begin
+                            if(live_level_next<=live_damping_step) begin
+                                live_level_next=0;state_next=IDLE;
+                            end else live_level_next=live_level_next-live_damping_step;
+                        end
+                    end
+                DECAY,SUSTAIN:if(!selected_gate) state_next=RELEASE;
+                    else if(live_level>live_target) begin
+                        if(live_level-live_target<={4'd0,live_decay_rate}) begin
+                            live_level_next=live_target;state_next=SUSTAIN;
+                        end else live_level_next=live_level-live_decay_rate;
+                    end else if(live_level<live_target) begin
+                        // 实时调高S时也平滑上升；不能重新触发或重置DDS相位。
+                        if(live_rise>={1'b0,live_target}) begin
+                            live_level_next=live_target;state_next=SUSTAIN;
+                        end else live_level_next=live_rise[19:0];
+                    end else state_next=SUSTAIN;
+                RELEASE:if(live_level<={3'd0,live_fall_rate}) begin
+                        live_level_next=0;state_next=IDLE;
+                    end else live_level_next=live_level-live_fall_rate;
+                default:begin live_level_next=0;state_next=IDLE;end
+            endcase
+            env_next=live_level_next[19:12];
+        end
     end
 
     // retrigger 可能只有一个 clk，先记住它，轮到该声部时消费。
@@ -258,6 +381,7 @@ module wavetable_synth #(
         if(!rst_n) begin
             running<=0;slot<=0;voice_index<=0;sample<=0;frame_done<=0;overrun<=0;
             gates_frame<=0;notes_frame<=0;velocities_frame<=0;timbres_frame<=0;pitch_frame<=0;
+            attack_frame<=0;decay_frame<=0;sustain_frame<=0;release_frame<=0;damping_frame<=0;
             test_frame<=0;previous_gates<=0;rom_address<=0;tone_address<=0;frac<=0;env_slot<=0;accumulator<=0;
             soft_a<=0;soft_b<=0;soft_base<=0;soft_interp<=0;soft_product<=0;
             v0<=0;v1<=0;v2<=0;v3<=0;last0<=0;last1<=0;last2<=0;last3<=0;
@@ -285,6 +409,10 @@ module wavetable_synth #(
                 if(running || v0 || v1 || v2 || v3) overrun<=1;
                 gates_frame<=gate;notes_frame<=note_bus;velocities_frame<=vel_bus;
                 timbres_frame<=timbre_bus;pitch_frame<=pitch;test_frame<=test_mode;
+                if(LIVE_ADSR_ENABLE) begin
+                    attack_frame<=attack_ctrl;decay_frame<=decay_ctrl;sustain_frame<=sustain_ctrl;
+                    release_frame<=release_ctrl;damping_frame<=damping;
+                end
                 accumulator<=0;voice_index<=0;slot<=0;running<=1;
             end else if(running) begin
                 slot<=slot+1'b1;

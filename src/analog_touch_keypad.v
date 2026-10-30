@@ -43,10 +43,16 @@ module analog_touch_keypad #(
     localparam STALE_WIDTH = (STALE_LIMIT > 1) ? $clog2(STALE_LIMIT) : 1;
     localparam [1:0] WAIT_SAMPLE = 0, FIND_NEAREST = 1,
                      CHECK_SPACING = 2, COMMIT_SAMPLE = 3;
-    reg [11:0] default_centers [0:15];
+    // 由同一校准JSON生成明确常量，不能从readmemh变量数组异步装载复位值。
+    // 后者会让Gowin推断同时异步set/reset（DI0004），RTL仿真却不暴露此映射风险。
+    `include "src/touch_centers_init.vh"
     reg [11:0] centers [0:15];
-    // 从工程根目录编译/运行；专用runner亦保持这一相对目录结构。
-    initial $readmemh("src/touch_centers.hex", default_centers);
+    genvar center_word;
+    generate for(center_word=0;center_word<16;center_word=center_word+1)begin:center_registers
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)centers[center_word]<=TOUCH_DEFAULT_CENTERS[center_word*12 +: 12];
+            else if(cal_write && cal_index==center_word)centers[center_word]<=cal_value;
+    end endgenerate
     reg [1:0] state;
     reg [3:0] scan_index, best_index, pending_index;
     reg [11:0] work_raw, best_center;
@@ -55,7 +61,6 @@ module analog_touch_keypad #(
     reg table_invalid, spacing_invalid;
     reg [STABLE_WIDTH-1:0] stable_count;
     reg [STALE_WIDTH-1:0] stale_count;
-    integer reset_index;
 
     // 先比较交换大小，再做一次减法；状态机切换左操作数复用同一个算术路径。
     wire [11:0] search_left = (state == CHECK_SPACING) ? best_center : work_raw;
@@ -69,8 +74,6 @@ module analog_touch_keypad #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            for (reset_index=0; reset_index<16; reset_index=reset_index+1)
-                centers[reset_index] <= default_centers[reset_index];
             keys <= 0;
             raw_value <= 0;
             valid <= 1'b0;
@@ -99,7 +102,6 @@ module analog_touch_keypad #(
             end
 
             if (cal_write) begin
-                centers[cal_index] <= cal_value;
                 keys <= 0;
                 stable_count <= 0;
                 pending_index <= 0;

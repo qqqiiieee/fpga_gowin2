@@ -6,7 +6,7 @@
 // 普通远程虚拟输入取得所有权时清声音，防止被覆盖来源留下持续门控。
 module performance_input_hub #(
  parameter MIDI_ENABLE=0,parameter OPTICAL_ENABLE=0,parameter MIDI_CHANNEL=0,
- parameter PRESSURE_EXPRESSION_ENABLE=0
+ parameter PRESSURE_EXPRESSION_ENABLE=0,parameter CONTROL_BANK_ENABLE=0,parameter PHONE_VOLUME_ENABLE=0
 )(
  input clk,input rst_n,input sample_tick,input allow_performance,input suppress_controls,
  input remote_active,input digital_zero,input midi_rx,input[1:0] optical_beams,
@@ -20,38 +20,77 @@ module performance_input_hub #(
  output midi_hit0,output midi_hit1,output[7:0] midi_drum_velocity0,output[7:0] midi_drum_velocity1,
  output panic_audio,output[11:0] performance_keys,
  output reg[6:0] primary_note,output reg primary_valid,output[13:0] diagnostic_status,
- input [7:0] pressure_vibrato
+ input [7:0] pressure_vibrato,
+ // V021控制侧与演奏侧分离：UI只改参数/模式；不伪造本地音符。
+ input strum_mode,input manual_panic,input knob_volume_valid,input [7:0] knob_volume,
+ output cc_valid,output [6:0] cc_number,cc_value,
+ output hat_closed_hit,hat_open_hit,output [7:0] hat_closed_velocity,hat_open_velocity,
+ // 只读实体MIDI按住监视：bit0=MIDI48(C3)，bit31=MIDI79(G5)，半音逐位。
+ // 不并入本地/触摸/虚拟键，不显示已松键的延音或扫弦尾音；范围外另置标志。
+ output [31:0] monitor_piano_keys32,output monitor_piano_outside
 );
  wire m_valid,m_on,m_off,m_ready;wire[6:0] m_note;wire[7:0] m_velocity;
  wire[127:0] held;wire m_pc,m_timbre,m_volume_valid,m_bend_valid;
+ // 复用解析器held别名，不新增按键状态或改变抑制、panic、音频仲裁语义。
+ // MIDI_ENABLE=0时既有no_midi分支将held置零，两个监视口自然恒为零。
+ assign monitor_piano_keys32=held[79:48];
+ assign monitor_piano_outside=(|held[47:0]) || (|held[127:80]);
  wire[7:0] m_volume,m_count;wire signed[8:0] m_bend;wire[6:0] m_mod;
  wire m_panic,m_error,m_overflow;
+ wire m_cc_valid;wire [6:0] m_cc_number,m_cc_value;
+ wire m_hit0,m_hit1;wire [7:0] m_drum_velocity0,m_drum_velocity1;
+ wire h_closed,h_open;wire [7:0] h_closed_velocity,h_open_velocity;
+ wire user_panic=CONTROL_BANK_ENABLE && manual_panic;
+ reg previous_strum;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)previous_strum<=0;else previous_strum<=strum_mode;
+ wire mode_changed=CONTROL_BANK_ENABLE && (strum_mode!=previous_strum);
  wire ext_suppress=!allow_performance || digital_zero || remote_active;
+ // V021全局取消优先于已挂起的新控制/Pad请求；只门控交付，不改解析器状态。
+ // 参数0恒为不取消，保持历史实例的控制仲裁、脉冲和力度语义。
+ wire global_cancel=CONTROL_BANK_ENABLE && (ext_suppress || panic_audio);
  generate if(MIDI_ENABLE)begin:midi_input
   midi_keyboard #(.MIDI_CHANNEL(MIDI_CHANNEL)) keyboard(
-   .clk(clk),.rst_n(rst_n),.rx(midi_rx),.suppress(ext_suppress),.event_ready(m_ready),
+   .clk(clk),.rst_n(rst_n),.rx(midi_rx),.suppress(ext_suppress || user_panic),.event_ready(m_ready),
    .event_valid(m_valid),.event_on(m_on),.event_off(m_off),.event_note(m_note),.event_velocity(m_velocity),
    .held_notes(held),.program_valid(m_pc),.timbre_select(m_timbre),
    .volume_valid(m_volume_valid),.volume(m_volume),.bend_valid(m_bend_valid),.bend(m_bend),
-   .modulation(m_mod),.hit0(midi_hit0),.hit1(midi_hit1),
-   .drum_velocity0(midi_drum_velocity0),.drum_velocity1(midi_drum_velocity1),
-   .panic(m_panic),.framing_error(m_error),.overflow(m_overflow),.received_count(m_count));
+   .modulation(m_mod),.hit0(m_hit0),.hit1(m_hit1),
+   .drum_velocity0(m_drum_velocity0),.drum_velocity1(m_drum_velocity1),
+   .panic(m_panic),.framing_error(m_error),.overflow(m_overflow),.received_count(m_count),
+   .cc_valid(m_cc_valid),.cc_number(m_cc_number),.cc_value(m_cc_value),
+   .hat_closed_hit(h_closed),.hat_open_hit(h_open),
+   .hat_closed_velocity(h_closed_velocity),.hat_open_velocity(h_open_velocity));
  end else begin:no_midi
   assign m_valid=0;assign m_on=0;assign m_off=0;assign m_note=0;assign m_velocity=0;
   assign held=0;assign m_pc=0;assign m_timbre=0;assign m_volume_valid=0;assign m_volume=160;
   assign m_bend_valid=0;assign m_bend=0;assign m_mod=0;assign m_panic=0;assign m_error=0;
-  assign m_overflow=0;assign m_count=0;assign midi_hit0=0;assign midi_hit1=0;
-  assign midi_drum_velocity0=0;assign midi_drum_velocity1=0;
+  assign m_overflow=0;assign m_count=0;assign m_hit0=0;assign m_hit1=0;
+  assign m_drum_velocity0=0;assign m_drum_velocity1=0;
+  assign m_cc_valid=0;assign m_cc_number=0;assign m_cc_value=0;
+  assign h_closed=0;assign h_open=0;assign h_closed_velocity=0;assign h_open_velocity=0;
  end endgenerate
+ assign cc_valid=m_cc_valid && !suppress_controls && !user_panic && !global_cancel;
+ assign cc_number=m_cc_number;assign cc_value=m_cc_value;
+ // 解析器先接内部wire，Hub各输出只有这里一个驱动；取消时脉冲和力度同清零。
+ assign midi_hit0=m_hit0 && !global_cancel;assign midi_hit1=m_hit1 && !global_cancel;
+ assign midi_drum_velocity0=global_cancel?8'd0:m_drum_velocity0;
+ assign midi_drum_velocity1=global_cancel?8'd0:m_drum_velocity1;
+ assign hat_closed_hit=h_closed && !global_cancel;assign hat_open_hit=h_open && !global_cancel;
+ assign hat_closed_velocity=global_cancel?8'd0:h_closed_velocity;
+ assign hat_open_velocity=global_cancel?8'd0:h_open_velocity;
  wire o_valid,o_on,o_off,o_ready,o_busy,o_trigger,o_reverse,o_beam_ready;
  wire[6:0] o_note;wire[7:0] o_velocity,o_gesture_velocity;wire[3:0] o_gap;
- wire[1:0] o_blocked;
+ wire[1:0] o_blocked,o_electrical;
  // 全局panic必须同时取消旧扫弦，不能只清音频后又被播放器重新置gate。
- wire optical_suppress=ext_suppress || m_panic;
+ // 普通键盘模式只由琴键发音；扫弦模式保留MIDI held和弦，但消费而不转发其Note事件。
+ // 切模式清旧声部/扫弦队列，避免两个模式的尾音和所有权互相遗留。
+ wire optical_suppress=ext_suppress || m_panic || user_panic || mode_changed ||
+    (CONTROL_BANK_ENABLE && !strum_mode);
  generate if(OPTICAL_ENABLE)begin:optical_input
   optical_strum gesture(.clk(clk),.rst_n(rst_n),.beams(optical_beams),.suppress(optical_suppress),
    .trigger(o_trigger),.reverse(o_reverse),.velocity(o_gesture_velocity),.gap_ms(o_gap),
-   .blocked(o_blocked),.ready(o_beam_ready));
+   .blocked(o_blocked),.ready(o_beam_ready),.electrical_level(o_electrical));
   strum_player player(.clk(clk),.rst_n(rst_n),.trigger(o_trigger),.reverse(o_reverse),
    .velocity(o_gesture_velocity),.gap_ms(o_gap),.held_notes(held),.suppress(optical_suppress),
    .event_ready(o_ready),.event_valid(o_valid),.event_on(o_on),.event_off(o_off),
@@ -59,13 +98,14 @@ module performance_input_hub #(
  end else begin:no_optical
   assign o_valid=0;assign o_on=0;assign o_off=0;assign o_note=0;assign o_velocity=0;
   assign o_busy=0;assign o_trigger=0;assign o_reverse=0;assign o_beam_ready=0;
-  assign o_gesture_velocity=0;assign o_gap=0;assign o_blocked=0;
+  assign o_gesture_velocity=0;assign o_gap=0;assign o_blocked=0;assign o_electrical=0;
  end endgenerate
  // V019的数字零参考会清空所有来源；零模式中不再缓存新的本地门控。
  wire local_event=(local_on || local_off) && !((MIDI_ENABLE || OPTICAL_ENABLE) && digital_zero);
  assign m_ready=!local_event && !ext_suppress;
  assign o_ready=!local_event && !m_valid && !optical_suppress;
- wire use_midi=!local_event && m_valid && !ext_suppress;
+ wire use_midi=!local_event && m_valid && !ext_suppress &&
+    !(CONTROL_BANK_ENABLE && strum_mode);
  wire use_optical=!local_event && !m_valid && o_valid && !optical_suppress;
  assign note_on=local_event?local_on:(use_midi?m_on:(use_optical?o_on:1'b0));
  assign note_off=local_event?local_off:(use_midi?m_off:(use_optical?o_off:1'b0));
@@ -79,27 +119,48 @@ module performance_input_hub #(
  always@(posedge clk or negedge rst_n)
   if(!rst_n)begin previous_remote<=0;previous_zero<=0;end
   else begin previous_remote<=remote_active;previous_zero<=digital_zero;end
- assign panic_audio=(MIDI_ENABLE && m_panic) ||
+ assign panic_audio=user_panic || mode_changed || (MIDI_ENABLE && m_panic) ||
     ((MIDI_ENABLE || OPTICAL_ENABLE) &&
      ((remote_active && !previous_remote) || (digital_zero && !previous_zero)));
  // 最近改变的输入拥有音量/弯音。微小ADC漂移可能造成回切，前级滑杆已做平滑/死区。
  reg midi_owns_volume,midi_owns_pitch;
  reg midi_volume_seen,midi_pitch_seen;
  reg[7:0] last_physical_volume,saved_midi_volume;
+ reg [7:0] physical_volume_anchor;
+ wire [7:0] physical_volume_distance=physical_volume>=physical_volume_anchor?
+    physical_volume-physical_volume_anchor:physical_volume_anchor-physical_volume;
  reg signed[8:0] last_physical_pitch,saved_midi_pitch;
  reg[23:0] vibrato_phase;
  always@(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    midi_owns_volume<=0;midi_owns_pitch<=0;midi_volume_seen<=0;midi_pitch_seen<=0;
-   last_physical_volume<=160;last_physical_pitch<=0;
+   last_physical_volume<=160;physical_volume_anchor<=160;last_physical_pitch<=0;
    saved_midi_volume<=160;saved_midi_pitch<=0;vibrato_phase<=0;
   end else begin
    last_physical_volume<=physical_volume;last_physical_pitch<=physical_pitch;
-   if(physical_volume!=last_physical_volume || remote_active)midi_owns_volume<=0;
+   // 有MIDI旋钮时，ADC在1~3码范围内的微抖不能反复夺走音量控制。
+   // 使用最后确认位置作锚，而不是逐拍位置，缓慢移动累计越过4码仍能接管。
+   if(CONTROL_BANK_ENABLE)begin
+    if(physical_volume_distance>=4 || remote_active)begin
+     physical_volume_anchor<=physical_volume;midi_owns_volume<=0;
+    end
+   end else if(physical_volume!=last_physical_volume || remote_active)midi_owns_volume<=0;
    if(physical_pitch!=last_physical_pitch || remote_active)midi_owns_pitch<=0;
-   if(MIDI_ENABLE && m_volume_valid && !ext_suppress && !m_panic)begin
-    if(!midi_volume_seen || m_volume!=saved_midi_volume)midi_owns_volume<=1;
+   if(MIDI_ENABLE && m_volume_valid && !ext_suppress && !m_panic && !global_cancel)begin
+    if(!midi_volume_seen || m_volume!=saved_midi_volume)begin
+     midi_owns_volume<=1;
+     // 从当前真实滑杆位置重新累计4码，避免旧锚点把1码抖动判成夺权。
+     if(CONTROL_BANK_ENABLE)physical_volume_anchor<=physical_volume;
+    end
     saved_midi_volume<=m_volume;midi_volume_seen<=1;
+   end
+   // V023此请求只来自手机绝对SET：即使与上次相同也应重新取得所有权。
+   // 默认参数0保留旧分页旋钮/CC7重复值不夺权语义；PHONE_VOLUME_ENABLE由新输入层选1。
+   if(CONTROL_BANK_ENABLE && knob_volume_valid && !ext_suppress && !m_panic && !global_cancel)begin
+    if(PHONE_VOLUME_ENABLE || !midi_volume_seen || knob_volume!=saved_midi_volume)begin
+     midi_owns_volume<=1;physical_volume_anchor<=physical_volume;
+    end
+    saved_midi_volume<=knob_volume;midi_volume_seen<=1;
    end
    if(MIDI_ENABLE && m_bend_valid && !ext_suppress && !m_panic)begin
     if(!midi_pitch_seen || m_bend!=saved_midi_pitch)midi_owns_pitch<=1;
@@ -119,7 +180,8 @@ module performance_input_hub #(
  // FSR揉弦最大约±128弯音码（约±1半音）；CC1仍保留旧最大约±64码。
  // 两来源取较大深度而非叠加，避免同时操作时深度突增；基础音高仍由滑杆/Bend决定。
  // 虚拟ADC也能模拟FSR，所以远程接管只禁用MIDI表达，不屏蔽已选中的压力表情。
- wire [7:0] pressure_depth=(PRESSURE_EXPRESSION_ENABLE && allow_performance && !digital_zero)?pressure_vibrato:8'd0;
+ // V021的第二路压力另送包络阻尼；不再同时叠加揉弦，摇杆Y/CC1独占颤音深度。
+ wire [7:0] pressure_depth=(PRESSURE_EXPRESSION_ENABLE && !CONTROL_BANK_ENABLE && allow_performance && !digital_zero)?pressure_vibrato:8'd0;
  wire [7:0] midi_depth=(MIDI_ENABLE && !ext_suppress)?{1'b0,m_mod}:8'd0;
  wire [7:0] vibrato_depth=(pressure_depth>midi_depth)?pressure_depth:midi_depth;
  wire signed[16:0] vibrato_product=triangle*$signed({1'b0,vibrato_depth});
@@ -150,5 +212,5 @@ module performance_input_hub #(
   end
  end
  // 此14位拼到09诊断diag2[15:2]；低两位仍为触摸valid/fault，兼容原标定工具。
- assign diagnostic_status={7'd0,o_busy,o_beam_ready,m_overflow,o_blocked,m_error,(|held || m_count!=0)};
+ assign diagnostic_status={4'd0,(OPTICAL_ENABLE!=0),o_electrical,o_busy,o_beam_ready,m_overflow,o_blocked,m_error,(|held || m_count!=0)};
 endmodule

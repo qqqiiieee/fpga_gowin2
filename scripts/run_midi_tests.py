@@ -15,7 +15,6 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -63,10 +62,6 @@ def main():
     runtime = ROOT / "tools/vendor/iverilog-v12/app/bin"
     suffix = ".exe" if os.name == "nt" else ""
     iverilog, vvp = runtime / ("iverilog"+suffix), runtime / ("vvp"+suffix)
-    # Cloud Linux uses the distribution Icarus; bundled Windows binaries are excluded.
-    if os.name != "nt":
-        iverilog = Path(os.environ.get("IVERILOG") or shutil.which("iverilog") or "/missing/iverilog")
-        vvp = Path(os.environ.get("VVP") or shutil.which("vvp") or "/missing/vvp")
     report = {
         "status": "fail", "source_stable": False, "project": str(ROOT),
         "started_utc": datetime.now(timezone.utc).isoformat(), "tests": [],

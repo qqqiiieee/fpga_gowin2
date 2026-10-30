@@ -1,0 +1,50 @@
+V023 phone bridge contract v1 (2026-10-30, experimental, no hardware validation)
+
+Pins: FPGA phone_uart_rx=T11 <- ESP32 GPIO17/TX2;
+      FPGA phone_uart_tx=P11 -> ESP32 GPIO16/RX2; common GND.
+ESP32 powered from its own USB. Do not connect two regulated 3V3 outputs.
+Classic ESP32-WROOM32 UART2; 115200 baud, 8N1, 3.3V TTL.
+Existing FTDI T13/M11 debug UART remains independent and unchanged.
+
+Request 12 bytes:
+  A5 5A 01 SEQ CMD PARAM VALUE 00 00 00 00 XOR
+Response 12 bytes:
+  5A A5 01 SEQ RESULT PARAM EFFECTIVE FLAGS TIMBRE FX_MODE VOLUME XOR
+XOR = XOR of bytes 2..10 inclusive. SEQ wraps at 256. One request in flight.
+CMD 0=get parameter (VALUE must be 0), 1=set absolute parameter, 2=Panic
+(Panic requires PARAM=0 VALUE=0). Reserved bytes must all be zero.
+RESULT 0=ok, 1=unsupported command, 2=unknown/read-only parameter,
+3=value out of range, 4=unsupported version/reserved bytes.
+Bad XOR/partial packet: no action and no response. Interbyte timeout 20 ms.
+Only validated SET causes a one-clock apply pulse. Response after settling
+reflects actual FPGA state, not an echo of the requested value. No audio data.
+Retry GET/SET/Panic with same sequence after 250 ms is safe (absolute SET).
+
+Parameters (all integer, inclusive limits):
+0 master volume 0..255 (shares existing ownership with physical slider/CC7)
+1 timbre 0..1 (flute/pluck)
+2 input mode 0..1 (KEY/STRUM)
+3 FX mode 0..3 (OFF/Delay/Chorus/Reverb)
+4 FX wet 0..255
+5 FX time 0..255
+6 FX feedback 0..255 (audio_effects still bounds actual stable coefficient)
+7 FX modulation 0..255
+8 attack 0..255
+9 decay 0..255
+10 sustain 0..255
+11 release 0..255
+12 HDMI page 0..3
+13 filter enable 0..1
+14 digital zero/mute 0..1
+15 status flags (read only; SET rejected)
+
+FLAGS bits: 0=MIDI seen/held, 1=ADS fault, 2=touch fault or diagnostic menu hold,
+3=optical ready, 4=STRUM selected, 5=MIDI overflow,
+6=actual digital zero (including FTDI zero) enabled, 7=reserved zero.
+MIDI knobs fixed in all UI pages: CC93=time, CC91=feedback,
+CC71=modulation, CC74=wet. Soft pickup after phone retarget.
+Pads stay percussion channel 10 notes 36/37/38/39 and existing GM aliases.
+
+V023 debug09 extension: diag2 bit11=raw-beam capability,
+bit9=filtered electrical beam A, bit10=filtered electrical beam B.
+V021 bit11=0; bits4/5 in both versions are relative-to-startup blocked state.

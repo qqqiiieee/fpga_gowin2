@@ -47,7 +47,8 @@ module remote_debug_link #(
   output reg [15:0] virtual_keys,output reg [7:0] velocity,
   output reg [63:0] virtual_adc,output reg accepted,output reg [7:0] last_seq,
   input [63:0] diagnostic_data,
-  output reg cal_write,output reg [3:0] cal_index,output reg [11:0] cal_value
+  output reg cal_write,output reg [3:0] cal_index,output reg [11:0] cal_value,
+  output reg diagnostic_request
 );
   // 对一个UART位的周期数四舍五入；默认取234周期，实际波特率约115385。
   localparam BIT_CYCLES=(CLK_HZ+BAUD/2)/BAUD;
@@ -165,9 +166,9 @@ module remote_debug_link #(
       velocity<=160;virtual_adc<=0;accepted<=0;last_seq<=0;
       packet_count<=0;packet_xor<=0;packet_age<=0;watchdog<=0;
       ack_start<=0;ack_payload<=0;
-      cal_write<=0;cal_index<=0;cal_value<=0;
+      cal_write<=0;cal_index<=0;cal_value<=0;diagnostic_request<=0;
     end else begin
-      accepted<=0;ack_start<=0;cal_write<=0;
+      accepted<=0;ack_start<=0;cal_write<=0;diagnostic_request<=0;
       if(remote_active) begin
         // watchdog按系统时钟计距上次已接受命令的时间，仅remote_active期间运行。
         // 到1秒撤销远程/纯零/停驻及虚拟键；velocity/virtual_adc/last_seq仍保留，
@@ -195,11 +196,13 @@ module remote_debug_link #(
             // XOR或flags非法的帧静默丢弃，无accepted、无ACK，也不重置watchdog。
             packet_count<=0;packet_xor<=0;
             if(DIAG_ENABLE && rx_data==packet_xor && packet[3]==8'h80) begin
+              diagnostic_request<=1;
               ack_payload<=make_diag_reply(packet[2],status_flags,physical_keys,diagnostic_data);
               ack_start<=1;
             end else if(DIAG_ENABLE && CALIB_ENABLE && rx_data==packet_xor && packet[3]==8'h81 &&
                 packet[4][7:4]==0 && packet[8][7:4]==0 &&
                 {packet[8],packet[7]}>=8 && {packet[8],packet[7]}<4095) begin
+              diagnostic_request<=1;
               cal_write<=1;cal_index<=packet[4][3:0];cal_value<={packet[8][3:0],packet[7]};
               ack_payload<=make_diag_reply(packet[2],status_flags,physical_keys,
                 {12'ha10,packet[4][3:0],packet[4][3:0],packet[8][3:0],packet[7],diagnostic_data[31:0]});

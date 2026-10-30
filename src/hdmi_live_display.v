@@ -1,16 +1,21 @@
 // 显示封装：源域27MHz、像素25.2MHz、DDR串行126MHz；锁定后各域分别释放复位。
 // sample_tick是源域时钟使能，pcm为16位二补码；pixel域只读取整帧状态与双缓冲波形。
-// UI_ENABLE默认0保留242bit旧接口，生产1增加高10bit页/游标/曲目/控制键。
+// UI_ENABLE默认0保留242bit旧接口，=1增加高10bit页/游标/曲目/控制键。
+// COMPACT_UI默认0兼容旧图；=1隐含开启四页元数据并增加37位，共289位整包跨域。
+// 新增源域端口control_page[1:0]/fx_mode[1:0]/strum_mode/knob_values[31:0]。
+// knob_values从低到高每8位对应K1..K4；与页、模式、旧状态同次握手，只在帧边界发布。
 // 低242bit打包与解包顺序必须匹配，见下方布局；不要为多位状态逐位双触发器同步。
 // source_status由req/ack整包握手捕获，display_status仅frame_tick帧边界切换。
-// wave_scope RAM同步读一拍、字体ROM一拍、RGB寄存一拍，DE/HS/VS必须共同延迟三拍。
+// 旧分支波形RAM一拍、字体一拍、RGB一拍，共三拍；COMPACT增加字符ROM一拍，共四拍。
+// 两分支各自的字色、背景、RGB与DE/HS/VS共同延迟；不修改原波形地址/采样率。
 // 复位立即断言且每域同步释放；PLL失锁清空显示状态但不复位音频层。
 // peak保留接口但当前波形缩放取capture_peak；不要为了消除未用端口而改所有位置调用。
 // 输出为兼容DVI的视频TMDS，没有HDMI音频包、HDCP或USB触控。
 
 // Instrument status crosses domains as a coherent frame-boundary snapshot.
 // The scope uses immutable RAM banks with its own request/ack handshake.
-module hdmi_live_display #(parameter UI_ENABLE=0)(
+module hdmi_live_display #(parameter UI_ENABLE=0,parameter COMPACT_UI=0,
+ parameter PIANO_ROLL_ENABLE=0)(
  input clk27,input rst_n,input sample_tick,input [15:0] pcm,peak,
  input [11:0] keys,input [3:0] timbre,input [6:0] note,input note_valid,
  input [15:0] frequency_bcd,input [7:0] volume_percent,
@@ -30,7 +35,12 @@ module hdmi_live_display #(parameter UI_ENABLE=0)(
  input test_active,input [5:0] test_requested,
  input [31:0] test_busy,test_gate,input test_sweep,
  input [4:0] test_index,input test_overrun,
- input [1:0] ui_page,ui_cursor,ui_song,input [3:0] ui_controls);
+ input [1:0] ui_page,ui_cursor,ui_song,input [3:0] ui_controls,
+ input [1:0] control_page,fx_mode,input strum_mode,input [31:0] knob_values,
+ // Physical held MIDI48..79, distinct from touch keys and oscillator busy.
+ input [31:0] piano_keys,input piano_outside,
+ input [11:0] roll_tick,input [1:0] roll_song,input roll_active,roll_done);
+ localparam USE_COMPACT=COMPACT_UI || PIANO_ROLL_ENABLE;
  wire serial_clk,pixel_clk;
  hdmi_clocks u_clocks(clk27,rst_n,serial_clk,pixel_clk,pll_locked);
  wire common_reset_n=rst_n && pll_locked;
@@ -50,18 +60,35 @@ module hdmi_live_display #(parameter UI_ENABLE=0)(
  // 原字段顺序不变；测试字段追加到低 78 位，打包和解包严格使用同一顺序。
  // 低位布局：[77] active，[76:71] requested，[70:39] busy，[38:7] gate，
  // [6] sweep，[5:1] index，[0] overrun；仅在帧边界使用已应答的整包数据。
- localparam STATUS_WIDTH=164+78+(UI_ENABLE ? 10 : 0);
+ // COMPACT implies the four-page metadata even when UI_ENABLE is omitted.
+ // 289-bit compact packet: [288:287] control page, [286:285] FX,
+ // [284] strum, [283:252] K4..K1. Low252 bits remain exactly compatible.
+ // Feature=0 preserves 242/252/289 bits exactly, with no extra CDC registers.
+ // Feature=1 implies compact and appends49 bits to the SAME bundled handshake:
+ // [337:306] piano_keys, [305] outside, [304:293] tick, [292:291] song,
+ // [290] active, [289] done. Low289 bits remain the compact legacy layout.
+ localparam BASE_STATUS_WIDTH=164+78+((UI_ENABLE || USE_COMPACT) ? 10 : 0)+(USE_COMPACT ? 37 : 0);
+ localparam STATUS_WIDTH=BASE_STATUS_WIDTH+(PIANO_ROLL_ENABLE ? 49 : 0);
  wire [241:0] legacy_source_status={
   keys,timbre,note,note_valid,frequency_bcd,volume_percent,level_dbfs,peak_percent,
   pitch,voices,pressure0,pressure1,flags,guide_active,guide_done,cue_mask,next_mask,
   wrong_mask,guide_step,guide_total,beat_progress,target_beats,clip,
   test_active,test_requested,test_busy,test_gate,test_sweep,test_index,test_overrun};
  // 旧 242-bit 接口与四页 252-bit 接口显式选择，消除隐式截断依赖。
+ wire [BASE_STATUS_WIDTH-1:0] base_source_status;
  wire [STATUS_WIDTH-1:0] source_status;
- generate if(UI_ENABLE)begin:source_ui_packet
-  assign source_status={ui_page,ui_cursor,ui_song,ui_controls,legacy_source_status};
+ generate if(USE_COMPACT)begin:source_compact_packet
+  assign base_source_status={control_page,fx_mode,strum_mode,knob_values,
+   ui_page,ui_cursor,ui_song,ui_controls,legacy_source_status};
+ end else if(UI_ENABLE)begin:source_ui_packet
+  assign base_source_status={ui_page,ui_cursor,ui_song,ui_controls,legacy_source_status};
  end else begin:source_legacy_packet
-  assign source_status=legacy_source_status;
+  assign base_source_status=legacy_source_status;
+ end endgenerate
+ generate if(PIANO_ROLL_ENABLE)begin:source_piano_packet
+  assign source_status={piano_keys,piano_outside,roll_tick,roll_song,roll_active,roll_done,base_source_status};
+ end else begin:source_no_piano_packet
+  assign source_status=base_source_status;
  end endgenerate
  wire [STATUS_WIDTH-1:0] display_status;
  hdmi_status_cdc #(.WIDTH(STATUS_WIDTH)) u_status(clk27,source_reset_sync[2],source_status,
@@ -104,11 +131,16 @@ module hdmi_live_display #(parameter UI_ENABLE=0)(
  wire [7:0] r,g,b;
  wire [1:0] d_ui_page,d_ui_cursor,d_ui_song;
  wire [3:0] d_ui_controls;
- generate if(UI_ENABLE)begin:ui_metadata
+ generate if(UI_ENABLE || USE_COMPACT)begin:ui_metadata
   assign {d_ui_page,d_ui_cursor,d_ui_song,d_ui_controls}=display_status[251:242];
  end else begin:legacy_metadata
   assign {d_ui_page,d_ui_cursor,d_ui_song,d_ui_controls}=10'd0;
  end endgenerate
+ wire [7:0] legacy_r,legacy_g,legacy_b;
+ // 编译期排除旧渲染器：COMPACT_UI=1时不展开其字体/译码/网格逻辑，
+ // 不依赖后续死逻辑删除。COMPACT_UI=0保持原接口、RGB和三拍流水不变。
+ // 历史bench仅需把层级绑定改为legacy_ui.u_dashboard，不修改任何像素预期。
+ generate if(!USE_COMPACT)begin:legacy_ui
  hdmi_instrument_dashboard #(.UI_ENABLE(UI_ENABLE)) u_dashboard(
   .x(draw_x),.y(draw_y),.de(draw_de),.keys(d_keys),.timbre(d_timbre),
   .note(d_note),.note_valid(d_note_valid),.frequency_bcd(d_frequency),
@@ -118,23 +150,63 @@ module hdmi_live_display #(parameter UI_ENABLE=0)(
   .cue_mask(d_cue),.next_mask(d_next),.wrong_mask(d_wrong),
   .guide_step(d_step),.guide_total(d_total),.beat_progress(d_progress),.target_beats(d_beats),
   .wave_current(scope_current),.wave_previous(scope_previous),
-  .scope_gain(scope_gain),.wave_valid(scope_valid),.red(r),.green(g),.blue(b),
+  .scope_gain(scope_gain),.wave_valid(scope_valid),.red(legacy_r),.green(legacy_g),.blue(legacy_b),
   .test_active(d_test_active),.test_requested(d_test_requested),
   .test_busy(d_test_busy),.test_gate(d_test_gate),.test_sweep(d_test_sweep),
   .test_index(d_test_index),.test_overrun(d_test_overrun),
   .pixel_clk(pixel_clk),.rst_n(video_rst_n),
   .ui_page(d_ui_page),.ui_cursor(d_ui_cursor),.ui_song(d_ui_song),.ui_controls(d_ui_controls));
+ end endgenerate
+ wire [1:0] d_control_page,d_fx_mode;
+ wire d_strum_mode;
+ wire [31:0] d_knob_values;
+ wire [31:0] d_piano_keys;
+ wire d_piano_outside,d_roll_active,d_roll_done;
+ wire [11:0] d_roll_tick;
+ wire [1:0] d_roll_song;
+ generate if(PIANO_ROLL_ENABLE)begin:piano_metadata
+  assign {d_piano_keys,d_piano_outside,d_roll_tick,d_roll_song,d_roll_active,d_roll_done}=display_status[337:289];
+ end else begin:no_piano_metadata
+  assign {d_piano_keys,d_piano_outside,d_roll_tick,d_roll_song,d_roll_active,d_roll_done}=49'd0;
+ end endgenerate
+ generate if(USE_COMPACT)begin:compact_ui
+  assign {d_control_page,d_fx_mode,d_strum_mode,d_knob_values}=display_status[288:252];
+  hdmi_compact_dashboard #(.PIANO_ROLL_ENABLE(PIANO_ROLL_ENABLE)) u_dashboard(
+   .pixel_clk(pixel_clk),.rst_n(video_rst_n),.x(draw_x),.y(draw_y),.de(draw_de),
+   .keys(d_keys),.timbre(d_timbre),.note(d_note),.note_valid(d_note_valid),
+   .frequency_bcd(d_frequency),.volume_percent(d_volume),.level_dbfs(d_level),.peak_percent(d_peak),
+   .voices(d_voices),.flags(alert_flags),.cue_mask(d_cue),.next_mask(d_next),.wrong_mask(d_wrong),
+   .guide_step(d_step),.guide_total(d_total),.wave_current(scope_current),.wave_previous(scope_previous),
+   .scope_gain(scope_gain),.wave_valid(scope_valid),.test_active(d_test_active),.test_requested(d_test_requested),
+   .test_busy(d_test_busy),.test_gate(d_test_gate),.test_sweep(d_test_sweep),
+   .test_index(d_test_index),.test_overrun(d_test_overrun),
+   .ui_page(d_ui_page),.ui_cursor(d_ui_cursor),.ui_song(d_ui_song),.ui_controls(d_ui_controls),
+   .control_page(d_control_page),.fx_mode(d_fx_mode),.strum_mode(d_strum_mode),.knob_values(d_knob_values),
+   .red(r),.green(g),.blue(b),.piano_keys(d_piano_keys),.piano_outside(d_piano_outside),
+   .roll_tick(d_roll_tick),.roll_song(d_roll_song),.roll_active(d_roll_active),.roll_done(d_roll_done));
+ end else begin:full_ui
+  assign {d_control_page,d_fx_mode,d_strum_mode,d_knob_values}=37'd0;
+  assign {r,g,b}={legacy_r,legacy_g,legacy_b};
+ end endgenerate
  // 中文字模BRAM新增一拍；同步信号跟随字模背景同拍延迟。
  reg font_de,font_hs,font_vs;
+ reg character_de,character_hs,character_vs;
  always @(posedge pixel_clk or negedge video_rst_n)begin
-  if(!video_rst_n)begin font_de<=0;font_hs<=1;font_vs<=1;end
-  else begin font_de<=draw_de;font_hs<=draw_hs;font_vs<=draw_vs;end
+  if(!video_rst_n)begin
+   font_de<=0;font_hs<=1;font_vs<=1;character_de<=0;character_hs<=1;character_vs<=1;
+  end else begin
+   font_de<=draw_de;font_hs<=draw_hs;font_vs<=draw_vs;
+   character_de<=font_de;character_hs<=font_hs;character_vs<=font_vs;
+  end
  end
  reg [23:0] rgb_pipe;
  reg de_pipe,hs_pipe,vs_pipe;
  always @(posedge pixel_clk or negedge video_rst_n)begin
   if(!video_rst_n)begin rgb_pipe<=0;de_pipe<=0;hs_pipe<=1;vs_pipe<=1;end
-  else begin rgb_pipe<={r,g,b};de_pipe<=font_de;hs_pipe<=font_hs;vs_pipe<=font_vs;end
+  else begin
+   rgb_pipe<={r,g,b};de_pipe<=USE_COMPACT ? character_de : font_de;
+   hs_pipe<=USE_COMPACT ? character_hs : font_hs;vs_pipe<=USE_COMPACT ? character_vs : font_vs;
+  end
  end
  hdmi_tx u_tx(pixel_clk,serial_clk,video_rst_n,rgb_pipe[23:16],rgb_pipe[15:8],
   rgb_pipe[7:0],de_pipe,hs_pipe,vs_pipe,tmds_clk_p,tmds_clk_n,tmds_data_p,tmds_data_n);

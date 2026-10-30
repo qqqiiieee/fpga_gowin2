@@ -62,7 +62,7 @@ def summarize(project: Path) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--project', type=Path, default=ROOT)
-    parser.add_argument('--baseline', type=Path, default=ROOT / 'validation/baseline_v019/build_summary.json')
+    parser.add_argument('--baseline', type=Path, default=ROOT / 'validation/baseline_v020/build_summary.json')
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()
     data = summarize(args.project)

@@ -89,8 +89,7 @@
     },
     {
       "name": "TXT_020",
-      "text": "曲库",
-      "hex": "dd6ef79bd100804020100804020100804020100804020100804020100804020100804020"
+      "text": "V030 曲库"
     },
     {
       "name": "TXT_021",
@@ -154,8 +153,7 @@
     },
     {
       "name": "TXT_033",
-      "text": "操作说明",
-      "hex": "e974fa9d5eb75f3199100804020100804020100804020100804020100804020100804020"
+      "text": "V030 操作说明"
     },
     {
       "name": "TXT_034",
@@ -209,8 +207,7 @@
     },
     {
       "name": "TXT_044",
-      "text": "32路验证",
-      "hex": "198ca7139904864523100804020100804020100804020100804020100804020100804020"
+      "text": "V030 32路验证"
     },
     {
       "name": "TXT_045",
@@ -314,8 +311,7 @@
     },
     {
       "name": "TXT_065",
-      "text": "接线诊断",
-      "hex": "ec767b5dbee777bddf100804020100804020100804020100804020100804020100804020"
+      "text": "V030 接线诊断"
     },
     {
       "name": "TXT_066",
@@ -543,8 +539,7 @@
     },
     {
       "name": "TXT_111",
-      "text": "多音色乐器",
-      "hex": "402050483422150c87442244020100804020100804020100804020100804020100804020"
+      "text": "V030 演奏 / PHONE"
     },
     {
       "name": "TXT_112",
@@ -664,6 +659,186 @@
     {
       "name": "TXT_DIAG_EXIT",
       "text": "S16 演奏"
+    },
+    {
+      "name": "TXT_COMPACT_00",
+      "text": "1 切换界面"
+    },
+    {
+      "name": "TXT_COMPACT_01",
+      "text": "演奏 / 曲库 / 说明 / 诊断"
+    },
+    {
+      "name": "TXT_COMPACT_02",
+      "text": "2 PLAY / PAUSE"
+    },
+    {
+      "name": "TXT_COMPACT_03",
+      "text": "音色 / 扫弦: PHONE"
+    },
+    {
+      "name": "TXT_COMPACT_04",
+      "text": "3 重开当前曲"
+    },
+    {
+      "name": "TXT_COMPACT_05",
+      "text": "4 选择下一曲"
+    },
+    {
+      "name": "TXT_COMPACT_06",
+      "text": "按住:状态 释放:操作"
+    },
+    {
+      "name": "TXT_COMPACT_07",
+      "text": "多键同时按下:无操作"
+    },
+    {
+      "name": "TXT_COMPACT_08",
+      "text": "0=释放 1=按下"
+    },
+    {
+      "name": "TXT_COMPACT_09",
+      "text": "MODE KEYBOARD"
+    },
+    {
+      "name": "TXT_COMPACT_10",
+      "text": "MODE STRUM"
+    },
+    {
+      "name": "TXT_COMPACT_11",
+      "text": "ADSR: K1 A K2 D K3 S K4 R"
+    },
+    {
+      "name": "TXT_COMPACT_12",
+      "text": "FX: K1 TIME K2 FB K3 MOD K4 MIX"
+    },
+    {
+      "name": "TXT_COMPACT_13",
+      "text": "K1 000 K2 000 K3 000 K4 000"
+    },
+    {
+      "name": "TXT_COMPACT_14",
+      "text": "FX MODE 0 FILTER 1 ZERO 0"
+    },
+    {
+      "name": "TXT_COMPACT_15",
+      "text": "TIMBRE FLUTE"
+    },
+    {
+      "name": "TXT_COMPACT_16",
+      "text": "TIMBRE PLUCK"
+    },
+    {
+      "name": "TXT_COMPACT_17",
+      "text": "NOTE 000 FREQ 0000Hz"
+    },
+    {
+      "name": "TXT_COMPACT_18",
+      "text": "VOL 000% RMS -000dBFS PK 000%"
+    },
+    {
+      "name": "TXT_COMPACT_19",
+      "text": "VOICES 00 FLAGS 0x00"
+    },
+    {
+      "name": "TXT_COMPACT_20",
+      "text": "SONG 1 STEP 00/00"
+    },
+    {
+      "name": "TXT_COMPACT_21",
+      "text": "2 开始当前曲"
+    },
+    {
+      "name": "TXT_COMPACT_22",
+      "text": "4 KEYS: 界面操作"
+    },
+    {
+      "name": "TXT_COMPACT_23",
+      "text": "MIDI / OPTICAL: MUSICAL INPUT"
+    },
+    {
+      "name": "TXT_COMPACT_24",
+      "text": "PMOD3 A11/B11/N6/D11"
+    },
+    {
+      "name": "TXT_COMPACT_25",
+      "text": "KEYS 0x0000"
+    },
+    {
+      "name": "TXT_COMPACT_26",
+      "text": "FILTER 1 ZERO 0 ADC 1"
+    },
+    {
+      "name": "TXT_COMPACT_27",
+      "text": "REQUEST 00 ACTIVE 00 INDEX 00"
+    },
+    {
+      "name": "TXT_COMPACT_28",
+      "text": "GATE 0x00000000"
+    },
+    {
+      "name": "TXT_COMPACT_29",
+      "text": "BUSY 0x00000000"
+    },
+    {
+      "name": "TXT_COMPACT_30",
+      "text": "32 OSC: USB TEST"
+    },
+    {
+      "name": "TXT_COMPACT_31",
+      "text": "USB TEST: SWEEP / EXIT"
+    },
+    {
+      "name": "TXT_COMPACT_32",
+      "text": "SWEEP 0 OVERRUN 0"
+    },
+    {
+      "name": "TXT_COMPACT_33",
+      "text": "PCM: WAIT"
+    },
+    {
+      "name": "TXT_COMPACT_34",
+      "text": "PCM WAVE x2^00"
+    },
+    {
+      "name": "TXT_COMPACT_35",
+      "text": "MAIN"
+    },
+    {
+      "name": "TXT_COMPACT_36",
+      "text": "ADSR"
+    },
+    {
+      "name": "TXT_COMPACT_37",
+      "text": "FX"
+    },
+    {
+      "name": "TXT_COMPACT_38",
+      "text": "4 选曲  2 开始"
+    },
+    {
+      "name": "TXT_COMPACT_39",
+      "text": "1 切页  3 重开"
+    },
+    {
+      "name": "TXT_COMPACT_40",
+      "text": "CUE 0x000 NEXT 0x000 BAD 0x000"
+    },
+    {
+      "name": "TXT_COMPACT_41",
+      "text": "4 选择下一曲"
+    },
+    {
+      "name": "TXT_COMPACT_42",
+      "text": "MAIN K1 VOL K2 BAL K3 BR K4 MIX"
+    },
+    {
+      "name": "TXT_COMPACT_43",
+      "text": "FX 0 OFF 1 DELAY 2 CHOR 3 REV"
+    },
+    {
+      "name": "TXT_BUTTON_STATES",
+      "text": "KEY1:0 KEY2:0 KEY3:0 KEY4:0"
     }
   ]
 }

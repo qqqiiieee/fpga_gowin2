@@ -16,7 +16,7 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCES = ["src/mcp3208_reader.v", "src/analog_touch_keypad.v", "src/touch_centers.hex",
+SOURCES = ["src/mcp3208_reader.v", "src/analog_touch_keypad.v", "src/touch_centers.hex", "src/touch_centers_init.vh",
            "assets/touch_calibration.json", "scripts/generate_touch_centers.py",
            "tests/tb_mcp3208_reader.v", "tests/tb_analog_touch_keypad.v", "scripts/run_touch_unit_tests.py"]
 DATASHEET = "https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/21298e.pdf"
@@ -99,10 +99,6 @@ def main():
     runtime = ROOT / "tools/vendor/iverilog-v12/app/bin"
     suffix = ".exe" if os.name == "nt" else ""
     iverilog, vvp = runtime / ("iverilog"+suffix), runtime / ("vvp"+suffix)
-    # Cloud Linux uses the distribution Icarus; bundled Windows binaries are excluded.
-    if os.name != "nt":
-        iverilog = Path(os.environ.get("IVERILOG") or shutil.which("iverilog") or "/missing/iverilog")
-        vvp = Path(os.environ.get("VVP") or shutil.which("vvp") or "/missing/vvp")
     report = {"status": "fail", "started_utc": datetime.now(timezone.utc).isoformat(),
               "project": str(ROOT), "tests": [], "sources_sha256": {},
               "hardware_tested": False, "programmed_or_published": False,

@@ -1,0 +1,87 @@
+{
+  "project": "D:\\Gowin_project\\instrument_phone_pmod3_20261030",
+  "resources": {
+    "Logic": 17065.0,
+    "Register": 8118.0,
+    "CLS": 9548.0,
+    "BSRAM": 27.0,
+    "DSP": 15.75
+  },
+  "capacities": {
+    "Logic": 20736.0,
+    "Register": 16173.0,
+    "CLS": 10368.0,
+    "BSRAM": 46.0,
+    "DSP": 24.0
+  },
+  "utilization_percent": {
+    "Logic": 82.296,
+    "Register": 50.195,
+    "CLS": 92.091,
+    "BSRAM": 58.696,
+    "DSP": 65.625
+  },
+  "timing_violations": {
+    "Setup": 0,
+    "Hold": 0
+  },
+  "fmax_mhz": {
+    "clk27": 27.771,
+    "serial126": 830.128,
+    "pixel25_2": 55.02
+  },
+  "synthesis_hierarchy": {
+    "u_alloc": {
+      "name": "u_alloc",
+      "Register": "648",
+      "Alu": "224",
+      "Lut": "305",
+      "T_Register": "648(648)",
+      "T_Alu": "224(224)",
+      "T_Lut": "305(305)"
+    },
+    "synth": {
+      "name": "synth",
+      "Register": "1610",
+      "Alu": "187",
+      "Lut": "1681",
+      "PADD18": "1",
+      "PADD9": "1",
+      "MULT9X9": "1",
+      "MULT18X18": "2",
+      "MULTADDALU18X18": "1",
+      "Bsram": "3",
+      "T_Register": "1610(1610)",
+      "T_Alu": "187(187)",
+      "T_Lut": "1847(1681)",
+      "T_PADD18": "1(1)",
+      "T_PADD9": "1(1)",
+      "T_MULT9X9": "1(1)",
+      "T_MULT18X18": "2(2)",
+      "T_MULTADDALU18X18": "1(1)",
+      "T_Bsram": "3(3)"
+    },
+    "u_telemetry": {
+      "name": "u_telemetry",
+      "Register": "366",
+      "Alu": "128",
+      "Lut": "497",
+      "MULT18X18": "2",
+      "MULTALU36X18": "1",
+      "MULTADDALU18X18": "3",
+      "Bsram": "1",
+      "T_Register": "366(366)",
+      "T_Alu": "128(128)",
+      "T_Lut": "575(497)",
+      "T_MULT18X18": "2(2)",
+      "T_MULTALU36X18": "1(1)",
+      "T_MULTADDALU18X18": "3(3)",
+      "T_Bsram": "1(1)"
+    }
+  },
+  "firmware": "D:\\Gowin_project\\instrument_phone_pmod3_20261030\\impl\\pnr\\instrument_handoff.fs",
+  "usercode": "0x00003366",
+  "firmware_sha256": "64eefa7df44d5b46baf8aa6874a28d29ac8f2446b4e5e92d6b8e3c7058b86ac7",
+  "input_hashes_verified": true,
+  "hardware_programmed": false
+}
