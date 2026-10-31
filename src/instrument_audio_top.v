@@ -22,7 +22,9 @@ module instrument_audio_top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_C
     parameter MIDI_ENABLE=0,parameter OPTICAL_ENABLE=0,parameter MIDI_CHANNEL=0,parameter PHASE_RAM=0,
     parameter DISPLAY_TOUCH_ONLY=0,parameter LIVE_ADSR_ENABLE=0,parameter EFFECTS_ENABLE=0,
     parameter TEST_HOLD_SAMPLES=187500,parameter TEST_MAX_SAMPLES=5625000,
-    parameter TEST_SWEEP_HALF_SAMPLES=46875,parameter TEST_RAMP_DIV=8)(
+    parameter TEST_SWEEP_HALF_SAMPLES=46875,parameter TEST_RAMP_DIV=8,
+    parameter PANEL_TEST_ENABLE=0,parameter VISUAL_MONITOR_ENABLE=0,parameter MAPPING_ENABLE=0,
+    parameter CHORD_SCORE_ENABLE=0,parameter GUIDE_MODES_ENABLE=0)(
     input clk,output [3:0] matrix_rows,input [3:0] matrix_cols,
     inout adc_scl,inout adc_sda,input uart_rx,output uart_tx,
     output hp_bck,output hp_ws,output hp_din,output pa_en,
@@ -49,7 +51,25 @@ module instrument_audio_top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_C
     input phone_set_valid,input [7:0] phone_param,phone_value,phone_query_param,
     output [7:0] phone_query_value,output [13:0] monitor_external_diagnostic,
     // 源域只读显示支路，bit0=MIDI48、bit31=MIDI79；不反馈演奏或声音路径。
-    output [31:0] monitor_piano_keys32,output monitor_piano_outside);
+    output [31:0] monitor_piano_keys32,output monitor_piano_outside,
+    output [7:0] monitor_midi_velocity,output signed [8:0] monitor_midi_bend,
+    output [6:0] monitor_midi_modulation,
+    // 面板已完成长按与消抖，直接发单周期验证命令，不伪造音乐音符。
+    input ui_test_enter,ui_test_exit,ui_test_count_valid,input [5:0] ui_test_count,
+    input ui_test_sweep_start,
+    output signed [15:0] monitor_voice0,monitor_voice1,
+    // Mapping config is staged externally. Inputs must be stable at commit handshake.
+    // addr={bank,index[6:0]}; writes/commit are accepted ONLY with their ready high.
+    input wire mapping_enable, mapping_bank, mapping_commit,
+    input wire mapping_wr_en, input wire [7:0] mapping_wr_addr,
+    input wire [6:0] mapping_wr_data,
+    input wire [27:0] mapping_pad_notes, mapping_cc_numbers,
+    output wire mapping_wr_ready, mapping_commit_ready, mapping_commit_ack,
+    output wire monitor_note_receipt, output wire [6:0] monitor_raw_note,
+    input wire guide_demo_valid, guide_demo_retrigger,
+    input wire [14:0] guide_demo_offsets,
+    input wire [6:0] guide_demo_note
+);
     // 配置后先保持复位 256 个主时钟，待状态确定后才允许工作。
     reg [7:0] por_cnt=0;reg rst_n=0;
     always @(posedge clk) begin
@@ -98,16 +118,26 @@ module instrument_audio_top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_C
     // 本地长按/串口虚拟键都使用同一已消抖key_state，避免矩阵鬼键绕过。
     // 默认计数按93750Hz；参数只为仿真加速提供覆盖，不改变板上时钟。
     oscillator_test_control #(.HOLD_SAMPLES(TEST_HOLD_SAMPLES),.MAX_SAMPLES(TEST_MAX_SAMPLES),
-        .SWEEP_HALF_SAMPLES(TEST_SWEEP_HALF_SAMPLES),.RAMP_DIV(TEST_RAMP_DIV)) test_control(
+        .SWEEP_HALF_SAMPLES(TEST_SWEEP_HALF_SAMPLES),.RAMP_DIV(TEST_RAMP_DIV),
+        .EXTERNAL_UI_ENABLE(PANEL_TEST_ENABLE)) test_control(
         .clk(clk),.rst_n(rst_n),.sample_tick(monitor_tick),.keys(test_control_keys),
         .ghost(abort_test?1'b0:keypad_ghost),.remote_active(input_remote),.owned(test_owned),
         .test_mode(test_mode),.gate_mask(test_gate),.requested_count(test_requested),
         .sweep_active(test_sweep),.sweep_index(test_index),.master_gain(test_gain),
-        .clear_audio(test_clear),.state_debug(test_state),.normal_input_ready(normal_input_ready));
+        .clear_audio(test_clear),.state_debug(test_state),.normal_input_ready(normal_input_ready),
+        .external_enter(ui_test_enter),.external_exit(ui_test_exit),
+        .external_count_valid(ui_test_count_valid),.external_count(ui_test_count),
+        .external_sweep_start(ui_test_sweep_start));
     instrument_inputs #(.VIRTUAL_ADC_CYCLES(VIRTUAL_ADC_CYCLES),.TOUCH_ENABLE(TOUCH_ENABLE),
         .PRESSURE_EXPRESSION_ENABLE(PRESSURE_EXPRESSION_ENABLE),
         .DISPLAY_TOUCH_ONLY(DISPLAY_TOUCH_ONLY),
-        .MIDI_ENABLE(MIDI_ENABLE),.OPTICAL_ENABLE(OPTICAL_ENABLE),.MIDI_CHANNEL(MIDI_CHANNEL)) input_hub(
+        .MIDI_ENABLE(MIDI_ENABLE),.OPTICAL_ENABLE(OPTICAL_ENABLE),.MIDI_CHANNEL(MIDI_CHANNEL),
+        .MAPPING_ENABLE(MAPPING_ENABLE)) input_hub(
+        .mapping_enable(mapping_enable),.mapping_bank(mapping_bank),.mapping_commit(mapping_commit),
+        .mapping_wr_en(mapping_wr_en),.mapping_wr_addr(mapping_wr_addr),.mapping_wr_data(mapping_wr_data),
+        .mapping_pad_notes(mapping_pad_notes),.mapping_cc_numbers(mapping_cc_numbers),
+        .mapping_wr_ready(mapping_wr_ready),.mapping_commit_ready(mapping_commit_ready),
+        .mapping_commit_ack(mapping_commit_ack),
         .clk(clk),.rst_n(rst_n),.matrix_rows(matrix_rows),.matrix_cols(matrix_cols),
         .adc_scl(adc_scl),.adc_sda(adc_sda),.uart_rx(uart_rx),.uart_tx(uart_tx),
         .synth_overrun(overrun),.suppress_controls(test_owned),
@@ -139,18 +169,42 @@ module instrument_audio_top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_C
         .phone_set_valid(phone_set_valid),.phone_param(phone_param),.phone_value(phone_value),
         .phone_query_param(phone_query_param),.phone_query_value(phone_query_value),
         .monitor_external_diagnostic(monitor_external_diagnostic),
-        .monitor_piano_keys32(monitor_piano_keys32),.monitor_piano_outside(monitor_piano_outside));
+        .monitor_piano_keys32(monitor_piano_keys32),.monitor_piano_outside(monitor_piano_outside),
+        .monitor_midi_velocity(monitor_midi_velocity),.monitor_midi_bend(monitor_midi_bend),
+        .monitor_midi_modulation(monitor_midi_modulation),
+        .monitor_note_receipt(monitor_note_receipt),.monitor_raw_note(monitor_raw_note));
     wire [8:0] brightness_sum={1'b0,brightness_base}+{1'b0,monitor_expression0};
     wire [7:0] effective_brightness=DISPLAY_TOUCH_ONLY?
         (brightness_sum[8]?8'd255:brightness_sum[7:0]):monitor_expression0;
+    wire demo_on,demo_off;wire [6:0] demo_note;
+    generate if(GUIDE_MODES_ENABLE)begin:guide_audio
+      if(CHORD_SCORE_ENABLE)begin:chords
+      guide_chord_events adapter(.clk(clk),.rst_n(rst_n),.clear(test_clear || panic_audio),
+        .blocked(note_on || note_off || !normal_input_ready || test_owned),
+        .desired_valid(guide_demo_valid),.desired_note(guide_demo_note),.desired_offsets(guide_demo_offsets),
+        .retrigger(guide_demo_retrigger),.event_on(demo_on),.event_off(demo_off),.event_note(demo_note));
+      end else begin:single
+      guide_demo_events adapter(.clk(clk),.rst_n(rst_n),
+        .clear(test_clear || panic_audio),
+        .blocked(note_on || note_off || !normal_input_ready || test_owned),
+        .desired_valid(guide_demo_valid),.desired_note(guide_demo_note),
+        .retrigger(guide_demo_retrigger),.event_on(demo_on),
+        .event_off(demo_off),.event_note(demo_note));
+      end
+    end else begin:no_guide_audio
+      assign demo_on=0;assign demo_off=0;assign demo_note=0;
+    end endgenerate
+    wire demo_event=demo_on || demo_off;
     instrument_audio #(.LOWPASS_ENABLE(LOWPASS_ENABLE),.NUM_VOICES(32),
         .TRANSITION_INPUT_ENABLE(1),.REDUCED_TIMBRES(1),
         .SOURCE_TAG_ENABLE(MIDI_ENABLE || OPTICAL_ENABLE),.PHASE_RAM(PHASE_RAM),
         .LIVE_ADSR_ENABLE(LIVE_ADSR_ENABLE),.EFFECTS_ENABLE(EFFECTS_ENABLE),
+        .VISUAL_MONITOR_ENABLE(VISUAL_MONITOR_ENABLE),
         .CONTROL_BANK_ENABLE(DISPLAY_TOUCH_ONLY),
         .PRESSURE_EXPRESSION_ENABLE(PRESSURE_EXPRESSION_ENABLE)) audio(
-        .clk(clk),.rst_n(rst_n),.note_on(note_on),.note_off(note_off),.note(note),
-        .velocity(velocity),.timbre(timbre),.slider_volume(slider_volume),.slider_pitch(slider_pitch),
+        .clk(clk),.rst_n(rst_n),.note_on(note_on || demo_on),.note_off(note_off || demo_off),
+        .note(demo_event?demo_note:note),
+        .velocity(demo_event?8'd192:velocity),.timbre(demo_event?selected_timbre:timbre),.slider_volume(slider_volume),.slider_pitch(slider_pitch),
         .hit0(hit0),.hit1(hit1),.velocity0(velocity0),.velocity1(velocity1),
         .digital_zero_test(digital_zero_test || effective_test_mute),.filter_enable(filter_enable),
         .test_owned(test_owned),.test_mode(test_mode),.test_clear(test_clear || panic_audio),
@@ -159,7 +213,8 @@ module instrument_audio_top #(parameter LOWPASS_ENABLE=1,parameter VIRTUAL_ADC_C
         .hp_bck(hp_bck),.hp_ws(hp_ws),.hp_din(hp_din),.overrun(overrun),
         .monitor_tick(monitor_tick),.monitor_pcm(monitor_pcm),
         .monitor_pitch(monitor_pitch),.monitor_busy(monitor_busy),.monitor_test_busy(monitor_test_busy),
-        .event_source(note_source),.pressure_brightness(effective_brightness),
+        .monitor_voice0(monitor_voice0),.monitor_voice1(monitor_voice1),
+        .event_source(demo_event?2'd3:note_source),.pressure_brightness(effective_brightness),
         .pressure_brightness_ready(DISPLAY_TOUCH_ONLY?1'b1:monitor_pressure_calibrated[0]),
         .attack_ctrl(attack_ctrl),.decay_ctrl(decay_ctrl),.sustain_ctrl(sustain_ctrl),.release_ctrl(release_ctrl),
         .damping(DISPLAY_TOUCH_ONLY?monitor_expression1:8'd0),.mix_balance(mix_balance),

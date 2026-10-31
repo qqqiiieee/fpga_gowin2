@@ -1,0 +1,421 @@
+{
+  "version": "V036",
+  "description": "Chinese operations only; professional terms retained verbatim from V035. Shared normal footer states four short actions on every page.",
+  "texts": {
+    "TXT_000": "",
+    "TXT_001": "音色 00 柔和长笛",
+    "TXT_002": "",
+    "TXT_003": "",
+    "TXT_004": "",
+    "TXT_005": "",
+    "TXT_006": "",
+    "TXT_007": "音色 01 拨弦",
+    "TXT_008": "",
+    "TXT_009": "",
+    "TXT_010": "",
+    "TXT_011": "",
+    "TXT_012": "",
+    "TXT_013": "",
+    "TXT_014": "",
+    "TXT_015": "",
+    "TXT_016": "音色 00",
+    "TXT_017": "欢乐颂",
+    "TXT_018": "两只老虎",
+    "TXT_019": "小星星跟弹",
+    "TXT_020": "V036 曲库",
+    "TXT_021": "选择 / 开始",
+    "TXT_022": "01 小星星",
+    "TXT_023": "42音符 / 120BPM",
+    "TXT_024": "02 欢乐颂",
+    "TXT_025": "32音符 / 120BPM",
+    "TXT_026": "03 两只老虎",
+    "TXT_027": "S16 下一项",
+    "TXT_028": "S16 长按确认开始",
+    "TXT_029": "S15 切页",
+    "TXT_030": "跟弹 按住音符 / 释放",
+    "TXT_031": "S13/S14 选择音色",
+    "TXT_032": "S15 切页 / S16 下一项",
+    "TXT_033": "V036 可视化",
+    "TXT_034": "00/03",
+    "TXT_035": "自由演奏",
+    "TXT_036": "S1-S12 音符",
+    "TXT_037": "S13 上一音色",
+    "TXT_038": "S14 下一音色",
+    "TXT_039": "S16 跟弹 / 长按重开",
+    "TXT_040": "S13+S16 跟弹",
+    "TXT_041": "S13+S14 重开",
+    "TXT_042": "S14+S15 滤波",
+    "TXT_043": "S15+S16 静音验证",
+    "TXT_044": "V036 32路验证",
+    "TXT_045": "S13+S15 长按2s 开始",
+    "TXT_046": "S1/S2/S3/S4/S5",
+    "TXT_047": "1/4/8/16/32路",
+    "TXT_048": "S6 逐路验证",
+    "TXT_049": "S16 退出",
+    "TXT_050": "频率为配置值",
+    "TXT_051": "电脑 FFT检查",
+    "TXT_052": "G门控 / A活跃",
+    "TXT_053": "按键代码",
+    "TXT_054": "KEYS 0x0001 = S1",
+    "TXT_055": "KEYS 0x0010 = S5",
+    "TXT_056": "KEYS 0x0100 = S9",
+    "TXT_057": "KEYS 0x8000 = S16",
+    "TXT_058": "UART 115200 / 8N1 / v08",
+    "TXT_059": "A5 5A seq flags keysLE",
+    "TXT_060": "velocity ADC0..3LE XOR",
+    "TXT_061": "16 bytes / XOR bytes2..14",
+    "TXT_062": "KEYS 0x0000",
+    "TXT_063": "按键代码 实时",
+    "TXT_064": "按键代码 / 16bit",
+    "TXT_065": "V036 接线诊断",
+    "TXT_066": "键盘 S1-S16",
+    "TXT_067": "R2/R3",
+    "TXT_068": "R1 T11 / R2 M14",
+    "TXT_069": "R3 T12 / R4 J14",
+    "TXT_070": "按键 实时状态",
+    "TXT_071": "音量 000%",
+    "TXT_072": "移调 -000",
+    "TXT_073": "移调 +000",
+    "TXT_074": "明亮000",
+    "TXT_075": "VIB 000",
+    "TXT_076": "ADC 故障",
+    "TXT_077": "ADC 正常",
+    "TXT_078": "远控",
+    "TXT_079": "键盘",
+    "TXT_080": "USB触控 未启用",
+    "TXT_081": "USB供电 / 主机未启用",
+    "TXT_082": "S9-S12 = R3",
+    "TXT_083": "S5-S8 = R2",
+    "TXT_084": "S13/S14 选择2音色",
+    "TXT_085": "独立振荡器",
+    "TXT_086": "请求 00",
+    "TXT_087": "活跃 00",
+    "TXT_088": "逐路验证",
+    "TXT_089": "固定输出",
+    "TXT_090": "RMS -000dBFS",
+    "TXT_091": "RMS +000dBFS",
+    "TXT_092": "峰值 000%",
+    "TXT_093": "固定音量",
+    "TXT_094": "Fs 93750Hz",
+    "TXT_095": "索引 00",
+    "TXT_096": "设定 0000Hz",
+    "TXT_097": "调度异常",
+    "TXT_098": "调度正常",
+    "TXT_099": "PCM波形 x2^00",
+    "TXT_100": "状态",
+    "TXT_101": "调度",
+    "TXT_102": "异常",
+    "TXT_103": "削波",
+    "TXT_104": "故障",
+    "TXT_105": "等待",
+    "TXT_106": "32路独立振荡器",
+    "TXT_107": "索引 / G门控 / A活跃",
+    "TXT_108": "释放时 A保持",
+    "TXT_109": "数字 PCM / RMS / 峰值",
+    "TXT_110": "S16退出",
+    "TXT_111": "V036 演奏",
+    "TXT_112": "练习完成",
+    "TXT_113": "当前 ---- 0000Hz",
+    "TXT_114": "声部 00",
+    "TXT_115": "最低按住键的设定音符",
+    "TXT_116": "鬼键",
+    "TXT_117": "ADC",
+    "TXT_118": "过期",
+    "TXT_119": "滤波",
+    "TXT_120": "静音",
+    "TXT_121": "键盘 S1-S12",
+    "TXT_122": "进度 00/00",
+    "TXT_123": "节拍 0",
+    "TXT_124": "完成",
+    "TXT_125": "错误",
+    "TXT_126": "保持",
+    "TXT_127": "当前 -- 下一个 --",
+    "TXT_128": "黄提示 绿正确 红错误",
+    "TXT_129": "青自由演奏 角标下一个",
+    "TXT_130": "数字 RMS dBFS / PCM",
+    "TXT_131": "按键与波形实时监测",
+    "TXT_132": "S15 切页 / S16 跟弹",
+    "TXT_133": "S13/S14 上下音色",
+    "TXT_134": "S16 长按重开",
+    "TXT_DIAG_EXIT": "S16 演奏",
+    "TXT_COMPACT_00": "1 切换界面",
+    "TXT_COMPACT_01": "演奏 / 曲库 / 可视化 / 诊断",
+    "TXT_COMPACT_02": "2 开始 / 暂停",
+    "TXT_COMPACT_03": "长按1切TIMBRE / 长按2切MODE",
+    "TXT_COMPACT_04": "3 重播当前曲",
+    "TXT_COMPACT_05": "4 选择下一曲",
+    "TXT_COMPACT_06": "按住:状态 释放:操作",
+    "TXT_COMPACT_07": "多键同时按下:无操作",
+    "TXT_COMPACT_08": "0=释放 1=按下",
+    "TXT_COMPACT_09": "MODE KEYBOARD",
+    "TXT_COMPACT_10": "MODE STRUM",
+    "TXT_COMPACT_11": "ADSR / FX DETAIL: PHONE",
+    "TXT_COMPACT_12": "K1 DELAY K2 CHOR K3 REV K4 VOL",
+    "TXT_COMPACT_13": "DL 000 CH 000 RV 000 VL 000",
+    "TXT_COMPACT_14": "FX MODE 0 FILTER 1 ZERO 0",
+    "TXT_COMPACT_15": "TIMBRE FLUTE",
+    "TXT_COMPACT_16": "TIMBRE PLUCK",
+    "TXT_COMPACT_17": "NOTE 000 FREQ 0000Hz",
+    "TXT_COMPACT_18": "VOL 000% RMS -000dBFS PK 000%",
+    "TXT_COMPACT_19": "VOICES 00 FLAGS 0x00",
+    "TXT_COMPACT_20": "SONG 1 STEP 00/00",
+    "TXT_COMPACT_21": "2 开始当前曲",
+    "TXT_COMPACT_22": "4键: 界面操作",
+    "TXT_COMPACT_23": "MIDI / OPTICAL: MUSICAL INPUT",
+    "TXT_COMPACT_24": "PMOD3 A11/B11/N6/D11",
+    "TXT_COMPACT_25": "KEYS 0x0000",
+    "TXT_COMPACT_26": "FILTER 1 ZERO 0 ADC 1",
+    "TXT_COMPACT_27": "REQUEST 00 ACTIVE 00 INDEX 00",
+    "TXT_COMPACT_28": "GATE 0x00000000",
+    "TXT_COMPACT_29": "BUSY 0x00000000",
+    "TXT_COMPACT_30": "32 OSC: USB TEST",
+    "TXT_COMPACT_31": "1路数 2巡检 3退出 4全32",
+    "TXT_COMPACT_32": "SWEEP 0 OVERRUN 0",
+    "TXT_COMPACT_33": "PCM: WAIT",
+    "TXT_COMPACT_34": "PCM WAVE x2^00",
+    "TXT_COMPACT_35": "MAIN",
+    "TXT_COMPACT_36": "ADSR",
+    "TXT_COMPACT_37": "FX",
+    "TXT_COMPACT_38": "4 选曲  2 开始",
+    "TXT_COMPACT_39": "1 切页  3 重开",
+    "TXT_COMPACT_40": "CUE 0x000 NEXT 0x000 BAD 0x000",
+    "TXT_COMPACT_41": "4 选择下一曲",
+    "TXT_COMPACT_42": "K1 DELAY K2 CHOR K3 REV K4 VOL",
+    "TXT_COMPACT_43": "FX 0 OFF 1 DELAY 2 CHOR 3 REV",
+    "TXT_BUTTON_STATES": "键1:0 键2:0 键3:0 键4:0",
+    "TXT_MODE_HYBRID": "MODE HYBRID",
+    "TXT_HOLD_TIMBRE": "长按1:切换TIMBRE",
+    "TXT_HOLD_MODE": "长按2:切换MODE",
+    "TXT_HOLD_RELEASE": "长按>=0.8s,释放操作",
+    "TXT_DIAG_MIDI": "MIDI VEL 000/127 MOD 000/127",
+    "TXT_DIAG_BEND": "BEND +000 (-256..255)",
+    "TXT_DIAG_FSR": "FSR0 RAW 0x0000 LVL 000 CAL 0",
+    "TXT_DIAG_FSR_ROLES": "FSR0 BRIGHT / FSR1 DAMP",
+    "TXT_DIAG_RAW_UNITS": "RAW ADC HEX, NOT kg",
+    "TXT_HOLD_TEST_RELEASE": "长按3>=0.8s释放:验证",
+    "TXT_PANEL_TEST_COUNTS": "32 OSC: 1/4/8/16/32",
+    "TXT_PANEL_TEST_KEYS": "1路数 2巡检 3退出 4全32",
+    "TXT_ROLL_PLAY": "播放 120 BPM 64 px/拍",
+    "TXT_ROLL_PAUSE": "暂停 120 BPM 64 px/拍",
+    "TXT_ROLL_DONE": "完成 120 BPM 64 px/拍",
+    "TXT_LIVE_NAV1": "1切页 2开始/暂停",
+    "TXT_LIVE_NAV2": "3重播 4选曲",
+    "TXT_VIS_FFT": "FFT magnitude (log)",
+    "TXT_VIS_XY": "Lissajous",
+    "TXT_VIS_FFT_INFO": "Fs11718.75Hz 0~5.86kHz",
+    "TXT_VIS_XY_INFO": "X:Voice0 Y:Voice1 (preFX)",
+    "TXT_VIS_FFT_WAIT": "FFT: WAIT",
+    "TXT_VIS_XY_WAIT": "Lissajous: WAIT"
+  },
+  "field_columns": {
+    "MIDI_VALUES": {
+      "velocity": [
+        9,
+        11
+      ],
+      "modulation": [
+        21,
+        23
+      ]
+    },
+    "MIDI_BEND": {
+      "sign": 5,
+      "magnitude": [
+        6,
+        8
+      ]
+    },
+    "FSR_VALUES": {
+      "sensor": 3,
+      "raw": [
+        11,
+        14
+      ],
+      "level": [
+        20,
+        22
+      ],
+      "calibrated": 28
+    },
+    "BUTTON_STATES": {
+      "buttons": [
+        4,
+        10,
+        16,
+        22
+      ]
+    },
+    "KNOBS": {
+      "values": [
+        [
+          3,
+          5
+        ],
+        [
+          10,
+          12
+        ],
+        [
+          17,
+          19
+        ],
+        [
+          24,
+          26
+        ]
+      ]
+    },
+    "FX_STATE": {
+      "mode": 8,
+      "filter": 17,
+      "zero": 24
+    },
+    "NOTE": {
+      "note": [
+        5,
+        8
+      ],
+      "frequency": [
+        14,
+        17
+      ]
+    },
+    "METERS": {
+      "volume": [
+        4,
+        6
+      ],
+      "sign": 13,
+      "rms": [
+        14,
+        16
+      ],
+      "peak": [
+        25,
+        27
+      ]
+    },
+    "VOICES": {
+      "voices": [
+        7,
+        8
+      ],
+      "flags": [
+        18,
+        19
+      ]
+    },
+    "SONG": {
+      "song": 5,
+      "step": [
+        12,
+        13
+      ],
+      "total": [
+        15,
+        16
+      ]
+    },
+    "KEYS": {
+      "mask": [
+        7,
+        10
+      ]
+    },
+    "HW": {
+      "filter": 7,
+      "zero": 14,
+      "ready": 20
+    },
+    "REQUEST": {
+      "requested": [
+        8,
+        9
+      ],
+      "active": [
+        18,
+        19
+      ],
+      "index": [
+        27,
+        28
+      ]
+    },
+    "GATE": {
+      "mask": [
+        7,
+        14
+      ]
+    },
+    "BUSY": {
+      "mask": [
+        7,
+        14
+      ]
+    },
+    "SWEEP": {
+      "sweep": 6,
+      "overrun": 16
+    },
+    "WAVE": {
+      "gain": [
+        12,
+        13
+      ]
+    },
+    "CUE": {
+      "cue": [
+        6,
+        8
+      ],
+      "next": [
+        17,
+        19
+      ],
+      "wrong": [
+        27,
+        29
+      ]
+    }
+  },
+  "unchanged": [
+    "All audio/input/control modules",
+    "CST/SDC",
+    "397bit CDC packet",
+    "pixel timing and piano geometry"
+  ],
+  "feature_disabled_language": "Chinese labels are shared; do not compare against old English literal expectations",
+  "footer": {
+    "normal_first": "1切页 2开始/暂停",
+    "normal_second": "3重播 4选曲",
+    "normal_first_y": 432,
+    "live_first_y": 448,
+    "second_y": 464,
+    "test_actions": "1路数 2巡检 3退出 4全32",
+    "test_actions_y": 432,
+    "test_status_y": 464,
+    "test_status": "0=释放 1=按下"
+  },
+  "visualization": {
+    "enabled_in_production": true,
+    "normal_page": 2,
+    "normal_plot_y": [
+      80,
+      335
+    ],
+    "fft_source": "final16bitPCM",
+    "fft_points": 512,
+    "analysis_sample_rate_hz": 11718.75,
+    "positive_bins": 256,
+    "xy_source": "independent voice0/voice1 afterenvelope beforemix/FX",
+    "compact_test_plots": true,
+    "normal_footer_unchanged": true,
+    "character_rom": {
+      "feature0": "2048x9",
+      "feature1": "4096x9"
+    },
+    "labels_y": 48,
+    "info_y": 368,
+    "holds_y": 400
+  }
+}

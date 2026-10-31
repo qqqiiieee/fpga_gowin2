@@ -1,80 +1,47 @@
-# Tang Primer 20K 多音色乐器 · V034
+# Tang Primer 20K 多音色乐器 · V047
 
-当前仓库是 **V034 的源码、配套 FPGA/ESP32 固件、离线验证材料与交接文档**。上一份已公开版本是 V015（`c07e7d1`）；本次直接更新到 V034，没有上传中间版本目录、对话记录、账号配置或工具链安装包。
+当前发布为 **V047 配套 FPGA/ESP32 源码、固件、验证材料与操作/架构交接文档**。相对仓库上一版 V034（`d6295e3`），主要增加手机曲谱上传、键位映射、数字录音、三种教学模式、和弦指引及 FFT/李萨如显示；鼓垫组增益提高约 6dB，修正受损引脚避让。中间固件版本由 Git 历史以外的本地归档保存。
 
-**状态：FPGA 综合/布局布线与时序检查通过，ESP32 编译通过，软件仿真通过；V034 尚未烧入两块板，混合扫弦尚待实机验收。** 此前实机确认的是 V033。PCM5102A 模拟输出无声仍未解决；32 路验证引擎保留，但当前顶层没有启动入口。数字模块存在不等于整机功能已经验收。
-
-## 先读这些
+**V047 两端已烧录并独立校验，真实 Wi-Fi 上传往返和 30 秒非静音数字 PCM 录音已通过。** 完整模拟输出延迟、32 路实际频谱峰值和物理断电冷启动尚未完成验证；不能据此声称赛题全部验收通过。本次发布不改变板上程序或预载示例曲谱。
 
 | 内容 | 入口 |
 |---|---|
-| 相比 GitHub 上一版增删了什么、重点关注什么 | [V015 → V034 更新说明](docs/V015到V034更新说明.md) |
-| 给交接者：架构、模块职责、接口与维护重点 | [项目架构与模块说明](docs/项目架构与模块说明.md) |
-| 给交接者的 AI：阅读顺序、修改入口、约束和验证边界 | [AI 快速上手](docs/AI快速上手.md)及[AGENTS.md](AGENTS.md) |
-| 四键、三种模式和手机接线/操作 | [V034 操作说明](docs/V034_面板长按与键盘扫弦混合.html) |
-| ESP32 固件部署与手机连接 | [ESP32 README](esp32_phone/README.md) |
-| 参数范围、真实回读、重试与兼容要求 | [手机 UART 协议](docs/phone_protocol.md) |
-| 编译、时序、离线回归与待验收范围 | [验证说明](verification/README.md) |
+| 相比仓库上一版增删与维护重点 | [V034 → V047 更新说明](docs/V034到V047更新说明.md) |
+| 给交接者的模块与架构说明 | [项目架构与模块说明](docs/项目架构与模块说明.md) |
+| 给交接者的 AI | [AI 快速上手](docs/AI快速上手.md)、[AGENTS.md](AGENTS.md) |
+| 手机与四页屏幕操作 | [V046 基础操作指南](docs/V046_手机控制与显示屏指南.html)、[V047 和弦上传补充](docs/V047_更新与曲谱上传指南.html) |
+| 当前接线与配套烧录 | [接线与部署](docs/V047_接线与部署.md) |
+| 键位重定向与演示拍摄 | [映射教程](docs/V047_键位重定向详细教程.html)、[拍摄参考](docs/V047_演示视频拍摄参考.html) |
+| 评分、频谱与延迟边界 | [32 路频谱指南](docs/32路评分与频谱展示/32路评分与频谱展示指南.html)、[资源与延迟](docs/V047_资源与延迟展示指南.html)、[逐项核查](docs/V047_赛题逐项达标核查.html) |
+| 固件身份与验证记录 | [manifest.json](manifest.json)、[验证说明](verification/README.md) |
 
-## 当前功能
+当前功能：32 个独立相位/包络声部，2 种旋律音色，4 种 MIDI 打击乐；KEY/STRUM/HYBRID；MIDI 力度、弯音、延音、CC1；双 FSR 调明亮度和拨弦阻尼。K1/CC93=Delay、K2/CC91=Chorus、K3/CC71=Reverb、K4/CC74=音量，三效果共享引擎、一次启用一种。滑杆、MCP3208、旧矩阵及电容菜单不参与当前生产路径。
 
-- **2 种旋律音色**：长笛、拨弦；**32 个独立相位/包络声部**共享合成流水线。音色数不等于声部数。
-- MIDI 琴键接收完整半音音高、力度、弯音和延音；4 个 Pad 触发打击乐。屏幕按实物画 **F2–C5 / MIDI 41–72** 的 32 个黑白键。
-- `KEY` 只用琴键直接发声；`STRUM` 由琴键选择和弦、光电触发扫弦；`HYBRID` 同时直接演奏和叠加光电拨弦。两来源共用 32 声部，同音的松键事件按来源隔离。
-- K1/CC93、K2/CC91、K3/CC71 分别调 Delay、Chorus、Reverb 强度，K4/CC74 调总音量；旋钮有软接管。**三种效果共用一个引擎，一次启用一种**。
-- ADS1115 只轮询两片 FSR：A0 调明亮度，A1 调拨弦阻尼。滑杆停用，A2/A3 不参与生产控制。
-- 四个独立共地按键负责切页、开始/暂停、重播和选曲；长按 1 切音色，长按 2 切输入模式，约 0.8 秒后松手执行。旧矩阵/电容菜单不再是生产输入。
-- HDMI 下落式演奏指引、三首练习曲、中文多页状态界面。32 频率验证路径的内部引擎与页面仍保留，现场入口待恢复。
-- 手机通过 ESP32 Wi-Fi 网页调参数；ESP32 用独立 UART 与 FPGA 通信，不参与音频合成。标准外接 I2S 与板载 PT8211 输出并存。
+HDMI 显示 F2–C5（MIDI 41–72，19 白键/13 黑键）。四页为演奏引导、曲库、FFT/李萨如、诊断。曲库保留小星星、灯阶练习曲、溪桥练习曲；手机可上传一个自定义槽。自动演奏发声、逐音正确才推进、固定 BPM 三模式均已实现；自定义和弦每组最多 4 音。
 
-## 工程与固件
+手机连接 `Tang20K-Music`（密码 `fpga2026`），打开 `http://192.168.4.1/` 调参数，`/extensions` 上传曲谱、提交映射、录音并下载 WAV。需等真实 ACK 和激活状态，HTTP 202 仅表示入队。示例 JSON 在 [examples/V047](examples/V047/)，须在手机选择文件并“保存并上传 FPGA”；固件不内置这些上传演示文件。
 
-| 路径 | 用途 |
+| 文件/目录 | 用途 |
 |---|---|
-| `instrument_handoff.gprj`、`build.tcl` | Gowin 工程；顶层 `src/top.v`，器件 GW2A-LV18PG256C8/I7 |
-| `src/`、`assets/` | RTL、引脚/时序约束、波表、字模和生成资产 |
-| `instrument_handoff.fs` | **V034 FPGA 固件**，UserCode `0x000099D5` |
-| `firmware/esp32/` | 与 V034 匹配的 classic ESP32 应用、bootloader、分区表 |
-| `esp32_phone/` | ESP32 网页、协议桥、构建脚本；core 2.0.17 |
-| `tests/`、`scripts/` | 当前离线回归、少量旧行为对照夹具、生成器与构建工具 |
-| `tools/` | 显式操作的串口/音频测试和离线分析；不会被默认离线检查连接硬件 |
-| `manifest.json`、`checksums.json` | 固件、构建输入及发布文件的 SHA256 身份 |
-| `impl/instrument_handoff_process_config.json` | 保留构建选项；其余 `impl/` 输出不入库 |
+| `instrument_handoff.gprj`、`build.tcl`、`src/`、`assets/` | Gowin 工程、RTL、CST/SDC、ROM/字模资产 |
+| `instrument_handoff.fs` | V047 FPGA 固件，UserCode `0x00003608` |
+| `firmware/esp32/`、`esp32_phone/` | classic ESP32 配套镜像、网页/桥接源码及构建工具 |
+| `tests/`、`scripts/` | 回归夹具、可迁移的发布核验入口；历史 bench 不代表全适用当前配置 |
+| `verification/` | 本版编译/时序与仿真/实机证据；原报告中的旧时间表示当时状态 |
+| `manifest.json`、`checksums.json` | 源码、构建输入、固件及发布文件身份 |
 
-主时钟 27MHz，采样使能 93750Hz。当前资源为 Logic **16940/20736**、CLS **9510/10368**、Register **8100/16173**、BSRAM **27/46**、DSP **15.75/24**。Setup/Hold 违例均为 0，主时钟报告 Fmax 为 30.303MHz；资源和余量须在每次修改后重新检查。
+主时钟 27MHz，实际设计输出采样率 **93750Hz**，外接标准 I2S BCK=3MHz，板载 PT8211 并行输出。录音是 FPGA 最终数字 PCM 降采样后的 **15625Hz / PCM16 / mono / 最长30秒**，不是 DAC 模拟回采；设计吞吐 32×93750=300万声部采样/秒，仍需现场频谱证明同时活跃可听。
 
-FPGA SHA256：`4286301056b4370119f9ec409b112ca28c9e51ae49c21700025ee66bf6c63831`。
+当前资源：Logic 20381/20736，Register 9540/16173，CLS 10353/10368，BSRAM 41/46，DSP 16.25/24；Setup/Hold 违例均 0。**CLS 只余 15，27MHz 域报告 Fmax 27.03MHz**，任何 RTL 增改均须完整布局布线，不可只看仿真通过。
 
-## 离线检查
-
-需要 Python 3.11+、Icarus Verilog（`iverilog` 与 `vvp`）和 C++17 编译器。浏览器测试另外需要 Node.js 与 Playwright。**以下命令不烧录、不访问串口、不录音。**
+离线校验（Python 3.11+；RTL 用 Icarus，JSON 用 Node.js）：
 
 ```sh
-python -m pip install -r requirements.txt
 python scripts/verify_release.py
 python scripts/run_release_checks.py
 ```
 
-Icarus 在 PATH 中可直接使用；否则把 `IVERILOG_BIN` 设为同时包含两个程序的目录，例如 PowerShell `$env:IVERILOG_BIN = '你的Icarus/bin目录'`。原开发机的私人目录不是运行依赖。
+`IVERILOG_BIN` 可指定同时包含 iverilog/vvp 的目录，否则使用 PATH。这两个入口不烧录、不打开串口、不预载曲谱。默认回归覆盖见 [verification/README.md](verification/README.md)，不冒充全部历史测试的重跑。FPGA 构建优先在已授权 Gowin 1.9.12.04 中执行 `source {完整路径/scripts/rebuild_gui_v047.tcl}`；必须保留 `use_sspi_as_gpio=1` 以启用 N9 上的 ADS SCL。
 
-增加实像素/跨时钟域和手机网页验证：
-
-```sh
-npm ci
-npx playwright install chromium
-python scripts/run_release_checks.py --ui --web
-```
-
-Linux 还需安装系统的 Icarus/C++ 编译器及 Chromium 运行依赖；可用 `npx playwright install --with-deps chromium`。已有兼容浏览器时，通过 `PLAYWRIGHT_CHROMIUM_EXECUTABLE` 指定路径。输出写入被 Git 忽略的 `validation/` 等目录。旧 bench 是兼容/对照材料，**当前推荐入口是 `run_release_checks.py`**，不能把任意历史脚本的通过当成本版验收。
-
-## FPGA 构建与实机交接
-
-用 Gowin 1.9.12.04 打开根目录 `.gprj` 并运行 Run All，或设置 `GOWIN_HOME` 后运行 `python scripts/build.py`。许可服务必须可用；许可证连接失败不等于 RTL 错误，也不能将旧 `.fs` 改名冒充新构建。新输出在 `impl/pnr/instrument_handoff.fs`，构建后运行 `python scripts/summarize_build.py` 核对资源、时序与输入哈希。
-
-需要断电保留时，选择外部 SPI Flash 的擦除、编程及校验流程，随后重载/断电重启验证；仅写 SRAM 不会在下次上电保留。烧录动作独立于本次 GitHub 发布。
-
-**V034 FPGA 与 ESP32 要配套升级**：输入模式参数新增值 2，旧 ESP32 只接受 0/1。实机优先检查四键长短按、模式/音色回读、同音双来源释放、真实光束方向、FSR 表情，以及 PCM5102A 输出和 32 路验证入口。当前 ESP32 网页内嵌帮助仍有旧引脚提示，**接线以 [multi_tone.cst](src/multi_tone.cst) 和交接文档的 L9/N8 为准**，PMOD1 暂不使用；修正文案需重新编译 ESP32，不能只改源码却沿用旧 bin。
-
-下图是 RTL 离线像素捕获，**不是实物显示屏验收照片**：
-
-![V034 HYBRID 钢琴界面 RTL 捕获](verification/hybrid_piano.png)
+FPGA SHA256：`d7fa4bbe937d33c69dd5b025d68b557c9088ab918d9c4c70d41f276862fc303f`。
+ESP32 应用 SHA256：`7cda05925a9ebe70ebea5322cda401434bd00a0bb958ac381c39fbedf1ea97c7`。

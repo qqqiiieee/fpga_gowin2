@@ -1,5 +1,6 @@
 `include "src/piano_layout.vh"
-// V034：三种演奏模式、面板短按/长按说明及底部独立按键状态。
+// V036：操作提示中文化，保留TIMBRE/FX/MIDI等专业名称；每页均显示四键职责。
+// 多维诊断HUD的MIDI与两路FSR独立显示，不相加、不换算为kg。
 // 生产固定control_page=2，旋钮为Delay/Chorus/Reverb强度及总音量。
 // 精简生产HDMI渲染器，固定640x480。全部输入属于pixel_clk域，由父层在帧边界快照。
 // rst_n异步低有效；de=0、x>=640或y>=480的输入像素，在同样两级延迟后输出纯黑。
@@ -9,7 +10,7 @@
 // 两级流水：第一级锁存字符/数字覆盖/背景/字色/行列偏移，第二级锁存字体对应背景。
 // 输出RGB为第二级有效像素；父层DE/HS/VS须跟随两拍，含波形RAM和RGB寄存共四拍。
 // 页面ui_page=0演奏、1曲库、2帮助、3诊断；test_active优先于所有页面显示32路测试。
-// ui_cursor=0..2选择菜单行；ui_song=0..2；keys[11:0]+ui_controls[3:0]仅用于显示。
+// ui_cursor/ui_song=0..3（CUSTOM_SCORE_ENABLE=0时仍为原三曲）；页码始终0..3。
 // control_page=0 MAIN、1 ADSR、2 FX，knob_values低到高每8位对应K1..K4参数目标0..255。
 // MAIN为音量/旋律鼓平衡/基础亮度/干湿；ADSR为A/D/S/R；FX为时间/反馈/调制/干湿。
 // strum_mode=0键盘、1扫弦、2混合；fx_mode为主层效果状态(0..3)，本模块不修改控制值。
@@ -30,7 +31,9 @@
 // x=32..543 uses floor((x-32)/2); y=144..279, centre212, clamp +/-60.
 // control_page 0/1/2 = MAIN/ADSR/FX. knob_values[7:0]=K1,...,[31:24]=K4.
 // flags use the existing parent contract: [7]alert,[5]ADC,[2]filter,[0]zero.
-module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
+module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0,parameter EXPRESSION_UI_ENABLE=0,
+    parameter VISUALIZATION_ENABLE=0,parameter CUSTOM_SCORE_ENABLE=0,
+    parameter SONG_LIBRARY_ENABLE=0)(
     input pixel_clk,input rst_n,input [9:0] x,y,input de,
     input [11:0] keys,input [3:0] timbre,input [6:0] note,input note_valid,
     input [15:0] frequency_bcd,input [7:0] volume_percent,
@@ -45,20 +48,32 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
     input [1:0] control_page,fx_mode,input [1:0] strum_mode,input [31:0] knob_values,
     output wire [7:0] red,green,blue,
     input [31:0] piano_keys,input piano_outside,
-    input [11:0] roll_tick,input [1:0] roll_song,input roll_active,roll_done
+    input [11:0] roll_tick,input [1:0] roll_song,input roll_active,roll_done,
+    input [31:0] expression_adc,input [1:0] expression_calibrated,
+    input [7:0] midi_velocity,input signed [8:0] midi_bend,input [6:0] midi_modulation,
+    input [7:0] pressure0,pressure1,
+    input [7:0] visual_fft_level,input visual_xy_dot,visual_fft_valid,visual_xy_valid,
+    output [7:0] visual_fft_addr,output [13:0] visual_xy_addr,
+    input custom_write_clk,input custom_write_en,
+    input [8:0] custom_write_addr,input [31:0] custom_write_data,
+    input [31:0] custom_config,input frame_tick,input roll_custom_bank,
+    output custom_bank_ack,
+    input [1:0] guide_mode,input practice_wait
 );
     localparam [23:0] BG=24'h0b101c,PANEL=24'h172338,BORDER=24'h34465f,
         GRID=24'h22324a,TEXT=24'he2e8f0,CYAN=24'h51d6e8,
         GREEN=24'h21c6a8,AMBER=24'hf4bb4f,ALERT=24'hff5964;
     `include "src/hdmi_ui_text.vh"
+    `include "src/hdmi_compact_text.vh"
     localparam [5:0] NAV=1,PAGES=2,PLAY=3,TONES=4,MODE_KEY=10,MODE_STRUM=11,
         ADSR_K=12,FX_K=13,KNOBS=14,FX_STATE=15,FLUTE=16,PLUCK=17,
         NOTE=18,METERS=19,VOICES=20,SONG=21,START=22,TOUCH=23,MUSICAL=24,
         WIRING=25,KEYS=26,HW=27,REQUEST=28,GATE=29,BUSY=30,
         COUNTS=31,SWEEP_KEYS=32,SWEEP=33,WAIT_WAVE=34,WAVE=35,
-        MAIN=36,ADSR=37,FX=38,SELECT=39,CONFIRM=40,CUE=41,SELECT_SONG=42,
+        MAIN=36,ADSR=37,FX=38,SELECT=39,CONFIRM=40,CUE=41,
+        SELECT_SONG=EXPRESSION_UI_ENABLE ? 6 : 42,
         LIVE_TITLE=43,LIB_TITLE=44,HELP_TITLE=45,DIAG_TITLE=46,TEST_TITLE=47,
-        SONG0=48,SONG1=49,SONG2=50,MAIN_K=51,FX_LEGEND=52,
+        SONG0=48,SONG1=49,SONG2=50,MAIN_K=EXPRESSION_UI_ENABLE ? 13 : 51,FX_LEGEND=52,
         ROLL_PLAY=53,ROLL_PAUSE=54,ROLL_DONE=55;
     function [287:0] ascii_row;
         input [255:0] message;
@@ -70,6 +85,26 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
     endfunction
     localparam [5:0] BUTTON_STATES=56, LIVE_NAV1=57, LIVE_NAV2=58,
         MODE_HYBRID=59,HOLD_TIMBRE=60,HOLD_MODE=61,HOLD_RELEASE=62;
+    // 保持2048x9字符ROM，不增加ROM地址位/BSRAM。39/40原来从不被选择，
+    // 42与6、51与13的原文本逐字相同，63原为空；启用HUD时复用这五行。
+    // 非诊断页通过SELECT_SONG/MAIN_K别名继续使用原文本，功能0保持旧像素。
+    localparam [5:0] MIDI_VALUES=39,MIDI_BEND=40,FSR_VALUES=42,
+        FSR_ROLES=51,RAW_UNITS=63;
+    // 专业标签新增6行，不占用/覆盖原有诊断或ADSR行；可选多一位ROM地址。
+    // VISUALIZATION_ENABLE=0仍为原2048x9；生产为4096x9，避免复用行号串字。
+    // V045 uses spare rows in the production 4096x9 ROM, never a combinational
+    // Chinese lookup. Feature0 keeps the original 2048/4096 depth exactly.
+    localparam ROW_BITS=(VISUALIZATION_ENABLE || SONG_LIBRARY_ENABLE)?7:6;
+    localparam [6:0] VIS_FFT=64,VIS_XY=65,VIS_FFT_INFO=66,VIS_XY_INFO=67,
+        VIS_FFT_WAIT=68,VIS_XY_WAIT=69;
+    localparam [6:0] PRACTICE_WAIT=70,GUIDE_FIXED=71,GUIDE_AUTO=72,GUIDE_PRACTICE=73,
+        KEY1_ACTION=74,KEY2_ACTION=75,KEY3_ACTION=76,KEY4_ACTION=77,GUIDE_CYCLE=78,
+        SONG0_BPM=79,SONG1_BPM=80,SONG2_BPM=81;
+    wire [6:0] guide_mode_row=guide_mode==2'd2 ? GUIDE_PRACTICE :
+        (guide_mode==2'd1 ? GUIDE_AUTO : GUIDE_FIXED);
+    // Completion/pause beat a stale wait flag; waiting belongs only to mode2.
+    wire [6:0] guide_state_row=roll_done ? ROLL_DONE : (!roll_active ? ROLL_PAUSE :
+        ((guide_mode==2'd2 && practice_wait) ? PRACTICE_WAIT : ROLL_PLAY));
     // Shared row selection for LIVE/LIBRARY/HELP/DIAGNOSTIC/OSC headers.
     // One-bit legacy callers zero-extend to KEY or STRUM automatically.
     wire [5:0] mode_row=strum_mode==2'd2 ? MODE_HYBRID :
@@ -95,47 +130,74 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
                 25:initial_row=TXT_COMPACT_24;26:initial_row=TXT_COMPACT_25;
                 27:initial_row=TXT_COMPACT_26;28:initial_row=TXT_COMPACT_27;
                 29:initial_row=TXT_COMPACT_28;30:initial_row=TXT_COMPACT_29;
-                31:initial_row=TXT_COMPACT_30;32:initial_row=TXT_COMPACT_31;
+                31:initial_row=EXPRESSION_UI_ENABLE ? TXT_PANEL_TEST_COUNTS : TXT_COMPACT_30;
+                32:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_TEST_KEYS :
+                    (EXPRESSION_UI_ENABLE ? TXT_PANEL_TEST_KEYS : TXT_COMPACT_31);
                 33:initial_row=TXT_COMPACT_32;34:initial_row=TXT_COMPACT_33;
                 35:initial_row=TXT_COMPACT_34;36:initial_row=TXT_COMPACT_35;
                 37:initial_row=TXT_COMPACT_36;38:initial_row=TXT_COMPACT_37;
-                39:initial_row=TXT_COMPACT_38;40:initial_row=TXT_COMPACT_39;
-                41:initial_row=TXT_COMPACT_40;42:initial_row=TXT_COMPACT_41;
-                43:initial_row=TXT_111;44:initial_row=TXT_020;45:initial_row=TXT_033;
-                46:initial_row=TXT_065;47:initial_row=TXT_044;
-                48:initial_row=TXT_022;49:initial_row=TXT_024;50:initial_row=TXT_026;
-                51:initial_row=TXT_COMPACT_42;52:initial_row=TXT_COMPACT_43;
-                53:initial_row=PIANO_ROLL_ENABLE ? ascii_row("PLAY    120 BPM    64 px/beat   ") : TXT_000;
-                54:initial_row=PIANO_ROLL_ENABLE ? ascii_row("PAUSE   120 BPM    64 px/beat   ") : TXT_000;
-                55:initial_row=PIANO_ROLL_ENABLE ? ascii_row("DONE    120 BPM    64 px/beat   ") : TXT_000;
+                39:initial_row=EXPRESSION_UI_ENABLE ? TXT_DIAG_MIDI : TXT_COMPACT_38;
+                40:initial_row=EXPRESSION_UI_ENABLE ? TXT_DIAG_BEND : TXT_COMPACT_39;
+                41:initial_row=TXT_COMPACT_40;
+                42:initial_row=EXPRESSION_UI_ENABLE ? TXT_DIAG_FSR : TXT_COMPACT_41;
+                43:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_LIVE : TXT_111;
+                44:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_LIBRARY : TXT_020;
+                45:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_HELP : TXT_033;
+                46:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_DIAG : TXT_065;
+                47:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_TEST : TXT_044;
+                48:initial_row=TXT_022;
+                49:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_SONG1 : TXT_024;
+                50:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_SONG2 : TXT_026;
+                51:initial_row=EXPRESSION_UI_ENABLE ? TXT_DIAG_FSR_ROLES : TXT_COMPACT_42;
+                52:initial_row=TXT_COMPACT_43;
+                53:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_PLAY : (PIANO_ROLL_ENABLE ? TXT_ROLL_PLAY : TXT_000);
+                54:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_PAUSE : (PIANO_ROLL_ENABLE ? TXT_ROLL_PAUSE : TXT_000);
+                55:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_DONE : (PIANO_ROLL_ENABLE ? TXT_ROLL_DONE : TXT_000);
                 56:initial_row=TXT_BUTTON_STATES;
-                57:initial_row=ascii_row("1 PAGE  2 PLAY/PAUSE            ");
-                58:initial_row=ascii_row("3 RESTART  4 SONG               ");
+                57:initial_row=TXT_LIVE_NAV1;
+                58:initial_row=TXT_LIVE_NAV2;
                 59:initial_row=TXT_MODE_HYBRID;
                 60:initial_row=TXT_HOLD_TIMBRE;
                 61:initial_row=TXT_HOLD_MODE;
-                62:initial_row=TXT_HOLD_RELEASE;
+                62:initial_row=TXT_HOLD_TEST_RELEASE; // The four-key long-3 action is independent of FSR detail visibility.
+                63:initial_row=EXPRESSION_UI_ENABLE ? TXT_DIAG_RAW_UNITS : TXT_000;
+                64:initial_row=TXT_VIS_FFT;65:initial_row=TXT_VIS_XY;
+                66:initial_row=TXT_VIS_FFT_INFO;67:initial_row=TXT_VIS_XY_INFO;
+                68:initial_row=TXT_VIS_FFT_WAIT;69:initial_row=TXT_VIS_XY_WAIT;
+                70:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_WAIT : TXT_000;
+                71:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_FIXED : TXT_000;
+                72:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_AUTO : TXT_000;
+                73:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_PRACTICE : TXT_000;
+                74:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_KEY1 : TXT_000;
+                75:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_KEY2 : TXT_000;
+                76:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_KEY3 : TXT_000;
+                77:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_KEY4 : TXT_000;
+                78:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_CYCLE : TXT_000;
+                79:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_BPM0 : TXT_000;
+                80:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_BPM1 : TXT_000;
+                81:initial_row=SONG_LIBRARY_ENABLE ? TXT_V045_BPM2 : TXT_000;
                 default:initial_row=TXT_000;
             endcase
         end
     endfunction
-    reg [8:0] character_rom[0:2047] /* synthesis syn_romstyle = "block_rom" */;
+    reg [8:0] character_rom[0:((1<<(ROW_BITS+5))-1)] /* synthesis syn_romstyle = "block_rom" */;
     integer ri,ci;
     reg [287:0] init_text;
     initial begin
-        for(ri=0;ri<64;ri=ri+1)begin
+        for(ri=0;ri<(1<<ROW_BITS);ri=ri+1)begin
             init_text=initial_row(ri);
             for(ci=0;ci<32;ci=ci+1)character_rom[ri*32+ci]=init_text[287-ci*9 -: 9];
         end
     end
-    // 所有数字窗口共用一个8位转BCD单元；移位加3，避免逐像素除法/取模。
+    // 所有数字窗口共用一个9位转BCD单元；移位加3，避免逐像素除法/取模。
+    // 多出的第9位仅为BEND=-256的绝对值；其余旧8位输入都零扩展，输出不变。
     function [11:0] bcd8;
-        input [7:0] value;
+        input [8:0] value;
         integer bit_index;
         reg [11:0] v;
         begin
             v=0;
-            for(bit_index=7;bit_index>=0;bit_index=bit_index-1)begin
+            for(bit_index=8;bit_index>=0;bit_index=bit_index-1)begin
                 if(v[3:0]>=5)v[3:0]=v[3:0]+3;
                 if(v[7:4]>=5)v[7:4]=v[7:4]+3;
                 if(v[11:8]>=5)v[11:8]=v[11:8]+3;
@@ -203,21 +265,28 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
     wire [9:0] local_x=right_side ? x-10'd320 : x-10'd32;
     // FX rows occupy416..463; dedicated KEY status row464..479 uses normal origin.
     // Keep piano through400 clear and prevent band14 from falling outside480 lines.
-    wire [9:0] local_y=(piano_live && y>=416 && y<464) ? y-10'd32 : y-10'd16;
+    wire [9:0] local_y=(!SONG_LIBRARY_ENABLE && piano_live && y>=416 && y<464) ? y-10'd32 : y-10'd16;
     wire text_window=visible && y>=16 && !local_y[4] &&
         ((x>=32 && x<288) || (x>=320 && x<576));
     wire [3:0] band=local_y[8:5];
     wire [4:0] column=local_x[7:3];
     wire [15:0] all_keys={ui_controls,keys};
-    wire [5:0] selected_song=ui_song<3 ? SONG0+{4'd0,ui_song} : SONG0;
-    reg [5:0] row_id;
+    // Song3 has no built-in title: reuse SONG and its existing digit override
+    // (49+3='4'), never label an uploaded score as Twinkle/song0.
+    wire [5:0] selected_song=ui_song<3 ? SONG0+{4'd0,ui_song} :
+        (CUSTOM_SCORE_ENABLE ? SONG : SONG0);
+    reg [ROW_BITS-1:0] row_id;
     reg [23:0] background,ink;
     reg [9:0] wave0,wave1;
-    reg [7:0] number;
+    reg [8:0] number;
     reg [1:0] digit;
     reg decimal_enable,override_enable;
     reg [8:0] override_char;
     reg [3:0] nibble;
+    // 所选一路仅用于显示复用，不将FSR0和FSR1求和；校准位也逐路选择。
+    wire [15:0] fsr_raw=right_side ? expression_adc[31:16] : expression_adc[15:0];
+    wire [7:0] fsr_level=right_side ? pressure1 : pressure0;
+    wire fsr_calibrated=right_side ? expression_calibrated[1] : expression_calibrated[0];
     reg [11:0] bcd;
     // F2 and each following C: 19 white keys start F,G,A,B,C...
     // Constant octave math elaborates away; labels share the held/roll window.
@@ -233,12 +302,31 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
     wire [23:0] piano_rgb;
     wire piano_covered;
     generate if(PIANO_ROLL_ENABLE)begin:piano_panel
-        piano_roll_renderer u_piano(.pixel_clk(pixel_clk),.rst_n(rst_n),.x(x),.y(y),
+        piano_roll_renderer #(.CUSTOM_SCORE_ENABLE(CUSTOM_SCORE_ENABLE),
+            .SONG_LIBRARY_ENABLE(SONG_LIBRARY_ENABLE)) u_piano(
+            .pixel_clk(pixel_clk),.rst_n(rst_n),.x(x),.y(y),
             .de(de && piano_live),.piano_keys(piano_keys),.piano_outside(piano_outside),
             .roll_tick(roll_tick),.roll_song(roll_song),.roll_active(roll_active),.roll_done(roll_done),
-            .rgb(piano_rgb),.covered(piano_covered));
+            .rgb(piano_rgb),.covered(piano_covered),
+            .custom_write_clk(custom_write_clk),.custom_write_en(custom_write_en),
+            .custom_write_addr(custom_write_addr),.custom_write_data(custom_write_data),
+            .custom_config(custom_config),.frame_tick(frame_tick),
+            .roll_custom_bank(roll_custom_bank),.custom_bank_ack(custom_bank_ack));
     end else begin:no_piano_panel
-        assign piano_rgb=24'd0;assign piano_covered=1'b0;
+        assign piano_rgb=24'd0;assign piano_covered=1'b0;assign custom_bank_ack=0;
+    end endgenerate
+    wire [23:0] visual_rgb;
+    wire visual_covered;
+    generate if(VISUALIZATION_ENABLE)begin:visual_panel
+        audio_visual_renderer u_visual(.pixel_clk(pixel_clk),.rst_n(rst_n),.x(x),.y(y),.de(de),
+            .enabled(test_active || ui_page==2),.compact(test_active),
+            .fft_level(visual_fft_level),.xy_dot(visual_xy_dot),
+            .fft_valid(visual_fft_valid),.xy_valid(visual_xy_valid),
+            .fft_read_addr(visual_fft_addr),.xy_read_addr(visual_xy_addr),
+            .rgb(visual_rgb),.covered(visual_covered));
+    end else begin:no_visual_panel
+        assign visual_fft_addr=0;assign visual_xy_addr=0;
+        assign visual_rgb=0;assign visual_covered=0;
     end endgenerate
 
     // 只选择当前窗口需要的一条共享文本；曲库游标用字色突出，不增加额外字体。
@@ -247,7 +335,7 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
         wave0=sample_y(wave_previous,scope_gain);wave1=sample_y(wave_current,scope_gain);
         // Only LIVE and diagnostic ownership draw the scope. Never draw outside
         // its original address window, even for signed extremes and gain15.
-        if(test_active || (ui_page==0 && !PIANO_ROLL_ENABLE) ||
+        if((test_active && !VISUALIZATION_ENABLE) || (ui_page==0 && !PIANO_ROLL_ENABLE) ||
             (PIANO_ROLL_ENABLE && ui_page==3))begin
             if(x>=31 && x<=544 && y>=143 && y<=280)begin
                 background=BORDER;
@@ -267,8 +355,11 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
                     1:row_id=right_side ? SWEEP : REQUEST;
                     2:row_id=right_side ? BUSY : GATE;
                     3:row_id=right_side ? WAVE : METERS;
-                    9:row_id=right_side ? SWEEP_KEYS : COUNTS;
-                    10:row_id=right_side ? TOUCH : (wave_valid?WAVE:WAIT_WAVE);
+                    9:row_id=VISUALIZATION_ENABLE ?
+                        (right_side ? (visual_xy_valid?VIS_XY:VIS_XY_WAIT) : (visual_fft_valid?VIS_FFT:VIS_FFT_WAIT)) :
+                        (right_side ? SWEEP_KEYS : COUNTS);
+                    10:row_id=VISUALIZATION_ENABLE ? (right_side ? VIS_XY_INFO : VIS_FFT_INFO) :
+                        (right_side ? TOUCH : (wave_valid?WAVE:WAIT_WAVE));
                     11:row_id=right_side ? VOICES : REQUEST;
                     12:row_id=right_side ? BUSY : GATE;
                     13:row_id=right_side ? 9 : SWEEP_KEYS;
@@ -294,14 +385,23 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
                         2:row_id=right_side ? 0 : SONG0;
                         3:row_id=right_side ? 0 : SONG1;
                         4:row_id=right_side ? 0 : SONG2;
-                        5:row_id=right_side ? PLAY : START;
+                        5:row_id=CUSTOM_SCORE_ENABLE ? (right_side ? 0 : SONG) :
+                            (right_side ? PLAY : START);
+                        6:row_id=CUSTOM_SCORE_ENABLE ? (right_side ? PLAY : START) : 0;
                         7:row_id=right_side ? FX_STATE : KNOBS;
                         9:row_id=right_side ? MUSICAL : TOUCH;
                         12:row_id=right_side ? 8 : 7;
                         13:row_id=right_side ? 9 : NAV;
                         default:row_id=0;
                     endcase
-                    2:case(band)
+                    2:if(VISUALIZATION_ENABLE)case(band)
+                        0:row_id=right_side ? mode_row : HELP_TITLE;
+                        1:row_id=right_side ? (visual_xy_valid?VIS_XY:VIS_XY_WAIT) :
+                                               (visual_fft_valid?VIS_FFT:VIS_FFT_WAIT);
+                        11:row_id=right_side ? VIS_XY_INFO : VIS_FFT_INFO;
+                        12:row_id=right_side ? HOLD_MODE : HOLD_TIMBRE;
+                        default:row_id=0;
+                    endcase else case(band)
                         0:row_id=right_side ? mode_row : HELP_TITLE;
                         1:row_id=right_side ? MUSICAL : TOUCH;
                         2:row_id=right_side ? PAGES : NAV;
@@ -317,7 +417,22 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
                         13:row_id=right_side ? 9 : NAV;
                         default:row_id=0;
                     endcase
-                    3:case(band)
+                    3:if(EXPRESSION_UI_ENABLE)begin
+                        // 波形仍占y144..279；多维读数位于上方，互不遮挡。
+                        // ADC就绪(flags[5])和各路校准分别显示，0不冒充校准成功。
+                        case(band)
+                            0:row_id=right_side ? mode_row : DIAG_TITLE;
+                            1:row_id=right_side ? MIDI_BEND : MIDI_VALUES;
+                            2:row_id=FSR_VALUES;
+                            3:row_id=right_side ? VOICES : HW;
+                            9:row_id=right_side ? FX_STATE : FSR_ROLES;
+                            10:row_id=right_side ? KNOBS : FX_K;
+                            11:row_id=right_side ? KEYS : RAW_UNITS;
+                            12:row_id=right_side ? HOLD_MODE : HOLD_TIMBRE;
+                            13:row_id=right_side ? HOLD_RELEASE : NAV;
+                            default:row_id=0;
+                        endcase
+                    end else case(band)
                         0:row_id=right_side ? mode_row : DIAG_TITLE;
                         1:row_id=right_side ? KEYS : WIRING;
                         2:row_id=right_side ? VOICES : METERS;
@@ -344,29 +459,90 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
                     default:row_id=0;
                 endcase
             end
-            // 所有页面固定显示四个消抖后的真实按键状态，含下落谱页。
-            if(band==14)row_id=right_side ? BUTTON_STATES : (piano_live ? LIVE_NAV2 : NAV);
+            // V036：普通四页共用两行短按说明，避免底部重复“1切页”而缺少2/3/4。
+            // 演奏页保留右侧FX数值；其它普通页右侧提示长按3进入验证。
+            // 测试页沿用专属四键说明，底部只补释放/按下含义，不提示普通操作。
+            if(!test_active && band==13)begin
+                if(!right_side)row_id=LIVE_NAV1;
+                else if(!piano_live)row_id=HOLD_RELEASE;
+            end
+            if(band==14)row_id=right_side ? BUTTON_STATES :
+                                  (test_active ? 6'd9 : LIVE_NAV2);
             if(PIANO_ROLL_ENABLE && ui_page==3 && !test_active && y>=144 && y<288)row_id=0;
+            if(SONG_LIBRARY_ENABLE && !test_active)begin
+                // Two 16px rows in the existing 640x480 canvas, at432/464.
+                // Each half is <=32 cells; right labels end before x576.
+                if(band==13)row_id=right_side ? KEY2_ACTION : KEY1_ACTION;
+                if(band==14)row_id=right_side ? KEY4_ACTION : KEY3_ACTION;
+                if(ui_page==0)begin
+                    if(band==2 && right_side)row_id=guide_mode_row;
+                    if(band==3)row_id=right_side ? guide_state_row : selected_song;
+                    // Piano ends at399; move its small FX row to400..415.
+                    if(piano_live && band==12)row_id=right_side ? KNOBS : FX_K;
+                end else begin
+                    if(band==12)row_id=right_side ? guide_state_row : guide_mode_row;
+                    if(ui_page==1)begin
+                        if(right_side)case(band)
+                            2:row_id=SONG0_BPM;
+                            3:row_id=SONG1_BPM;
+                            4:row_id=SONG2_BPM;
+                            default:begin end
+                        endcase
+                        if(band==8)row_id=right_side ? 0 : GUIDE_CYCLE;
+                    end
+                end
+            end
             if(band==0)ink=CYAN;
-            if(ui_page==1 && !test_active && !right_side && band>=2 && band<=4 && band=={2'd0,ui_cursor}+2)
+            if(ui_page==1 && !test_active && !right_side && band>=2 &&
+                band<=(CUSTOM_SCORE_ENABLE ? 5 : 4) && band=={2'd0,ui_cursor}+2)
                 ink=AMBER;
             if(ui_page==0 && !test_active && band==11 && !right_side)ink=AMBER;
             if(row_id==REQUEST || row_id==GATE || row_id==BUSY)ink=GREEN;
             if((row_id==SWEEP && test_overrun) || (row_id==VOICES && flags[7]))ink=ALERT;
+            if(SONG_LIBRARY_ENABLE && row_id==PRACTICE_WAIT)ink=AMBER;
         end
 
         // A single decimal converter shared by all numeric cells. Hex masks use
         // one selected nibble; no per-label converters or wide text shifting.
         number=0;digit=0;decimal_enable=0;override_enable=0;override_char=32;nibble=0;bcd=0;
         case(row_id)
+            ROLL_PLAY,ROLL_PAUSE,ROLL_DONE,PRACTICE_WAIT:if(SONG_LIBRARY_ENABLE && column>=9 && column<=11)begin
+                // Three built-in tempos; uploaded song tempo is not in this
+                // status packet, so do not pretend it is the Twinkle tempo.
+                if(CUSTOM_SCORE_ENABLE && ui_song==3)begin override_enable=1;override_char=9'd45;end
+                else begin
+                    number=ui_song==1 ? 9'd112 : (ui_song==2 ? 9'd100 : 9'd120);
+                    digit=11-column;decimal_enable=1;
+                end
+            end
+            MIDI_VALUES:if(EXPRESSION_UI_ENABLE)begin
+                if(column>=9 && column<=11)begin number={1'b0,midi_velocity};digit=11-column;decimal_enable=1;end
+                if(column>=21 && column<=23)begin number={2'd0,midi_modulation};digit=23-column;decimal_enable=1;end
+            end
+            MIDI_BEND:if(EXPRESSION_UI_ENABLE)begin
+                if(column==5)begin override_enable=1;override_char=midi_bend[8] ? 9'd45 : 9'd43;end
+                if(column>=6 && column<=8)begin
+                    // 9位二补码取绝对值，-256必须显示256而不是8位截断成000。
+                    number=midi_bend[8] ? (~midi_bend+9'd1) : midi_bend;
+                    digit=8-column;decimal_enable=1;
+                end
+            end
+            FSR_VALUES:if(EXPRESSION_UI_ENABLE)begin
+                if(column==3)begin override_enable=1;override_char=9'd48+right_side;end
+                if(column>=11 && column<=14)begin
+                    override_enable=1;override_char=hex_char(fsr_raw[(14-column)*4 +: 4]);
+                end
+                if(column>=20 && column<=22)begin number={1'b0,fsr_level};digit=22-column;decimal_enable=1;end
+                if(column==28)begin override_enable=1;override_char=9'd48+fsr_calibrated;end
+            end
             // 这里只观察四路消抖状态；两位一起变1可见，不修改多键取消规则。
-            // KEY1..KEY4为面板键，MIDI旋钮仍用K1..K4，不混淆二者。
+            // “键1..键4”为面板键，MIDI旋钮仍用K1..K4，不混淆二者。
             BUTTON_STATES:begin
                 case(column)
-                    5:begin override_enable=1;override_char=9'd48+ui_controls[0];end
-                    12:begin override_enable=1;override_char=9'd48+ui_controls[1];end
-                    19:begin override_enable=1;override_char=9'd48+ui_controls[2];end
-                    26:begin override_enable=1;override_char=9'd48+ui_controls[3];end
+                    4:begin override_enable=1;override_char=9'd48+ui_controls[0];end
+                    10:begin override_enable=1;override_char=9'd48+ui_controls[1];end
+                    16:begin override_enable=1;override_char=9'd48+ui_controls[2];end
+                    22:begin override_enable=1;override_char=9'd48+ui_controls[3];end
                     default:begin end
                 endcase
             end
@@ -398,7 +574,10 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
                 if(column>=4 && column<=6)begin number=volume_percent;digit=6-column;decimal_enable=1;end
                 if(column==13)begin override_enable=1;override_char=level_dbfs[7]?9'd45:9'd43;end
                 if(column>=14 && column<=16)begin
-                    number=level_dbfs[7] ? (~level_dbfs+8'd1) : level_dbfs;digit=16-column;decimal_enable=1;
+                    // 显式保持旧8位取负语义；number因BEND扩到9位后不能让
+                    // 表达式上下文将~level_dbfs也扩为9位，否则-18会错误显示274。
+                    number={1'b0,level_dbfs[7] ? (8'd0-level_dbfs) : level_dbfs};
+                    digit=16-column;decimal_enable=1;
                 end
                 if(column>=25 && column<=27)begin number=peak_percent;digit=27-column;decimal_enable=1;end
             end
@@ -412,6 +591,14 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
                 if(column==5)begin override_enable=1;override_char=9'd49+ui_song;end
                 if(column>=12 && column<=13)begin number={2'd0,guide_step};digit=13-column;decimal_enable=1;end
                 if(column>=15 && column<=16)begin number={2'd0,guide_total};digit=16-column;decimal_enable=1;end
+                // Fourth entry means "曲目4", using the requested existing
+                // SONG text + ASCII4 (the frozen font has no 目 glyph).
+                // Keep only "SONG 4", independent of selection/step counters;
+                // no character ROM rows, glyphs, font size or pages are added.
+                if(CUSTOM_SCORE_ENABLE && ui_page==1 && !right_side && band==5)begin
+                    decimal_enable=0;override_enable=column>=5;
+                    override_char=column==5 ? 9'd52 : 9'd32;
+                end
             end
             KEYS:if(column>=7 && column<=10)begin
                 override_enable=1;override_char=hex_char(all_keys[(10-column)*4 +: 4]);
@@ -482,6 +669,6 @@ module hdmi_compact_dashboard #(parameter PIANO_ROLL_ENABLE=0)(
         end
     end
     wire [23:0] rgb=visible1 ? ((text1 && font_bits[7-font_x1]) ? ink1 :
-        (piano_covered ? piano_rgb : background1)) : 24'd0;
+        (visual_covered ? visual_rgb : (piano_covered ? piano_rgb : background1))) : 24'd0;
     assign {red,green,blue}=rgb;
 endmodule

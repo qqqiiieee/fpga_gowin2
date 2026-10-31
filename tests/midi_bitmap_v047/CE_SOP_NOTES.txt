@@ -1,0 +1,37 @@
+Frozen CE/SOP candidate: 0a51924531c4c981398d5ab98182a31da8c668ccdf5ec8311b73cf604de22969
+
+Source transformation
+  apply_ce_sop_candidate.py starts from the pinned pre-optimization reference,
+  removes only assignments to held/pending/release/delivered/blocked bitmaps,
+  and inserts their independent per-bit processes. UART, FIFO data/pointers/count,
+  mapping lookup/commit, parser, scan scheduling, controls and panic detection
+  remain the original text. The reference remains byte-for-byte unchanged.
+
+Why this differs from the unsuccessful full-vector next-state attempt
+  held/pending/delivered share one scalar D value per bitmap and use local CE.
+  Thus normal point writes do not feed each old bitmap bit through a D mux.
+  release/blocked are scalar-per-bit SOPs with priorities gated into global
+  controls. They do not cascade 128-bit ternary masks for each priority level.
+  Savings are a synthesis hypothesis, not a certified LUT count; parent owns
+  the full-toolchain comparison and routing/fit decision.
+
+Equivalence reasoning (all RHS state is OLD, no additional pipeline)
+  held: global clear = panic | entering_suppress | CC123. Otherwise only accepted
+  On or any Off updates the addressed bit; D is accepted_on after global clear.
+  pending: same point-write enable, with sustain_up added to global clear. D is
+  deferred_off after global clear. An accepted On clears an existing pending Off.
+  delivered: panic clears every bit; otherwise pop changes only event_raw_note
+  to event_on. The FIFO fields and raw metadata are unchanged.
+  release: panic gates every SOP term off. Suppress entry selects OLD delivered
+  corrected by same-edge pop On/Off. Otherwise CC123 ORs OLD held/pending;
+  sustain_up ORs OLD pending; accepted On clears its raw bit; successful scan
+  clears its scan bit. CC123/sustain_up/accepted On are mutually exclusive MIDI
+  message decodes, and scan_offer already excludes these and suppress entry.
+  blocked: panic with suppress keeps OLD blocked|held, panic without suppress
+  clears all. During panic, same-edge key edits are disabled explicitly. Without
+  panic, suppress entry imports OLD held, Off clears its raw bit, and a
+  suppressed On sets its raw bit. Thus pending-only notes do not become blocked
+  when panic occurs, and an old held key is not accidentally lost.
+
+Verification status must be read from final_latest.json / REPORT.txt.
+Negative controls and historical failed baseline selfchecks are separate runs.

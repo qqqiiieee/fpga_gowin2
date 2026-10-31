@@ -1,6 +1,6 @@
 // Test boundary only: no claim about real TMDS/display lock.
 module hdmi_live_display #(parameter UI_ENABLE=0,parameter COMPACT_UI=0,parameter PIANO_ROLL_ENABLE=0,
- parameter HYBRID_MODE_ENABLE=0)(
+ parameter HYBRID_MODE_ENABLE=0,parameter EXPRESSION_UI_ENABLE=0,parameter VISUALIZATION_ENABLE=0)(
  input clk27,input rst_n,input sample_tick,input [15:0] pcm,peak,
  input [11:0] keys,input [3:0] timbre,input [6:0] note,input note_valid,
  input [15:0] frequency_bcd,input [7:0] volume_percent,
@@ -23,7 +23,10 @@ module hdmi_live_display #(parameter UI_ENABLE=0,parameter COMPACT_UI=0,paramete
  input [1:0] ui_page,ui_cursor,ui_song,input [3:0] ui_controls,
  input [1:0] control_page,fx_mode,input [1:0] strum_mode,input [31:0] knob_values,
  input [31:0] piano_keys,input piano_outside,input [11:0] roll_tick,
- input [1:0] roll_song,input roll_active,roll_done);
+ input [1:0] roll_song,input roll_active,roll_done,
+ input [31:0] expression_adc,input [1:0] expression_calibrated,
+ input [7:0] midi_velocity,input signed [8:0] midi_bend,input [6:0] midi_modulation,
+ input signed [15:0] visual_voice0,visual_voice1);
 
  assign tmds_clk_p=0;assign tmds_clk_n=0;assign tmds_data_p=0;assign tmds_data_n=0;
  assign pll_locked=1;assign frame_tick=0;

@@ -1,0 +1,107 @@
+{
+  "date_beijing": "2026-10-31_210322",
+  "firmware": "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\instrument_v047.fs",
+  "firmware_sha256": "d7fa4bbe937d33c69dd5b025d68b557c9088ab918d9c4c70d41f276862fc303f",
+  "usercode_expected": "0x00003608",
+  "operation_index": 37,
+  "frequency": "0.5MHz",
+  "start_address": "0x000000",
+  "programming_attempted": true,
+  "flash_write_verified": true,
+  "flash_boot_reload_verified": true,
+  "cold_power_cycle_verified": false,
+  "success": true,
+  "usb_location": 8737,
+  "commands": [
+    [
+      "D:\\Gowin_V1.9.12.04_x64_win\\Gowin\\Gowin_V1.9.12.04_x64\\Programmer\\bin\\programmer_cli.exe",
+      "--device",
+      "GW2A-18C",
+      "--cable-index",
+      "4",
+      "--location",
+      "8737",
+      "--frequency",
+      "0.5MHz",
+      "--operation_index",
+      "0"
+    ],
+    [
+      "D:\\Gowin_V1.9.12.04_x64_win\\Gowin\\Gowin_V1.9.12.04_x64\\Programmer\\bin\\programmer_cli.exe",
+      "--device",
+      "GW2A-18C",
+      "--cable-index",
+      "4",
+      "--location",
+      "8737",
+      "--frequency",
+      "0.5MHz",
+      "--operation_index",
+      "37",
+      "--spiaddr",
+      "0x000000",
+      "--fsFile",
+      "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\instrument_v047.fs"
+    ],
+    [
+      "D:\\Gowin_V1.9.12.04_x64_win\\Gowin\\Gowin_V1.9.12.04_x64\\Programmer\\bin\\programmer_cli.exe",
+      "--device",
+      "GW2A-18C",
+      "--cable-index",
+      "4",
+      "--location",
+      "8737",
+      "--frequency",
+      "0.5MHz",
+      "--operation_index",
+      "1"
+    ],
+    [
+      "D:\\Gowin_V1.9.12.04_x64_win\\Gowin\\Gowin_V1.9.12.04_x64\\Programmer\\bin\\programmer_cli.exe",
+      "--device",
+      "GW2A-18C",
+      "--cable-index",
+      "4",
+      "--location",
+      "8737",
+      "--frequency",
+      "0.5MHz",
+      "--operation_index",
+      "0"
+    ]
+  ],
+  "usercode_after_reload": "0x00003608",
+  "status_after_reload": "0x00006020",
+  "serial_snapshots": [
+    {
+      "seq": 0,
+      "status": 32,
+      "keys": 0,
+      "touch_raw": 0,
+      "touch_keys": 0,
+      "diag2": 3712,
+      "diag3": 0
+    },
+    {
+      "seq": 1,
+      "status": 96,
+      "keys": 0,
+      "touch_raw": 0,
+      "touch_keys": 0,
+      "diag2": 3712,
+      "diag3": 0
+    },
+    {
+      "seq": 2,
+      "status": 96,
+      "keys": 0,
+      "touch_raw": 0,
+      "touch_keys": 0,
+      "diag2": 3712,
+      "diag3": 0
+    }
+  ],
+  "serial_port": "COM8",
+  "serial_diagnostic_pass": true,
+  "finished_beijing": "2026-10-31T21:04:12.090340+08:00"
+}

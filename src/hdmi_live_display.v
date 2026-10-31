@@ -16,7 +16,9 @@
 // Instrument status crosses domains as a coherent frame-boundary snapshot.
 // The scope uses immutable RAM banks with its own request/ack handshake.
 module hdmi_live_display #(parameter UI_ENABLE=0,parameter COMPACT_UI=0,
- parameter PIANO_ROLL_ENABLE=0,parameter HYBRID_MODE_ENABLE=0)(
+ parameter PIANO_ROLL_ENABLE=0,parameter HYBRID_MODE_ENABLE=0,
+ parameter EXPRESSION_UI_ENABLE=0,parameter VISUALIZATION_ENABLE=0,
+ parameter CUSTOM_SCORE_ENABLE=0,parameter SONG_LIBRARY_ENABLE=0)(
  input clk27,input rst_n,input sample_tick,input [15:0] pcm,peak,
  input [11:0] keys,input [3:0] timbre,input [6:0] note,input note_valid,
  input [15:0] frequency_bcd,input [7:0] volume_percent,
@@ -40,7 +42,25 @@ module hdmi_live_display #(parameter UI_ENABLE=0,parameter COMPACT_UI=0,
  input [1:0] control_page,fx_mode,input [1:0] strum_mode,input [31:0] knob_values,
  // Physical held MIDI41..72 (F2..C5), distinct from panel keys and oscillator busy.
  input [31:0] piano_keys,input piano_outside,
- input [11:0] roll_tick,input [1:0] roll_song,input roll_active,roll_done);
+ input [11:0] roll_tick,input [1:0] roll_song,input roll_active,roll_done,
+ // V035只读诊断；不是新增音源控制，也不把两个FSR读数相加。
+ // ADC低16位=FSR0/高16位=FSR1，保留ADS二补码原始码，用HEX显示而非kg。
+ // velocity是最近有效NoteOn的原始MIDI力度0..127；bend是-256..255控制值，
+ // modulation为MIDI CC1原值0..127。calibrated各位分别对应FSR0/FSR1。
+ input [31:0] expression_adc,input [1:0] expression_calibrated,
+ input [7:0] midi_velocity,input signed [8:0] midi_bend,input [6:0] midi_modulation,
+ // V036：最终PCM的FFT与独立声部0/1的XY，均为只读观察，独立双缓冲CDC。
+ input signed [15:0] visual_voice0,visual_voice1,
+ // Broadcast unchanged to source guide + pixel RAM. Config is SOURCE-domain;
+ // renderer owns the held-bus/toggle transfer and atomic frame publication.
+ // ACK remains a pixel-domain level: top/controller must synchronise TWICE
+ // into clk27 and reject BEGIN while ack != custom_config[31].
+ input custom_write_clk,input custom_write_en,
+ input [8:0] custom_write_addr,input [31:0] custom_write_data,
+ input [31:0] custom_config,output custom_bank_ack,
+ // V045 source-domain status; appended to the SAME frame-snapshot mailbox.
+ // 0=fixed BPM, 1=automatic, 2=note-by-note. Unconnected is ignored at feature0.
+ input [1:0] guide_mode,input practice_wait);
  localparam USE_COMPACT=COMPACT_UI || PIANO_ROLL_ENABLE;
  wire serial_clk,pixel_clk;
  hdmi_clocks u_clocks(clk27,rst_n,serial_clk,pixel_clk,pll_locked);
@@ -75,7 +95,23 @@ module hdmi_live_display #(parameter UI_ENABLE=0,parameter COMPACT_UI=0,
  // parameter1 adds one bit only for compact:290, or339 with piano enabled.
  localparam PIANO_STATUS_WIDTH=BASE_STATUS_WIDTH+(PIANO_ROLL_ENABLE ? 49 : 0);
  localparam USE_HYBRID=USE_COMPACT && HYBRID_MODE_ENABLE;
- localparam STATUS_WIDTH=PIANO_STATUS_WIDTH+(USE_HYBRID ? 1 : 0);
+ localparam HYBRID_STATUS_WIDTH=PIANO_STATUS_WIDTH+(USE_HYBRID ? 1 : 0);
+ // 只在compact启用时追加58位到原有整包之上；默认0完全保留旧字段与宽度。
+ // 生产piano+hybrid布局低339位不变；397位新包顶部为：
+ // [396:365]ADC [364:363]cal [362:355]velocity [354:346]bend [345:339]mod。
+ localparam USE_EXPRESSION=USE_COMPACT && EXPRESSION_UI_ENABLE;
+ localparam EXPRESSION_STATUS_WIDTH=HYBRID_STATUS_WIDTH+(USE_EXPRESSION ? 58 : 0);
+ localparam USE_CUSTOM=PIANO_ROLL_ENABLE && CUSTOM_SCORE_ENABLE;
+ // A single extra tag travels with time/song/page in the existing coherent
+ // snapshot. It prevents rendering the new bank at the previous bank's tick
+ // if the independent config mailbox reaches a frame before u_status does.
+ // Default0 retains ALL previous 242/252/289/338/... packet layouts.
+ localparam CUSTOM_STATUS_WIDTH=EXPRESSION_STATUS_WIDTH+(USE_CUSTOM ? 1 : 0);
+ localparam USE_SONG_LIBRARY=USE_COMPACT && SONG_LIBRARY_ENABLE;
+ // Keep every old bit (including the custom bank tag) at its original offset.
+ // Production piano+hybrid+expression+custom: [400:399]mode [398]wait,
+ // [397]custom bank, [396:0]unchanged. Feature0 retains the old exact width.
+ localparam STATUS_WIDTH=CUSTOM_STATUS_WIDTH+(USE_SONG_LIBRARY ? 3 : 0);
  wire [241:0] legacy_source_status={
   keys,timbre,note,note_valid,frequency_bcd,volume_percent,level_dbfs,peak_percent,
   pitch,voices,pressure0,pressure1,flags,guide_active,guide_done,cue_mask,next_mask,
@@ -84,6 +120,9 @@ module hdmi_live_display #(parameter UI_ENABLE=0,parameter COMPACT_UI=0,
  // 旧 242-bit 接口与四页 252-bit 接口显式选择，消除隐式截断依赖。
  wire [BASE_STATUS_WIDTH-1:0] base_source_status;
  wire [PIANO_STATUS_WIDTH-1:0] piano_source_status;
+ wire [HYBRID_STATUS_WIDTH-1:0] hybrid_source_status;
+ wire [EXPRESSION_STATUS_WIDTH-1:0] expression_source_status;
+ wire [CUSTOM_STATUS_WIDTH-1:0] custom_source_status;
  wire [STATUS_WIDTH-1:0] source_status;
  generate if(USE_COMPACT)begin:source_compact_packet
   assign base_source_status={control_page,fx_mode,(strum_mode!=2'd0),knob_values,
@@ -99,9 +138,37 @@ module hdmi_live_display #(parameter UI_ENABLE=0,parameter COMPACT_UI=0,
   assign piano_source_status=base_source_status;
  end endgenerate
  generate if(USE_HYBRID)begin:source_hybrid_packet
-  assign source_status={(strum_mode==2'd2),piano_source_status};
+  assign hybrid_source_status={(strum_mode==2'd2),piano_source_status};
  end else begin:source_no_hybrid_packet
-  assign source_status=piano_source_status;
+  assign hybrid_source_status=piano_source_status;
+ end endgenerate
+ generate if(USE_EXPRESSION)begin:source_expression_packet
+  assign expression_source_status={expression_adc,expression_calibrated,midi_velocity,
+   midi_bend,midi_modulation,hybrid_source_status};
+ end else begin:source_no_expression_packet
+  assign expression_source_status=hybrid_source_status;
+ end endgenerate
+ wire d_roll_custom_bank;
+ generate if(USE_CUSTOM)begin:custom_timeline_tag
+  reg source_bank;
+  // Same edge as guide's synchronous config detection/restart. Thus a held
+  // status snapshot sees either old tick+old tag or restarted tick+new tag.
+  always @(posedge clk27 or negedge source_reset_sync[2])
+   if(!source_reset_sync[2])source_bank<=0;
+   else source_bank<=custom_config[31];
+  assign custom_source_status={source_bank,expression_source_status};
+  assign d_roll_custom_bank=display_status[CUSTOM_STATUS_WIDTH-1];
+ end else begin:no_custom_timeline_tag
+  assign custom_source_status=expression_source_status;assign d_roll_custom_bank=0;
+ end endgenerate
+ wire [1:0] d_guide_mode;
+ wire d_practice_wait;
+ generate if(USE_SONG_LIBRARY)begin:song_library_metadata
+  assign source_status={guide_mode,practice_wait,custom_source_status};
+  assign {d_guide_mode,d_practice_wait}=display_status[STATUS_WIDTH-1:CUSTOM_STATUS_WIDTH];
+ end else begin:no_song_library_metadata
+  assign source_status=custom_source_status;
+  assign {d_guide_mode,d_practice_wait}=3'd0;
  end endgenerate
  wire [STATUS_WIDTH-1:0] display_status;
  hdmi_status_cdc #(.WIDTH(STATUS_WIDTH)) u_status(clk27,source_reset_sync[2],source_status,
@@ -178,19 +245,48 @@ module hdmi_live_display #(parameter UI_ENABLE=0,parameter COMPACT_UI=0,
  wire d_piano_outside,d_roll_active,d_roll_done;
  wire [11:0] d_roll_tick;
  wire [1:0] d_roll_song;
+ wire [31:0] d_expression_adc;
+ wire [1:0] d_expression_calibrated;
+ wire [7:0] d_midi_velocity;
+ wire signed [8:0] d_midi_bend;
+ wire [6:0] d_midi_modulation;
+ generate if(USE_EXPRESSION)begin:expression_metadata
+  assign {d_expression_adc,d_expression_calibrated,d_midi_velocity,
+   d_midi_bend,d_midi_modulation}=display_status[EXPRESSION_STATUS_WIDTH-1:HYBRID_STATUS_WIDTH];
+ end else begin:no_expression_metadata
+  assign {d_expression_adc,d_expression_calibrated,d_midi_velocity,
+   d_midi_bend,d_midi_modulation}=58'd0;
+ end endgenerate
  generate if(PIANO_ROLL_ENABLE)begin:piano_metadata
   assign {d_piano_keys,d_piano_outside,d_roll_tick,d_roll_song,d_roll_active,d_roll_done}=display_status[337:289];
  end else begin:no_piano_metadata
   assign {d_piano_keys,d_piano_outside,d_roll_tick,d_roll_song,d_roll_active,d_roll_done}=49'd0;
  end endgenerate
  generate if(USE_HYBRID)begin:hybrid_metadata
-  assign d_strum_mode=display_status[STATUS_WIDTH-1] ? 2'd2 : {1'b0,d_strum_enabled};
+  assign d_strum_mode=display_status[HYBRID_STATUS_WIDTH-1] ? 2'd2 : {1'b0,d_strum_enabled};
  end else begin:no_hybrid_metadata
   assign d_strum_mode={1'b0,d_strum_enabled};
  end endgenerate
+ wire [7:0] visual_fft_addr,visual_fft_level;
+ wire [13:0] visual_xy_addr;
+ wire visual_xy_dot,visual_fft_valid,visual_xy_valid;
+ generate if(VISUALIZATION_ENABLE && USE_COMPACT)begin:visualization
+  // 显示PLL失锁只复位分析/绘图支路；不连接音频复位或声音使能。
+  audio_visual_buffers #(.XY_AUTO_SCALE(1)) buffers(.clk27(clk27),.source_rst_n(source_reset_sync[2]),
+   .pixel_clk(pixel_clk),.pixel_rst_n(video_rst_n),.frame_tick(frame_tick),
+   .sample_tick(sample_tick),.pcm(pcm),.voice0(visual_voice0),.voice1(visual_voice1),
+   .fft_read_addr(visual_fft_addr),.xy_read_addr(visual_xy_addr),
+   .fft_level(visual_fft_level),.xy_dot(visual_xy_dot),
+   .fft_valid(visual_fft_valid),.xy_valid(visual_xy_valid));
+ end else begin:no_visualization
+  assign visual_fft_level=0;assign visual_xy_dot=0;
+  assign visual_fft_valid=0;assign visual_xy_valid=0;
+ end endgenerate
  generate if(USE_COMPACT)begin:compact_ui
   assign {d_control_page,d_fx_mode,d_strum_enabled,d_knob_values}=display_status[288:252];
-  hdmi_compact_dashboard #(.PIANO_ROLL_ENABLE(PIANO_ROLL_ENABLE)) u_dashboard(
+  hdmi_compact_dashboard #(.PIANO_ROLL_ENABLE(PIANO_ROLL_ENABLE),
+   .EXPRESSION_UI_ENABLE(EXPRESSION_UI_ENABLE),.VISUALIZATION_ENABLE(VISUALIZATION_ENABLE),
+   .CUSTOM_SCORE_ENABLE(CUSTOM_SCORE_ENABLE),.SONG_LIBRARY_ENABLE(SONG_LIBRARY_ENABLE)) u_dashboard(
    .pixel_clk(pixel_clk),.rst_n(video_rst_n),.x(draw_x),.y(draw_y),.de(draw_de),
    .keys(d_keys),.timbre(d_timbre),.note(d_note),.note_valid(d_note_valid),
    .frequency_bcd(d_frequency),.volume_percent(d_volume),.level_dbfs(d_level),.peak_percent(d_peak),
@@ -202,10 +298,22 @@ module hdmi_live_display #(parameter UI_ENABLE=0,parameter COMPACT_UI=0,
    .ui_page(d_ui_page),.ui_cursor(d_ui_cursor),.ui_song(d_ui_song),.ui_controls(d_ui_controls),
    .control_page(d_control_page),.fx_mode(d_fx_mode),.strum_mode(d_strum_mode),.knob_values(d_knob_values),
    .red(r),.green(g),.blue(b),.piano_keys(d_piano_keys),.piano_outside(d_piano_outside),
-   .roll_tick(d_roll_tick),.roll_song(d_roll_song),.roll_active(d_roll_active),.roll_done(d_roll_done));
+   .roll_tick(d_roll_tick),.roll_song(d_roll_song),.roll_active(d_roll_active),.roll_done(d_roll_done),
+   .expression_adc(d_expression_adc),.expression_calibrated(d_expression_calibrated),
+   .midi_velocity(d_midi_velocity),.midi_bend(d_midi_bend),.midi_modulation(d_midi_modulation),
+   .pressure0(d_pressure0),.pressure1(d_pressure1),
+   .visual_fft_level(visual_fft_level),.visual_xy_dot(visual_xy_dot),
+   .visual_fft_valid(visual_fft_valid),.visual_xy_valid(visual_xy_valid),
+   .visual_fft_addr(visual_fft_addr),.visual_xy_addr(visual_xy_addr),
+   .custom_write_clk(custom_write_clk),.custom_write_en(custom_write_en),
+   .custom_write_addr(custom_write_addr),.custom_write_data(custom_write_data),
+   .custom_config(custom_config),.frame_tick(frame_tick),
+   .roll_custom_bank(d_roll_custom_bank),.custom_bank_ack(custom_bank_ack),
+   .guide_mode(d_guide_mode),.practice_wait(d_practice_wait));
  end else begin:full_ui
   assign {d_control_page,d_fx_mode,d_strum_enabled,d_knob_values}=37'd0;
   assign {r,g,b}={legacy_r,legacy_g,legacy_b};
+  assign custom_bank_ack=0;
  end endgenerate
  // 中文字模BRAM新增一拍；同步信号跟随字模背景同拍延迟。
  reg font_de,font_hs,font_vs;

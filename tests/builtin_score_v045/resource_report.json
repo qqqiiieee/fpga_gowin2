@@ -1,0 +1,127 @@
+{
+  "passed": true,
+  "vendor_synthesis": false,
+  "packing": false,
+  "timing": false,
+  "production_build": false,
+  "programming": false,
+  "publication": false,
+  "source_sha256": {
+    "src/piano_roll_guide.v": "f127cd6d47019843623971e631fc4c28d6dddc1817e14f7186eae9ff1bc149e3",
+    "src/piano_roll_renderer.v": "b15d2ff8fa3d2f9791782339b8f60f67c63d15caf548a5b66e64bb52f6dca013",
+    "src/piano_roll_score.v": "0850607ea71b05d42b457a71ab3678170f3c522385d725b01c019671b197c4ad",
+    "src/piano_builtin_score_ram.v": "a61d3965c58c6dbcd49bbb527eab7213d4362b5f7433eb379df75bab34ba6585",
+    "src/custom_score_ram.v": "8b465e5f27891d0ef276f0bb59faeb63b8069a24d6d9c5225954de5d437707e6",
+    "src/piano_builtin_score.hex": "eb14d9981728e24c3a2533752eb62966ac09ff032e8e1b1f0b014bf118916797",
+    "src/piano_layout.vh": "8a12817352ecd8b2848bb17847c3733e167354796ed4ba8bb40ad2d126e3f233",
+    "src/piano_song_rom_v045.vh": "09197fea591f6b350ef9ca64ac26b50b7ece7bb4453363dccd5a1c2ab8369b78"
+  },
+  "cases": [
+    {
+      "enabled": 0,
+      "cell_counts": {
+        "DFFCE": 133,
+        "LUT4": 340,
+        "DFFC": 131,
+        "LUT2": 200,
+        "DFFPE": 1,
+        "LUT3": 194,
+        "ALU": 441,
+        "LUT1": 16,
+        "$scopeinfo": 7,
+        "SDPX9B": 2,
+        "DFF": 67,
+        "SPX9": 1,
+        "GND": 1,
+        "VCC": 1
+      },
+      "memories": [
+        {
+          "module": "$paramod$0fd3ea1395a7c8c4d76ca2d8de8de715cd298661\\piano_roll_renderer",
+          "name": "geometry",
+          "width": 18,
+          "size": 1024,
+          "synchronous_read": 1
+        },
+        {
+          "module": "custom_score_ram",
+          "name": "memory",
+          "width": 32,
+          "size": 512,
+          "synchronous_read": 1
+        },
+        {
+          "module": "piano_roll_score",
+          "name": "$auto$proc_rom.cc:155:do_switch$574",
+          "width": 7,
+          "size": 32,
+          "synchronous_read": 0
+        },
+        {
+          "module": "piano_roll_score",
+          "name": "$auto$proc_rom.cc:155:do_switch$578",
+          "width": 7,
+          "size": 32,
+          "synchronous_read": 0
+        },
+        {
+          "module": "piano_roll_score",
+          "name": "$auto$proc_rom.cc:155:do_switch$582",
+          "width": 7,
+          "size": 64,
+          "synchronous_read": 0
+        }
+      ],
+      "runtime_div_mod_cells": 0,
+      "directory": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\resources\\20261031T102423_506701Z\\library_0",
+      "geometry_hex_sha256": "5fbcf6a8d07cf6db5647bf5b4db7862079ed6ea66ea8dd99553d3e2ff5d23a4a"
+    },
+    {
+      "enabled": 1,
+      "cell_counts": {
+        "DFFCE": 133,
+        "DFFPE": 1,
+        "LUT4": 239,
+        "LUT2": 115,
+        "LUT3": 124,
+        "DFFC": 135,
+        "ALU": 259,
+        "LUT1": 5,
+        "$scopeinfo": 6,
+        "SPX9": 4,
+        "SDPX9B": 2,
+        "DFF": 66,
+        "GND": 1,
+        "VCC": 1
+      },
+      "memories": [
+        {
+          "module": "$paramod$84498d2297b4247b7d4ab22449fd545ebd048d60\\piano_roll_renderer",
+          "name": "geometry",
+          "width": 18,
+          "size": 1024,
+          "synchronous_read": 1
+        },
+        {
+          "module": "custom_score_ram",
+          "name": "memory",
+          "width": 32,
+          "size": 512,
+          "synchronous_read": 1
+        },
+        {
+          "module": "piano_builtin_score_ram",
+          "name": "memory",
+          "width": 32,
+          "size": 1024,
+          "synchronous_read": 1
+        }
+      ],
+      "runtime_div_mod_cells": 0,
+      "directory": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\resources\\20261031T102423_506701Z\\library_1",
+      "geometry_hex_sha256": "5fbcf6a8d07cf6db5647bf5b4db7862079ed6ea66ea8dd99553d3e2ff5d23a4a"
+    }
+  ],
+  "inputs_unchanged": true,
+  "result_directory": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\resources\\20261031T102423_506701Z"
+}

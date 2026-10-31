@@ -1,0 +1,95 @@
+{
+  "passed": true,
+  "checked_at_utc": "2026-10-31T10:11:56.705252+00:00",
+  "source_sha256": "f3b9542ca23556fa0f73c3eb9b1443b69ac03d9512b570a0d0c24a6de36e85b0",
+  "generation_matches": true,
+  "negative_cases_rejected": [
+    "low_note",
+    "high_note",
+    "zero_duration",
+    "fraction_duration",
+    "duration_width",
+    "bool_note",
+    "count_mismatch",
+    "duration_mismatch",
+    "duplicate_id",
+    "count_width",
+    "timeline_width",
+    "invalid_bpm",
+    "changed_simple",
+    "missing_rest",
+    "leading_rest"
+  ],
+  "songs": [
+    {
+      "id": 0,
+      "title": "Twinkle Twinkle Little Star",
+      "event_count": 42,
+      "note_count": 42,
+      "rest_count": 0,
+      "bpm": 120,
+      "beat_samples": 46875,
+      "total_beats": 50,
+      "min_note": 60,
+      "max_note": 69
+    },
+    {
+      "id": 1,
+      "title": "Lantern Steps",
+      "event_count": 48,
+      "note_count": 44,
+      "rest_count": 4,
+      "bpm": 112,
+      "beat_samples": 50223,
+      "total_beats": 34,
+      "min_note": 48,
+      "max_note": 72
+    },
+    {
+      "id": 2,
+      "title": "River Bridges",
+      "event_count": 48,
+      "note_count": 42,
+      "rest_count": 6,
+      "bpm": 100,
+      "beat_samples": 56250,
+      "total_beats": 34,
+      "min_note": 41,
+      "max_note": 70
+    }
+  ],
+  "native_simulation": {
+    "run": true,
+    "passed": true,
+    "quarter_checks": 1024,
+    "event_checks": 256,
+    "metadata_checks": 4,
+    "duplicate_module_include": true,
+    "commands": [
+      [
+        "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+        "-g2001",
+        "-Wall",
+        "-I",
+        "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\song_library_v045\\simulation",
+        "-s",
+        "tb_song_library_v045",
+        "-o",
+        "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\song_library_v045\\simulation\\songs.vvp",
+        "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\song_library_v045\\simulation\\tb_song_library_v045.v"
+      ],
+      [
+        "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+        "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\song_library_v045\\simulation\\songs.vvp"
+      ]
+    ],
+    "logs": [
+      "simulation/compile.log",
+      "simulation/simulate.log"
+    ]
+  },
+  "fpga_compile": false,
+  "hardware_test": false,
+  "published": false,
+  "esp_changed": false
+}

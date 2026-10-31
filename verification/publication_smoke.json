@@ -1,0 +1,108 @@
+{
+  "version": "V047",
+  "passed": true,
+  "scope": "identity, three chord RTL benches, current phone score codec",
+  "hardware_accessed": false,
+  "full_project_built": false,
+  "tests": [
+    {
+      "command": [
+        "C:\\Users\\31989\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "scripts/verify_release.py"
+      ],
+      "exit_code": 0,
+      "stdout": "RELEASE_IDENTITY_PASS V047 0x00003608; FPGA/ESP32/source hashes match; no hardware access\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+        "-g2012",
+        "-Wall",
+        "-s",
+        "tb_modes",
+        "-o",
+        "D:\\Gowin_project\\github_v047_20261031\\validation\\release_smoke\\modes.vvp",
+        "src/guide_chord_modes.v",
+        "tests/chords_v047/tb_modes.v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "warning: Some design elements have no explicit time unit and/or\n       : time precision. This may cause confusing timing results.\n       : Affected design elements are:\n       :   -- module guide_chord_modes declared here: src/guide_chord_modes.v:6\n"
+    },
+    {
+      "command": [
+        "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+        "D:\\Gowin_project\\github_v047_20261031\\validation\\release_smoke\\modes.vvp"
+      ],
+      "exit_code": 0,
+      "stdout": "CHORD_MODES_PASS checks=35 triggers=3\ntests/chords_v047/tb_modes.v:74: $finish called at 2240000 (1ps)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+        "-g2012",
+        "-Wall",
+        "-s",
+        "tb_events",
+        "-o",
+        "D:\\Gowin_project\\github_v047_20261031\\validation\\release_smoke\\events.vvp",
+        "src/guide_chord_events.v",
+        "src/voice_allocator.v",
+        "tests/chords_v047/tb_events.v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "warning: Some design elements have no explicit time unit and/or\n       : time precision. This may cause confusing timing results.\n       : Affected design elements are:\n       :   -- module guide_chord_events declared here: src/guide_chord_events.v:5\n       :   -- module voice_allocator declared here: src/voice_allocator.v:19\n"
+    },
+    {
+      "command": [
+        "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+        "D:\\Gowin_project\\github_v047_20261031\\validation\\release_smoke\\events.vvp"
+      ],
+      "exit_code": 0,
+      "stdout": "CHORD_EVENTS_PASS checks=145 ons=24 offs=20\ntests/chords_v047/tb_events.v:69: $finish called at 1330000 (1ps)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+        "-g2012",
+        "-Wall",
+        "-s",
+        "tb_score_pixels",
+        "-o",
+        "D:\\Gowin_project\\github_v047_20261031\\validation\\release_smoke\\score_pixels.vvp",
+        "src/phone_extension_state.v",
+        "src/piano_roll_guide.v",
+        "src/piano_roll_renderer.v",
+        "src/custom_score_ram.v",
+        "src/piano_roll_score.v",
+        "tests/chords_v047/tb_score_pixels.v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "src/piano_roll_guide.v:14: warning: timescale for piano_roll_guide inherited from another file.\nsrc/phone_extension_state.v:1: ...: The inherited timescale is here.\nsrc/piano_roll_renderer.v:15: warning: timescale for piano_roll_renderer inherited from another file.\nsrc/phone_extension_state.v:1: ...: The inherited timescale is here.\nsrc/custom_score_ram.v:10: warning: timescale for custom_score_ram inherited from another file.\nsrc/phone_extension_state.v:1: ...: The inherited timescale is here.\nsrc/piano_roll_score.v:9: warning: timescale for piano_roll_score inherited from another file.\nsrc/phone_extension_state.v:1: ...: The inherited timescale is here.\n"
+    },
+    {
+      "command": [
+        "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+        "D:\\Gowin_project\\github_v047_20261031\\validation\\release_smoke\\score_pixels.vvp"
+      ],
+      "exit_code": 0,
+      "stdout": "CHORD_SCORE_PIXELS_PASS checks=103 invalid_words=10 bubbles=11\ntests/chords_v047/tb_score_pixels.v:117: $finish called at 652290000 (1ps)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\31989\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.EXE",
+        "scripts/check_score_examples.cjs"
+      ],
+      "exit_code": 0,
+      "stdout": "SCORE_CODEC_PASS 2 examples; 7 invalid chords rejected; no hardware access\n",
+      "stderr": ""
+    }
+  ],
+  "finished_utc": "2026-10-31T14:26:07.554782+00:00"
+}

@@ -1,0 +1,107 @@
+{
+  "version": "V047",
+  "started_beijing": "2026-10-31T21:04:18.095278+08:00",
+  "port": "COM3",
+  "vid": 6790,
+  "pid": 29987,
+  "hwid": "USB VID:PID=1A86:7523 SER= LOCATION=1-2.1",
+  "images": [
+    {
+      "address": "0x1000",
+      "file": "esp32_phone.ino.bootloader.bin",
+      "sha256": "3d97b71a61331ebaddef2a74e090c35299650f395f1387f85130010e84e46563"
+    },
+    {
+      "address": "0x8000",
+      "file": "esp32_phone.ino.partitions.bin",
+      "sha256": "148b959cbff1c38aa8e1d5c0ba9d612c54997b945e56a63f41223eef650653a1"
+    },
+    {
+      "address": "0xe000",
+      "file": "boot_app0.bin",
+      "sha256": "f94c5d786a7a8fab06ac5d10e33bf37711a6697636dc037559ea19cc410a17f0"
+    },
+    {
+      "address": "0x10000",
+      "file": "esp32_phone.ino.bin",
+      "sha256": "7cda05925a9ebe70ebea5322cda401434bd00a0bb958ac381c39fbedf1ea97c7"
+    }
+  ],
+  "programming_attempted": true,
+  "flash_written": true,
+  "flash_verified": true,
+  "success": true,
+  "phone_end_to_end_physically_validated": false,
+  "erased_entire_flash": false,
+  "commands": [
+    [
+      "D:\\Gowin_project\\instrument_phone_test_20261030\\esp32_phone\\.toolchain\\data\\packages\\esp32\\tools\\esptool_py\\4.5.1\\esptool.exe",
+      "--chip",
+      "esp32",
+      "--port",
+      "COM3",
+      "--baud",
+      "460800",
+      "--before",
+      "default_reset",
+      "--after",
+      "hard_reset",
+      "chip_id"
+    ],
+    [
+      "D:\\Gowin_project\\instrument_phone_test_20261030\\esp32_phone\\.toolchain\\data\\packages\\esp32\\tools\\esptool_py\\4.5.1\\esptool.exe",
+      "--chip",
+      "esp32",
+      "--port",
+      "COM3",
+      "--baud",
+      "460800",
+      "--before",
+      "default_reset",
+      "--after",
+      "hard_reset",
+      "write_flash",
+      "-z",
+      "--flash_mode",
+      "dio",
+      "--flash_freq",
+      "40m",
+      "--flash_size",
+      "4MB",
+      "0x1000",
+      "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\ESP32固件_V047\\esp32_phone.ino.bootloader.bin",
+      "0x8000",
+      "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\ESP32固件_V047\\esp32_phone.ino.partitions.bin",
+      "0xe000",
+      "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\ESP32固件_V047\\boot_app0.bin",
+      "0x10000",
+      "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\ESP32固件_V047\\esp32_phone.ino.bin"
+    ],
+    [
+      "D:\\Gowin_project\\instrument_phone_test_20261030\\esp32_phone\\.toolchain\\data\\packages\\esp32\\tools\\esptool_py\\4.5.1\\esptool.exe",
+      "--chip",
+      "esp32",
+      "--port",
+      "COM3",
+      "--baud",
+      "460800",
+      "--before",
+      "default_reset",
+      "--after",
+      "hard_reset",
+      "verify_flash",
+      "0x1000",
+      "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\ESP32固件_V047\\esp32_phone.ino.bootloader.bin",
+      "0x8000",
+      "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\ESP32固件_V047\\esp32_phone.ino.partitions.bin",
+      "0xe000",
+      "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\ESP32固件_V047\\boot_app0.bin",
+      "0x10000",
+      "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\ESP32固件_V047\\esp32_phone.ino.bin"
+    ]
+  ],
+  "chip_verified": "ESP32-D0WDQ6",
+  "mac": "04:b2:47:f9:cc:40",
+  "hard_reset_after_verified": true,
+  "finished_beijing": "2026-10-31T21:04:51.627560+08:00"
+}

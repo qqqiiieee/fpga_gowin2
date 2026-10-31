@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>V047 键位重定向详细教程</title>
+<style>
+:root{font:16px/1.8 system-ui,"Microsoft YaHei",sans-serif;color:#203449;background:#edf2f6}*{box-sizing:border-box}body{max-width:1080px;margin:auto;padding:26px}header,section{background:#fff;border:1px solid #d8e3eb;border-radius:14px;padding:24px 30px;margin:18px 0}header{border-top:6px solid #147d82}h1{font-size:30px;line-height:1.4}h2{font-size:23px;color:#135f6a}h3{font-size:18px}a{color:#006e88}nav{display:flex;flex-wrap:wrap;gap:8px 18px}.tag,.muted{font-size:14px;color:#526b7e}.note,.pending,.check{padding:13px 17px;border-left:4px solid #168884;background:#eff9f7;margin:15px 0}.pending{border-color:#b57a19;background:#fff6e2}.check{border-color:#4381b0;background:#f0f6fc}table{width:100%;border-collapse:collapse;margin:15px 0;font-size:15px}th,td{border:1px solid #cedce5;padding:10px;vertical-align:top;text-align:left}th{background:#edf5f8}code,pre{font-family:Consolas,"Microsoft YaHei",monospace}code{background:#eef3f6;padding:1px 4px}pre{background:#142b3b;color:#eef7fb;border-radius:8px;padding:17px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;font-size:14px}li{margin:7px 0}.scroll{overflow-x:auto}footer{font-size:14px;color:#526b7e;padding:12px}strong{color:#153e59}@media(max-width:650px){body{padding:10px}header,section{padding:18px}h1{font-size:25px}table{font-size:13px}td,th{padding:7px}}@media print{body{background:#fff;padding:0;font-size:11pt}header,section{border:0;padding:10px 0}h2,h3{break-after:avoid}tr,pre,.note,.pending{break-inside:avoid}a{color:inherit}pre{color:#111;background:#f3f3f3}nav{display:none}}
+</style>
+</head>
+<body>
+<header>
+<p class="tag">TANG PRIMER 20K · 2026-10-31 · 可离线打开</p>
+<h1>键位重定向：从修改到验证、恢复</h1>
+<p>按当前手机端源码说明 Note、Pad、CC 的实际行为。先用两个音的交换完成一次闭环，再逐项调整，便于定位问题。</p>
+<div class="pending"><strong>版本边界：</strong>本教程随 V047 配套源码与测试交付；编译状态见版本说明，尚未在板上验证新版。用户将拔下 ESP32；V047 两端新版拟交付，不能把以下操作步骤当作已完成的板上验证。已有 ESP32 重启问题已在 V046 修复。V047 新原创和弦曲JSON已落盘，和弦功能仍以最终发布验证记录为准。</div>
+<nav><a href="#meaning">三类映射</a><a href="#prepare">准备</a><a href="#swap">交换60/62</a><a href="#json">完整JSON</a><a href="#pads">四Pad</a><a href="#cc">四CC与软接管</a><a href="#raw">显示与声音</a><a href="#commit">提交与恢复</a><a href="#power">断电边界</a><a href="#score">单音及和弦曲谱</a><a href="#mistakes">排错</a></nav>
+</header>
+
+<section id="meaning"><h2>1．改的是哪一层</h2>
+<table><thead><tr><th>编辑项</th><th>索引 / 槽的含义</th><th>填入的数字</th><th>不随它改变的内容</th></tr></thead><tbody>
+<tr><td><code>notes[128]</code></td><td>索引是旋律通道输入的原始 MIDI 音符；例如 Note 60。</td><td>该键交给发声器的目标音高。默认 <code>notes[i]=i</code>。</td><td>物理按住高亮、逐音找键基准、光电扫弦选和弦仍用原始音高。</td></tr>
+<tr><td><code>pads[4]</code></td><td>槽0→Kick；1→Snare；2→Closed Hat；3→Open Hat。</td><td><strong>通道10（内部编号9）</strong>上触发对应鼓声的来源音符。</td><td>鼓声动作固定；不会把Pad变成旋律琴键，也不改发送通道。</td></tr>
+<tr><td><code>cc[4]</code></td><td>槽0→Delay；1→Chorus；2→Reverb；3→Volume。</td><td>控制固定功能的来源CC编号。</td><td>旋钮硬件发出的编号、软接管规则、保护CC的原作用。</td></tr>
+</tbody></table>
+<p class="note"><strong>单射就是不能重复。</strong>Note表有128项，每项为0..127整数且互不重复，因此它是0..127的一次完整置换。改60→62时必须把原来占用62的目标移走，例如同时改62→60。只覆写一项会被网页/ESP校验拒绝。底层接口的兼容说明不等于手机允许多键合并。</p>
+<p>音符编号0是合法音高，不是“静音”。映射表允许0..127；屏幕可见键域及自定义曲谱范围是41..72（F2–C5），初次操作请在这个范围内交换。旋律按当前默认接收通道1；Pad按通道10，不能只看编号相同就认为可互换。</p>
+</section>
+
+<section id="prepare"><h2>2．先保存能回退的基线</h2>
+<ol>
+<li><strong>连接：</strong>两板正常供电时，手机连接热点 <code>Tang20K-Music</code>，密码 <code>fpga2026</code>，打开 <a href="http://192.168.4.1/">192.168.4.1</a>，再进入 <a href="http://192.168.4.1/extensions">/extensions</a>。本地热点没有互联网，选择继续连接。</li>
+<li><strong>确认链路：</strong>等待 FPGA 已连接及有效实际回读。网页能打开只证明 ESP32 可访问。当前已拔ESP时，只阅读和准备文件，不能做手机硬件验收。</li>
+<li><strong>整理演奏状态：</strong>退出振荡器验证，暂停曲谱，选 KEY 输入模式，松开全部琴键与踏板，停止扫光电；录音需停止并排空。先演奏60、62各一次，记住原声音和松键结果。</li>
+<li><strong>读取并备份：</strong>在“运行时 Note / 四Pad / 四CC映射”点击“读取已保存 / 当前映射”，记下是否本次已确认生效。再点“导出映射 JSON”，自行保存为便于识别的备份名。导出的是编辑框内容，先读取才能避免备份未提交草稿。</li>
+<li><strong>确定演示起点：</strong>若已有自定义映射，备份后先按第8节提交FPGA默认映射。这样后面的60/62示例有明确起点；不需要恢复默认时，必须检查所有占用关系。</li>
+</ol>
+<p class="check">应看到：链路有效、没有录音作业、默认音能正常松开、备份已下载。任一项不符先排查，不用重新烧录来代替状态确认。</p>
+</section>
+
+<section id="swap"><h2>3．案例A：把60与62真正交换</h2>
+<table><thead><tr><th>步骤</th><th>操作与效果</th><th>验证 / 恢复</th></tr></thead><tbody>
+<tr><td>① 准备编辑框</td><td>在默认基线上点“编辑框恢复默认”。此时128项为原值，Pad为[36,38,37,39]，CC为[93,91,71,74]。</td><td>提示“尚未提交”；FPGA没有因为这个按钮改变。</td></tr>
+<tr><td>② 同时改两项</td><td>展开“编辑128个旋律 Note”，将 <strong>Note 60填62，Note 62填60</strong>，其余126项保持原值。手动编辑会将草稿标记为启用自定义映射。</td><td>此时只修改草稿。不要改完第一项就提交；那时62重复、60缺失。</td></tr>
+<tr><td>③ 提交</td><td>确认所有键和踏板已松开，点击“提交完整映射并保存”。确需主动停音时，先勾选“提交前发送并等待 FPGA Panic 确认”。</td><td>等待作业完成；“已入队”不算成功。若报忙，按第8节恢复空闲后重试。</td></tr>
+<tr><td>④ 再读取</td><td>点击“读取已保存 / 当前映射”。</td><td>应显示“FPGA本次连接已确认自定义映射生效”，并仍为60→62、62→60；它是ESP对本次提交的确认，不是逐项扫描FPGA RAM。</td></tr>
+<tr><td>⑤ 单键检查</td><td>新按原始60：声音应为62；新按原始62：声音应为60；原始64仍为64。每次松开并等待尾音。</td><td>屏幕按住高亮仍在原始键位。长Release或FX尾音不等于卡音，先关FX、缩短尾音作比较。</td></tr>
+<tr><td>⑥ 独立松键检查</td><td>同时按60和62，先松60再松62；换一次松键顺序。</td><td>先松60应释放其映射音62，仍按住的62所发60继续保持；反向同理。不要用踏板干扰这次验证。</td></tr>
+<tr><td>⑦ 恢复</td><td>松键并点“提交 FPGA 默认映射”，等完成后重新读取。</td><td>应显示已禁用自定义映射；60、62恢复原音。若要恢复原自定义配置，导入第2节备份并重新提交。</td></tr>
+</tbody></table>
+</section>
+
+<section id="json"><h2>4．可直接另存并导入的交换JSON</h2>
+<p>现成文件：<a href="../examples/V047/映射演示_交换C4与D4.json">映射演示_交换C4与D4.json</a>（60↔62）。该文件设有<code>panic_before_commit:true</code>，导入后会勾选提交前Panic；提交会先停音。下方手工示例为false，使用前按本次需要核对复选框。</p>
+<p>复制下面<strong>完整对象</strong>，保存为UTF-8的 <code>swap-60-62.json</code>。它只交换60/62，保留四Pad与四CC默认来源。文件导入仅填写编辑框，仍须点击提交。映射文件上限4096字节，不能填省略号、注释、重复字段或小数。</p>
+<pre id="mapping-example">{
+  "schema": "tang20k.mapping/1",
+  "disabled": false,
+  "panic_before_commit": false,
+  "notes": [
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
+    16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,
+    32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,
+    48,49,50,51,52,53,54,55,56,57,58,59,62,61,60,63,
+    64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,
+    80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,
+    96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,
+    112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127
+  ],
+  "pads": [36,38,37,39],
+  "cc": [93,91,71,74]
+}</pre>
+<p><code>disabled:false</code>启用完整自定义表；<code>disabled:true</code>走禁用自定义映射的流程，即使数组写了交换也不会启用交换。导入对象仍必须包含合法完整数组。不要把备份里的<code>true</code>误保留为新方案的开关。<code>panic_before_commit</code>是本次提交选项，不是永久演奏模式；点击“读取”后仍应人工检查复选框。</p>
+<p>默认恒等Note表<strong>启用</strong>与真正<strong>禁用</strong>自定义映射并不完全相同：启用时Pad只认指定四个来源；禁用时恢复旧版全部GM别名。需要原行为，请用“提交 FPGA 默认映射”。</p>
+</section>
+
+<section id="pads"><h2>5．案例B：交换两个Pad的鼓声动作</h2>
+<table><thead><tr><th>数组槽</th><th>网页标签</th><th>默认来源</th><th>禁用自定义后恢复的全部别名</th></tr></thead><tbody>
+<tr><td>pads[0]</td><td>Kick 来源</td><td>36</td><td>35、36</td></tr><tr><td>pads[1]</td><td>Snare 来源</td><td>38</td><td>38、40</td></tr><tr><td>pads[2]</td><td>Closed Hat 来源</td><td>37</td><td>37、42</td></tr><tr><td>pads[3]</td><td>Open Hat 来源</td><td>39</td><td>39、46</td></tr>
+</tbody></table>
+<ol>
+<li>先确认控制器实际发送通道10，且Pad音符确实是36、38、37、39。物理Pad排列可能不同；按钮位置不能代替来源消息确认。</li>
+<li>在完整映射中将Kick来源改38、Snare来源改36，Closed Hat保留37、Open Hat保留39，即 <code>pads:[38,36,37,39]</code>。四项各为0..127且互不重复。</li>
+<li>松键、停演奏，按第3节提交与读取。敲原始36应为Snare，原始38应为Kick；另两Pad保持原鼓声。四个来源逐个敲一遍，保留声音证据。</li>
+<li>恢复时用备份重新提交，或提交FPGA默认映射。恢复后35/36均可Kick、38/40均可Snare，镲声别名也恢复。</li>
+</ol>
+<p class="note">启用自定义时，仅配置的四个来源有效。即使只改了Note，Pad旧别名35、40、42、46也可能不再触发。Pad无声先查通道、来源和启用状态，不要去改<code>notes[36]</code>补救。</p>
+</section>
+
+<section id="cc"><h2>6．案例C：旋钮换功能与软接管</h2>
+<table><thead><tr><th>槽顺序（不可按数值排序）</th><th>默认来源</th><th>固定目标</th></tr></thead><tbody>
+<tr><td>cc[0]</td><td>93</td><td>Delay 强度</td></tr><tr><td>cc[1]</td><td>91</td><td>Chorus 强度</td></tr><tr><td>cc[2]</td><td>71</td><td>Reverb 强度</td></tr><tr><td>cc[3]</td><td>74</td><td>Volume 总音量</td></tr>
+</tbody></table>
+<p>四项为互不重复的0..127整数，禁止使用保护CC：<strong>1 / 7 / 64 / 120 / 121 / 123</strong>。即使底层仍能识别某些原动作，手机入口也不会允许占用；例如不能拿CC7填Volume槽来绕过限制。</p>
+<ol>
+<li><strong>换来源：</strong>确认控制器K1发93、K3发71。把Delay来源改71、Reverb来源改93，保留Chorus=91、Volume=74，即 <code>cc:[71,91,93,74]</code>。效果为K1控制Reverb、K3控制Delay。</li>
+<li><strong>提交并确认：</strong>执行空闲提交、再读取。此时旋钮仍发送原CC，FPGA把来源转给对应固定功能；改映射不会改键盘固件。</li>
+<li><strong>完成软接管：</strong>缓慢转到该功能保存值附近或扫过该值，再继续转一点，使数值真正变化。各效果独立保存强度，非当前效果不是追着当前Wet走。</li>
+<li><strong>比较声音：</strong>K1接管并变化后应选择Reverb，弹短音听残响；K3接管并变化后应选择Delay，弹短音听重复回声。K2验证Chorus起伏，K4验证总音量实际回读。</li>
+<li><strong>重新接管：</strong>手机切FX或改强度、改音量后，相关旋钮可能需再次扫过新的目标；按实际回读判断。恢复默认或导入原备份后，再检查各旋钮功能。</li>
+</ol>
+<p class="check">仅匹配目标值只取得接管资格，继续变化才选择效果；反复发送相同值不会抢占模式。MIDI是0..127，页面部分实际量是0..255，不能机械对比数字相等。三个FX共用引擎，一次启用一种；强度0为干声。换来源后，未被分配的旧旋钮CC不会继续作为该旋钮功能生效。</p>
+</section>
+
+<section id="raw"><h2>7．案例D：显示、逐音比较与声音是不同路径</h2>
+<p>保留60↔62映射，先用原始音高60的单音目标做检查：</p>
+<table><thead><tr><th>操作</th><th>应观察到的结果</th><th>含义</th></tr></thead><tbody>
+<tr><td>KEY模式按下原始60</td><td>物理按住高亮仍对应60；声音是62。</td><td>高亮监视输入原始音符，音频使用映射结果。</td></tr>
+<tr><td>逐音目标60出现后，新按原始62</td><td>虽然它发出60，仍不能因此满足原始60目标。</td><td>不能靠听到目标音判断找键是否正确。</td></tr>
+<tr><td>松开后，新按原始60</td><td>满足原始60目标；其手动发声仍映成62。</td><td>逐音比较在Note映射前进行；提前按住、旧按键、Pad或velocity=0消息不代替新正确按键。</td></tr>
+<tr><td>STRUM模式按住原始60、64、67后扫光电</td><td>光电选和弦仍以原始60、64、67为依据。</td><td>光电生成的音、局部输入不经过这张MIDI旋律Note表。HYBRID可同时出现映射键盘声与原音高光电声。</td></tr>
+<tr><td>自动演奏曲谱</td><td>FPGA按曲谱音高发声。</td><td>自动演奏不是外部MIDI输入，不用键位交换代替曲谱移调。</td></tr>
+</tbody></table>
+<p>完成后恢复默认映射，再录制正常教学片段。否则“画面高亮与耳听音高不同”会干扰观众理解。</p>
+</section>
+
+<section id="commit"><h2>8．提交、Panic、禁用与恢复的准确区别</h2>
+<table><thead><tr><th>动作</th><th>实际效果</th><th>如何收尾</th></tr></thead><tbody>
+<tr><td>读取、导入、编辑、导出</td><td>读取保存/已知值或修改本地草稿；不自动提交。</td><td>需要应用时另点提交；要放弃草稿则重新读取。</td></tr>
+<tr><td>编辑框恢复默认</td><td>只加载默认草稿，标记disabled=true。</td><td>要改变FPGA，仍需提交；后续手动编辑任一数值会重新标记启用。</td></tr>
+<tr><td>提交完整映射并保存</td><td>发送完整表到暂存区域，最终提交被接受后原子生效，然后保存ESP文件。</td><td>等最终作业结果，再读取本次确认；不能只拍进度或请求ACK。</td></tr>
+<tr><td>勾选提交前Panic</td><td>先明确请求并等待停音确认，再提交/禁用。会清持续音并停止导奏，涉及原有程序/弯音/调制等复位语义。</td><td>提交后检查音色与控制值，松开后重新按键；需要继续曲谱时重新开始。</td></tr>
+<tr><td>未勾选Panic</td><td>不是无缝热切换。仍要求演奏空闲和MIDI安全边界；接受映射提交本身也清理旧音与输入状态。</td><td>松开琴键和踏板、停止光电及自动演奏，等待尾音与忙状态消退后提交。</td></tr>
+<tr><td>提交 FPGA 默认映射</td><td>执行MAP_DISABLE，禁用自定义表，恢复恒等旋律、默认CC及全部Pad GM别名；成功后保存默认状态。</td><td>重新读取确认，再试60、62和各Pad。它不是只给128项填回原值。</td></tr>
+</tbody></table>
+<h3>三个可照做的恢复场景</h3>
+<ol>
+<li><strong>报“FPGA忙”：</strong>停止录音并排空、暂停导奏、退出测试、松开键与踏板、停止旋钮/扫弦输入。等待后重试；需要强制停音再勾Panic。Panic也不能绕过录音占用或断链。</li>
+<li><strong>超时 / Panic未确认：</strong>不要把新表当作已生效。确认链路，读取状态；若仍不确定，空闲时重新提交目标完整表或默认映射，直到有最终确认，再实弹。断链期间不能保证自己看到的旧状态仍有效。</li>
+<li><strong>“FPGA映射已生效，但Flash保存失败”：</strong>这时不能笼统说“什么也没改”。先导出要保留的完整配置，处理存储问题后重提并确认；需要原行为则提交默认。不要格式化存储来当作恢复映射按钮。</li>
+</ol>
+</section>
+
+<section id="power"><h2>9．保存、重启与断电边界</h2>
+<table><thead><tr><th>位置 / 场景</th><th>保留什么</th><th>回来后做什么</th></tr></thead><tbody>
+<tr><td>手机编辑框</td><td>未提交草稿不等于ESP保存；刷新页面可能丢失。</td><td>重要方案导出JSON到手机/电脑。</td></tr>
+<tr><td>ESP32 LittleFS</td><td>成功保存的映射含启用/禁用状态，正常断电后可读取；曲谱文件与最近一段录音也存这里。</td><td>看保存结果，保留外部备份；不要在写入时断电。</td></tr>
+<tr><td>FPGA复位 / 两板断电</td><td>运行时映射复位为禁用；自定义曲谱RAM需重新上传/激活。ESP有文件不等于FPGA已应用。</td><td>重新连接，读取已保存表，再提交并验证；曲谱也重新上传保存的JSON。</td></tr>
+<tr><td>仅ESP重启 / 拔掉ESP</td><td>若FPGA供电及复位未受影响，已有FPGA运行状态可继续；ESP重启读取保存文件，但不会据此确认或自动恢复FPGA映射。</td><td>重新连接后的active_confirmed初始不是成功证明。读取、按需要重提并实弹，不能把失去确认直接当作映射已失效。</td></tr>
+<tr><td>下载或重启后播放旧WAV</td><td>V046允许HTTP读取已保存录音；重启后做文件结构检查，不是重新完成一次FPGA端到端CRC验证。</td><td>展示当次录音通过时的结果；旧文件播放应标明回放。USB读取有当前启动会话限制。</td></tr>
+<tr><td>LittleFS初始化</td><td>会清空该分区的曲谱、映射和录音；不是恢复某一张表。</td><td>仅按明确需要使用，先下载备份。已有重启问题在V046修复，不能把初始化当成常规步骤。</td></tr>
+</tbody></table>
+<p class="note">“已保存”“作业已入队”“FPGA本次已确认”是三个不同结论。重新读取的映射是ESP保存/已知配置；最终还要用实际按键和松键验证。</p>
+</section>
+
+<section id="score"><h2>10．配合逐音验证的单音示例与V047和弦边界</h2>
+<h3>无需升级即可给V046上传的单音示例</h3>
+<p>现成文件：<a href="../examples/V047/上传验证_兼容V046单音.json">上传验证_兼容V046单音.json</a>，包含16个单音、8拍、100 BPM，使用score/1，无需升级到V047。下方三音序列另用于简短键位核对。</p>
+<p>以下是自编三音检查序列，不引用版权曲谱。在曲谱区粘贴或导入（V046标题为“自定义单音曲谱”，V047开发页面为“自定义曲谱 · 最多四音和弦”），点击“保存并上传 FPGA”，等完成后选择自定义曲及所需模式，再开始。默认有两拍预备。上传曲是额外自定义槽，不替换三首预置曲；再次上传会更新这个自定义槽。</p>
+<pre id="score-v46">{
+  "schema":"tang20k.score/1",
+  "title":"键位核对三音",
+  "bpm":100,
+  "events":[
+    {"pitch":60,"start":0,"duration":1,"velocity":90},
+    {"pitch":62,"start":1,"duration":1,"velocity":90},
+    {"pitch":64,"start":2,"duration":1,"velocity":90}
+  ]
+}</pre>
+<p>V046单音格式：1..63事件，音高41..72、力度1..127、BPM 30..240；start/duration以拍为单位，必须落在1/4拍网格。按起始时间排列，不重叠；旋律最多61拍，加固定两拍预备共不超过63拍。也支持整数<code>start_quarter / duration_quarters</code>，这里的quarter是一拍的四分之一；不要混用两套字段。JSON上限16384字节。</p>
+<h3>V047开发目标：1..4音同起止和弦</h3>
+<div class="pending"><strong>需配套新FPGA与ESP47，尚待最终发布验证。</strong>新原创曲已保存为<a href="../examples/V047/霓虹阶梯_黑白键双音四音_V047.json">霓虹阶梯_黑白键双音四音_V047.json</a>：59组、144音、32拍、116 BPM，作为额外自定义曲，不替换预置三曲。V046旧单音页面不能用“把多个音填在相同start”方式冒充和弦；也不能宣称V047已烧录。以下为确定的V047格式约定，开发源码已加入解析，不是现有硬件成功记录。</div>
+<ul>
+<li>新schema为<code>tang20k.score/2</code>，events每组使用<code>pitches:[...]</code>，含1..4个41..72范围内<strong>升序、唯一</strong>音高。</li>
+<li>同组共享<code>start / duration / velocity</code>，共同起止；最多63组，按时间顺序排列，不同组不能重叠。不是63个音的总数，也不是可任意叠加的多轨文件。</li>
+<li>兼容旧<code>tang20k.score/1</code>单音。固定BPM与自动演奏计划支持和弦；固定BPM照常不等待、不替人发声，自动演奏按组发声。</li>
+<li>逐音和弦必须为当前目标<strong>新按过目标音，并且全部目标键同时保持</strong>才推进。依次点完并松开不算多键同时按；提前一直按住、只踩踏板延音不替代新按键。</li>
+<li>比较仍以原始音高为准。拍摄正式和弦练习前恢复默认Note映射；新曲片段、显示及上述边界均以最终配套版本验收为准。</li>
+</ul>
+<pre id="score-v47">{
+  "schema":"tang20k.score/2",
+  "title":"和弦格式核对片段（待V047验证）",
+  "bpm":100,
+  "events":[
+    {"pitches":[60,64,67],"start":0,"duration":1,"velocity":90},
+    {"pitches":[62,65,69],"start":1,"duration":1,"velocity":90}
+  ]
+}</pre>
+<p>上例仅为自编格式检查片段；完整原创演示曲使用上方“霓虹阶梯”JSON链接，实机效果仍待最终发布验证。网页上传的是约定JSON，不直接解析任意MIDI或音频。本文不提供《Bad Apple!!》或其他版权作品转谱；用户提供有权使用的文件后可另行转换。</p>
+</section>
+
+<section id="mistakes"><h2>11．易错点速查</h2>
+<table><thead><tr><th>现象</th><th>原因 / 处理</th></tr></thead><tbody>
+<tr><td>只改60→62就报错</td><td>62被用两次。默认起点应同时62→60；已有自定义表则先寻找目标的原占用者。</td></tr>
+<tr><td>JSON里有交换，声音仍原样</td><td>检查disabled是否为true、是否只导入未提交、是否已重启FPGA、实际输入是否为旋律通道、是否处在STRUM。</td></tr>
+<tr><td>映射后屏幕仍亮原键</td><td>原始输入显示的预期行为。不要把它当成提交失败。</td></tr>
+<tr><td>目标音听起来正确但逐音不推进</td><td>比较的是原始键，且要求新的正确按键；检查实际模式、是否处在演奏页及暂停状态。</td></tr>
+<tr><td>改Note后某些Pad别名不响</td><td>整表启用使Pad仅识别四个指定来源；提交默认映射恢复全部旧别名。</td></tr>
+<tr><td>CC填写7或64报错</td><td>保护CC禁止占用；四槽顺序是Delay、Chorus、Reverb、Volume，不能按CC大小排序。</td></tr>
+<tr><td>旋钮刚动不变、手机调完又不跟随</td><td>先扫过对应保存目标，再改变数值；查看实际回读，不用反复提交映射解决软接管。</td></tr>
+<tr><td>点“编辑框恢复默认”后仍映射</td><td>尚未提交。需要真正恢复则点“提交 FPGA 默认映射”，等待完成再读。</td></tr>
+<tr><td>停音后重新按键才响</td><td>Panic/提交清理了按住状态；先松开再按。Panic停止导奏后也需重新开始。</td></tr>
+<tr><td>有文件却显示未确认</td><td>存储与运行时状态不同；按第9节重连、重提并验证。</td></tr>
+</tbody></table>
+<p class="check"><strong>一次验收应留下：</strong>导出的完整JSON、最终作业结果、读取后的启用/禁用确认、60/62双向声音和独立松键记录、四Pad与CC检查结果。未完成的实机项写“待测”，不能用源码阅读替代。</p>
+</section>
+
+<footer>核对依据：<a href="../esp32_phone/v041_core.h">v041_core.h</a>、<a href="../esp32_phone/v041_json.h">v041_json.h</a>、<a href="../esp32_phone/v041_ui.h">v041_ui.h</a>、<a href="../esp32_phone/v041_runtime.h">v041_runtime.h</a>、<a href="../PHONE_EXTENSIONS_INTERFACE.txt">PHONE_EXTENSIONS_INTERFACE.txt</a>及<a href="V046_手机控制与显示屏指南.html">V046指南</a>；软接管核对src/midi_control_bank.v。V047和弦段采用当前开发约定，发布前需与最终代码及验证记录复核。另见<a href="V047_演示视频拍摄参考.html">演示视频拍摄参考</a>。</footer>
+</body>
+</html>

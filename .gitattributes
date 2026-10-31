@@ -10,3 +10,5 @@ tests/tb_hdmi_instrument_dashboard.v -whitespace
 tests/tb_hdmi_live_display.v -whitespace
 # Keep vendor timing/report table alignment in archived evidence.
 verification/*.txt -whitespace
+# Preserve the exact vendor timing-report alignment and final blank lines.
+verification/*.tr -whitespace

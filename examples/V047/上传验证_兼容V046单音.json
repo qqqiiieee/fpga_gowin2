@@ -1,0 +1,103 @@
+{
+  "schema": "tang20k.score/1",
+  "title": "上传验证 · 黑白键单音",
+  "bpm": 100,
+  "events": [
+    {
+      "pitch": 53,
+      "start": 0.0,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 56,
+      "start": 0.5,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 60,
+      "start": 1.0,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 61,
+      "start": 1.5,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 63,
+      "start": 2.0,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 65,
+      "start": 2.5,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 68,
+      "start": 3.0,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 67,
+      "start": 3.5,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 65,
+      "start": 4.0,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 63,
+      "start": 4.5,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 61,
+      "start": 5.0,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 60,
+      "start": 5.5,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 58,
+      "start": 6.0,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 56,
+      "start": 6.5,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 55,
+      "start": 7.0,
+      "duration": 0.5,
+      "velocity": 96
+    },
+    {
+      "pitch": 53,
+      "start": 7.5,
+      "duration": 0.5,
+      "velocity": 96
+    }
+  ]
+}

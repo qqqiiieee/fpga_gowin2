@@ -1,3 +1,5 @@
+// V040：PMOD0/1/2前两组信号脚全部停用；I2S BCK=B12，LRCK=C12，DIN=B13。
+// V040：ADS SCL→PMOD3 N9，SDA→PMOD3 N7；D14/E15疑似短接，留作未使用输入。
 // V030：PMOD1疑似受损，按键全部迁移至PMOD3；以本文件IO_LOC为准。
 //Copyright (C)2014-2026 Gowin Semiconductor Corporation.
 //All rights reserved. 
@@ -29,23 +31,15 @@ IO_LOC "ui_buttons_n[2]" N6;
 IO_PORT "ui_buttons_n[2]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
 IO_LOC "ui_buttons_n[3]" D11;
 IO_PORT "ui_buttons_n[3]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
-IO_LOC "amp_bck" B14;
+IO_LOC "amp_bck" B12;
 IO_PORT "amp_bck" IO_TYPE=LVCMOS33 PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
-IO_LOC "amp_lrc" A15;
+IO_LOC "amp_lrc" C12;
 IO_PORT "amp_lrc" IO_TYPE=LVCMOS33 PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
 IO_LOC "amp_din" B13;
 IO_PORT "amp_din" IO_TYPE=LVCMOS33 PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
 
-// ADS1115, PMOD2 D14/E15, 3.3V open drain, external/module pull-ups.
-// 旧MCP3208端口保留但TOUCH_ENABLE默认0；不再作为菜单控制来源。
-IO_LOC "touch_sclk" T6;
-IO_PORT "touch_sclk" IO_TYPE=LVCMOS33 PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
-IO_LOC "touch_mosi" P6;
-IO_PORT "touch_mosi" IO_TYPE=LVCMOS33 PULL_MODE=NONE DRIVE=8 BANK_VCCIO=3.3;
-IO_LOC "touch_miso" R8;
-IO_PORT "touch_miso" IO_TYPE=LVCMOS33 PULL_MODE=DOWN BANK_VCCIO=3.3;
-IO_LOC "touch_cs_n" T7;
-IO_PORT "touch_cs_n" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+// ADS1115, PMOD3 N9/N7, 3.3V open drain, external/module pull-ups.
+// 旧MCP3208四个物理端口已移除，避免触及PMOD0疑似受损组。
 // 专用MIDI接收与两路SEN0503；与调试115200bps USB-UART完全分离。
 IO_LOC "midi_rx" T8;
 IO_PORT "midi_rx" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
@@ -54,9 +48,9 @@ IO_PORT "optical_beams[0]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
 IO_LOC "optical_beams[1]" P9;
 IO_PORT "optical_beams[1]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
 
-IO_LOC "adc_scl" D14;
+IO_LOC "adc_scl" N9;
 IO_PORT "adc_scl" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
-IO_LOC "adc_sda" E15;
+IO_LOC "adc_sda" N7;
 IO_PORT "adc_sda" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
 
 IO_LOC "timbre_led_n[2]" L14;
@@ -94,3 +88,15 @@ IO_LOC "phone_uart_rx" L9;
 IO_PORT "phone_uart_rx" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
 IO_LOC "phone_uart_tx" N8;
 IO_PORT "phone_uart_tx" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+
+// V040: one preserved reset-release FF per HDMI serializer, placed near its IO.
+// These are reset data nets, not clocks; keep them off automatic long wires.
+// The real recovery/removal checks in matrix_clock.sdc remain enabled.
+INS_LOC "u_display/u_tx/serializer_reset_sync_clock_s1" R2C16[0][A];
+INS_LOC "u_display/u_tx/serializer_reset_sync_lane0_s1" R2C20[0][A];
+INS_LOC "u_display/u_tx/serializer_reset_sync_lane1_s1" R2C24[0][A];
+INS_LOC "u_display/u_tx/serializer_reset_sync_lane2_s1" R2C30[0][A];
+CLOCK_LOC "u_display/u_tx/serializer_reset_sync_clock" LOCAL_CLOCK;
+CLOCK_LOC "u_display/u_tx/serializer_reset_sync_lane0" LOCAL_CLOCK;
+CLOCK_LOC "u_display/u_tx/serializer_reset_sync_lane1" LOCAL_CLOCK;
+CLOCK_LOC "u_display/u_tx/serializer_reset_sync_lane2" LOCAL_CLOCK;

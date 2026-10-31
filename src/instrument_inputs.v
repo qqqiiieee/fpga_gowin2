@@ -21,7 +21,7 @@
 module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_ENABLE=0,
     parameter PRESSURE_EXPRESSION_ENABLE=0,
     parameter MIDI_ENABLE=0,parameter OPTICAL_ENABLE=0,parameter MIDI_CHANNEL=0,
-    parameter DISPLAY_TOUCH_ONLY=0,parameter TOUCH_DIAG_HOLD_CYCLES=13500000)(
+    parameter DISPLAY_TOUCH_ONLY=0,parameter TOUCH_DIAG_HOLD_CYCLES=13500000,parameter MAPPING_ENABLE=0)(
     input clk,input rst_n,
     output [3:0] matrix_rows,input [3:0] matrix_cols,
     inout adc_scl,inout adc_sda,input uart_rx,output uart_tx,
@@ -52,7 +52,17 @@ module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_EN
     input phone_set_valid,input [7:0] phone_param,phone_value,phone_query_param,
     output [7:0] phone_query_value,output [13:0] monitor_external_diagnostic,
     // 直通物理MIDI held监视：F2..C5（41..72）及范围外标志，仅供钢琴卷帘显示。
-    output [31:0] monitor_piano_keys32,output monitor_piano_outside
+    output [31:0] monitor_piano_keys32,output monitor_piano_outside,
+    output [7:0] monitor_midi_velocity,output signed [8:0] monitor_midi_bend,
+    output [6:0] monitor_midi_modulation,
+    // Mapping config is staged externally. Inputs must be stable at commit handshake.
+    // addr={bank,index[6:0]}; writes/commit are accepted ONLY with their ready high.
+    input wire mapping_enable, mapping_bank, mapping_commit,
+    input wire mapping_wr_en, input wire [7:0] mapping_wr_addr,
+    input wire [6:0] mapping_wr_data,
+    input wire [27:0] mapping_pad_notes, mapping_cc_numbers,
+    output wire mapping_wr_ready, mapping_commit_ready, mapping_commit_ack,
+    output wire monitor_note_receipt, output wire [6:0] monitor_raw_note
 );
     localparam ADC_STALE_CYCLES=13500000; // 0.5s 没有完整 ADC 结果视为失联。
     wire remote_active,remote_zero,remote_park,physical_zero_test;
@@ -302,7 +312,12 @@ module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_EN
     performance_input_hub #(.MIDI_ENABLE(MIDI_ENABLE),.OPTICAL_ENABLE(OPTICAL_ENABLE),
         .PRESSURE_EXPRESSION_ENABLE(PRESSURE_EXPRESSION_ENABLE),
         .MIDI_CHANNEL(MIDI_CHANNEL),.CONTROL_BANK_ENABLE(DISPLAY_TOUCH_ONLY),
-        .PHONE_VOLUME_ENABLE(DISPLAY_TOUCH_ONLY)) performance(
+        .PHONE_VOLUME_ENABLE(DISPLAY_TOUCH_ONLY),.MAPPING_ENABLE(MAPPING_ENABLE)) performance(
+        .mapping_enable(mapping_enable),.mapping_bank(mapping_bank),.mapping_commit(mapping_commit),
+        .mapping_wr_en(mapping_wr_en),.mapping_wr_addr(mapping_wr_addr),.mapping_wr_data(mapping_wr_data),
+        .mapping_pad_notes(mapping_pad_notes),.mapping_cc_numbers(mapping_cc_numbers),
+        .mapping_wr_ready(mapping_wr_ready),.mapping_commit_ready(mapping_commit_ready),
+        .mapping_commit_ack(mapping_commit_ack),
         .clk(clk),.rst_n(rst_n),.sample_tick(sample_tick),.allow_performance(allow_performance),
         .suppress_controls(suppress_controls),.remote_active(remote_active),.digital_zero(digital_zero_test),
         .midi_rx(midi_rx),.optical_beams(optical_beams),
@@ -320,6 +335,9 @@ module instrument_inputs #(parameter VIRTUAL_ADC_CYCLES=63390,parameter TOUCH_EN
         .diagnostic_status(external_diagnostic),
         .monitor_piano_keys32(monitor_piano_keys32),.monitor_piano_outside(monitor_piano_outside),
         .strum_mode(ui_strum_mode),.manual_panic(ui_panic),
+        .monitor_midi_velocity(monitor_midi_velocity),.monitor_midi_bend(monitor_midi_bend),
+        .monitor_midi_modulation(monitor_midi_modulation),
+        .monitor_note_receipt(monitor_note_receipt),.monitor_raw_note(monitor_raw_note),
         .knob_volume_valid(knob_volume_valid),.knob_volume(knob_volume),
         .cc_valid(cc_valid),.cc_number(cc_number),.cc_value(cc_value),
         .hat_closed_hit(hat_closed_hit),.hat_open_hit(hat_open_hit),

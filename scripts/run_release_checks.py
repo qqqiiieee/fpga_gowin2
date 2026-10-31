@@ -1,35 +1,42 @@
-"""Current release checks, offline only; --ui and --web add rendering/browser checks."""
+"""Portable V047 release smoke checks. No build, programming, serial or network."""
 from pathlib import Path
-import argparse,json,subprocess,sys
-from datetime import datetime,timezone
+from datetime import datetime, timezone
+import json, subprocess, sys, shutil
+from toolchain import find_icarus
 
 ROOT=Path(__file__).resolve().parents[1]
+
 def main():
-    parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--ui',action='store_true',help='Include literal-text pixels and coherent status CDC')
-    parser.add_argument('--web',action='store_true',help='Include phone browser tests; npm dependencies and Chromium required')
-    args=parser.parse_args()
+    tools=find_icarus()
+    node=shutil.which('node')
+    if not node:raise SystemExit('Node.js is required for current phone JSON checks')
+    out=ROOT/'validation/release_smoke';out.mkdir(parents=True,exist_ok=True)
+    cases={
+        'modes':['guide_chord_modes.v'],
+        'events':['guide_chord_events.v','voice_allocator.v'],
+        'score_pixels':['phone_extension_state.v','piano_roll_guide.v',
+                        'piano_roll_renderer.v','custom_score_ram.v','piano_roll_score.v']}
     commands=[[sys.executable,'scripts/verify_release.py']]
-    for name in ['generate_ui_text','generate_ui_lookup','generate_odd_half_rom','generate_dual_timbres','generate_touch_centers']:
-        commands.append([sys.executable,'scripts/'+name+'.py','--check'])
-    commands.extend([[sys.executable,'scripts/check_midi_note_table.py'],
-                     [sys.executable,'scripts/run_v034_tests.py'],
-                     [sys.executable,'tests/phone_bridge/run_native.py']])
-    if args.ui:
-        commands.extend([[sys.executable,'scripts/run_hdmi_hybrid_tests.py'],
-                         [sys.executable,'scripts/run_four_key_ui_render.py']])
-    if args.web:commands.append(['node','tests/phone_bridge/web_ui.test.cjs'])
+    for name,sources in cases.items():
+        binary=out/(name+'.vvp')
+        commands.extend([[str(tools.iverilog),'-g2012','-Wall','-s','tb_'+name,
+            '-o',str(binary),*['src/'+f for f in sources],
+            'tests/chords_v047/tb_'+name+'.v'],[str(tools.vvp),str(binary)]])
+    commands.append([node,'scripts/check_score_examples.cjs'])
     results=[]
     for cmd in commands:
-        print('CHECK', ' '.join(cmd),flush=True)
-        r=subprocess.run(cmd,cwd=ROOT)
-        results.append({'command':cmd,'exit_code':r.returncode})
-        if r.returncode:break
-    out=ROOT/'validation';out.mkdir(exist_ok=True)
-    report={'version':'V034','passed':len(results)==len(commands) and all(r['exit_code']==0 for r in results),
-            'tests':results,'with_ui':args.ui,'with_web':args.web,
-            'finished_utc':datetime.now(timezone.utc).isoformat(),'hardware_accessed':False}
-    (out/'release_checks.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    print('RELEASE_CHECKS_'+('PASS' if report['passed'] else 'FAIL'),flush=True)
-    return 0 if report['passed'] else 1
+        p=subprocess.run(cmd,cwd=ROOT,env=tools.environment(),capture_output=True,
+                         text=True,encoding='utf-8',errors='replace',timeout=120)
+        results.append({'command':cmd,'exit_code':p.returncode,'stdout':p.stdout,'stderr':p.stderr})
+        print(p.stdout[-1800:],end='',flush=True)
+        if p.returncode:
+            print(p.stderr[-2400:],file=sys.stderr);break
+    passed=len(results)==len(commands) and all(x['exit_code']==0 for x in results)
+    report={'version':'V047','passed':passed,'scope':'identity, three chord RTL benches, current phone score codec',
+            'hardware_accessed':False,'full_project_built':False,'tests':results,
+            'finished_utc':datetime.now(timezone.utc).isoformat()}
+    (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print('RELEASE_SMOKE_'+('PASS' if passed else 'FAIL'))
+    return 0 if passed else 1
+
 if __name__=='__main__':raise SystemExit(main())

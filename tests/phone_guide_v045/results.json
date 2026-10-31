@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "native",
+      "passed": true,
+      "exit_code": 0
+    },
+    {
+      "name": "ui",
+      "passed": true,
+      "exit_code": 0
+    },
+    {
+      "name": "legacy_ui",
+      "passed": true,
+      "exit_code": 0
+    }
+  ],
+  "preservation_passed": true,
+  "utc": "2026-10-31T10:28:52.993317+00:00",
+  "concurrent_changes_outside_this_task": [
+    "esp32_phone/web_ui.h"
+  ],
+  "scope": "Actual runtime functions extracted verbatim; native UART/FPGA model and embedded JS VM DOM. No ESP32/FPGA firmware build, hardware, flash, or network validation.",
+  "source_sha256": {
+    "v041_runtime.h": "8e1d122251eeffa93a2929403bf980bfc23e1004bbbdb4919c88c34af4550a77",
+    "v041_ui.h": "3c10c7e86389271054186389b98af2569f38f8981465af1f19ade23731d2acd1",
+    "esp32_phone.ino": "d346ced3f51ba8c10df196e3e07448a95a55c393cce96808ed39ca521a7e9fbd"
+  }
+}

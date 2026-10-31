@@ -1,0 +1,131 @@
+{
+  "passed": false,
+  "final_frozen_comparison": false,
+  "baseline_selfcheck": true,
+  "mutation": null,
+  "source_sha256_before": {
+    "src/midi_keyboard.v": "3d90a0eaf7234d6f790376a64299af6acf68e38d7a62155db3fae9f8138905ac",
+    "src/midi_uart_rx.v": "3b7a51e848f26dd21caff5808978c03e2d50a4b5548e7dcde19aad114938bab9",
+    "tests/midi_bitmap_v047/midi_keyboard_before.v": "08c12d1f527fdb8d2e74dd57df86b8e744931176d47f398d069ae6be84a2a58d",
+    "tests/midi_bitmap_v047/tb_midi_bitmap_diff.sv": "14dcbfc5240a6855116bedcc0933b66a5c525ebbcf5d37a795e1cc1303aa15ec",
+    "tests/midi_bitmap_v047/run_diff.py": "88aba1815d6a9abc9809b06edb7a57e96f3dbb7cf065aece570174c53b5f7ad1"
+  },
+  "source_sha256_after": {
+    "src/midi_keyboard.v": "3d90a0eaf7234d6f790376a64299af6acf68e38d7a62155db3fae9f8138905ac",
+    "src/midi_uart_rx.v": "3b7a51e848f26dd21caff5808978c03e2d50a4b5548e7dcde19aad114938bab9",
+    "tests/midi_bitmap_v047/midi_keyboard_before.v": "08c12d1f527fdb8d2e74dd57df86b8e744931176d47f398d069ae6be84a2a58d",
+    "tests/midi_bitmap_v047/tb_midi_bitmap_diff.sv": "14dcbfc5240a6855116bedcc0933b66a5c525ebbcf5d37a795e1cc1303aa15ec",
+    "tests/midi_bitmap_v047/run_diff.py": "88aba1815d6a9abc9809b06edb7a57e96f3dbb7cf065aece570174c53b5f7ad1"
+  },
+  "all_snapshotted_inputs_unchanged": true,
+  "tool_sha256": {
+    "iverilog.exe": "803b8844af2cc8ed70b5f08b07ffa749901280e81339617ca3e72cbbb852bd2b",
+    "vvp.exe": "e2f442f4d5aa76e55c85c3ff77e4446fbfdb9946b7cfe8a2dff87f275da17b62"
+  },
+  "compared_outputs": [
+    "event_valid",
+    "event_on",
+    "event_off",
+    "event_note",
+    "event_velocity",
+    "held_notes",
+    "program_valid",
+    "timbre_select",
+    "volume_valid",
+    "volume",
+    "bend_valid",
+    "bend",
+    "modulation",
+    "hit0",
+    "hit1",
+    "drum_velocity0",
+    "drum_velocity1",
+    "panic",
+    "framing_error",
+    "overflow",
+    "received_count",
+    "cc_valid",
+    "cc_number",
+    "cc_value",
+    "hat_closed_hit",
+    "hat_open_hit",
+    "hat_closed_velocity",
+    "hat_open_velocity",
+    "mapping_wr_ready",
+    "mapping_commit_ready",
+    "mapping_commit_ack",
+    "receipt_note_on",
+    "receipt_note"
+  ],
+  "compared_output_count": 33,
+  "sampling": "Every clock: pre-edge handshake values and post-NBA registered/combinational values, case inequality plus X rejection.",
+  "clock_hz": 1000000,
+  "uart_baud": 31250,
+  "uart_bit_cycles": 32,
+  "mapping_idle_cycles": 320,
+  "active_sense_ms": 20,
+  "active_sense_cycles": 20000,
+  "mapping_enable_parameter": 1,
+  "runtime_mapper_modes": [
+    "disabled",
+    "enabled identity",
+    "enabled shifted bank1 directed raw-note case"
+  ],
+  "scope": "Serial 8N1 pins, public ready/suppress/mapping ports only; read-only baseline internal flags used solely for collision coverage. No forced signals, no synthesized design, no hardware or network.",
+  "compile": {
+    "command": [
+      "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+      "-g2012",
+      "-Wall",
+      "-s",
+      "tb_midi_bitmap_diff",
+      "-I",
+      "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\midi_bitmap_v047\\results\\20261031T113751_322201Z",
+      "-o",
+      "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\midi_bitmap_v047\\results\\20261031T113751_322201Z\\test.vvp",
+      "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\midi_bitmap_v047\\results\\20261031T113751_322201Z\\reference_derived.v",
+      "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\midi_bitmap_v047\\results\\20261031T113751_322201Z\\current_derived.v",
+      "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\midi_bitmap_v047\\results\\20261031T113751_322201Z\\snapshot\\src\\midi_uart_rx.v",
+      "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\midi_bitmap_v047\\results\\20261031T113751_322201Z\\snapshot\\tests\\midi_bitmap_v047\\tb_midi_bitmap_diff.sv"
+    ],
+    "returncode": 0,
+    "seconds": 0.516
+  },
+  "runs": [
+    {
+      "command": [
+        "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+        "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\midi_bitmap_v047\\results\\20261031T113751_322201Z\\test.vvp",
+        "+SEED=1"
+      ],
+      "returncode": 1,
+      "seconds": 53.829,
+      "seed": 1,
+      "log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\midi_bitmap_v047\\results\\20261031T113751_322201Z\\run_seed_1.log",
+      "metrics": {},
+      "case_passes": [
+        "mode=0 phase=all128_duplicate_on_off_velocity0 cycle=169377",
+        "mode=0 phase=sustain_all128_deferred_off_retrigger cycle=339910",
+        "mode=0 phase=scan_backlog_retrigger_cancel_and_queued_off_order cycle=388599",
+        "mode=0 phase=cc123_full_release_backpressure_controls cycle=475584",
+        "mode=0 phase=suppress_same_edge_pop_on_and_rearm cycle=487223",
+        "mode=0 phase=suppress_same_edge_pop_off cycle=489881",
+        "mode=0 phase=suppress_same_edge_key_on_key_off cycle=498643",
+        "mode=0 phase=suppress_panic_oldheld_priority cycle=508822",
+        "mode=0 phase=fifo_full_pop_push_same_edge cycle=525895",
+        "mode=0 phase=fifo_overflow_off_and_on_then_recovery cycle=562569",
+        "mode=0 phase=cc120_preempts_full_fifo_and_cancels_cc cycle=579626",
+        "mode=0 phase=control_pad_bend_running_status_sysex_filter cycle=608043",
+        "mode=0 phase=active_sensing_refresh_timeout_transport_reset cycle=689400",
+        "mode=0 phase=bad_stop_break_recovery cycle=698329",
+        "mode=0 phase=seeded_mixed_uart_backpressure_suppress cycle=932571",
+        "mode=1 phase=all128_duplicate_on_off_velocity0 cycle=1101948",
+        "mode=1 phase=sustain_all128_deferred_off_retrigger cycle=1272607"
+      ],
+      "output_changes": {},
+      "negative_control_detected": false,
+      "passed": false
+    }
+  ],
+  "result_path": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\midi_bitmap_v047\\results\\20261031T113751_322201Z\\results.json"
+}

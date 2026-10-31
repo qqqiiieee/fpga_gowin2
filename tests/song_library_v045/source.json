@@ -1,0 +1,75 @@
+{
+  "schema": "tang20k.builtin-song-source/1",
+  "ticks_per_beat": 64,
+  "quarters_per_beat": 4,
+  "count_in_beats": 2,
+  "sample_rate_hz": 93750,
+  "physical_midi_range": [41, 72],
+  "rest_note": 0,
+  "songs": [
+    {
+      "id": 0,
+      "title": "Twinkle Twinkle Little Star",
+      "title_zh": "小星星（保留原版）",
+      "origin": "Retained existing piano_roll_score.v song 0, all 42 pitches and one/two-beat durations unchanged.",
+      "difficulty": "simple",
+      "bpm": 120,
+      "event_count": 42,
+      "melody_quarters": 192,
+      "events_note_duration_quarters": [
+        [60,4], [60,4], [67,4], [67,4], [69,4], [69,4], [67,8],
+        [65,4], [65,4], [64,4], [64,4], [62,4], [62,4], [60,8],
+        [67,4], [67,4], [65,4], [65,4], [64,4], [64,4], [62,8],
+        [67,4], [67,4], [65,4], [65,4], [64,4], [64,4], [62,8],
+        [60,4], [60,4], [67,4], [67,4], [69,4], [69,4], [67,8],
+        [65,4], [65,4], [64,4], [64,4], [62,4], [62,4], [60,8]
+      ]
+    },
+    {
+      "id": 1,
+      "title": "Lantern Steps",
+      "title_zh": "灯阶练习曲（原创）",
+      "origin": "Original educational melody composed for this task; no external score or arrangement used.",
+      "difficulty": "intermediate",
+      "key": "F major",
+      "meter": "4/4",
+      "educational_focus": "Broken triads, eighth/quarter/dotted-quarter rhythm, repeated-note articulation, rests, and register changes.",
+      "bpm": 112,
+      "event_count": 48,
+      "melody_quarters": 128,
+      "events_note_duration_quarters": [
+        [53,2], [57,2], [60,4], [57,2], [55,2], [53,4],
+        [58,6], [57,2], [55,2], [53,2], [52,2], [0,2],
+        [48,2], [52,2], [55,4], [60,2], [58,2], [57,4],
+        [55,4], [57,2], [58,2], [60,2], [60,2], [0,4],
+        [65,2], [69,2], [72,4], [69,2], [67,2], [65,4],
+        [70,6], [69,2], [67,2], [65,2], [64,2], [0,2],
+        [60,2], [58,2], [57,4], [55,2], [52,2], [48,4],
+        [53,6], [57,2], [55,2], [53,2], [0,2], [53,2]
+      ]
+    },
+    {
+      "id": 2,
+      "title": "River Bridges",
+      "title_zh": "溪桥练习曲（原创）",
+      "origin": "Original educational melody composed for this task; no external score or arrangement used.",
+      "difficulty": "intermediate",
+      "key": "D minor with harmonic-minor leading tone",
+      "meter": "4/4",
+      "educational_focus": "Low/high register leaps, Bb and C-sharp, dotted-quarter/eighth contrast, rests, and cadence articulation.",
+      "bpm": 100,
+      "event_count": 48,
+      "melody_quarters": 128,
+      "events_note_duration_quarters": [
+        [50,2], [53,2], [57,4], [55,2], [53,2], [50,4],
+        [46,6], [50,2], [53,2], [57,2], [55,2], [0,2],
+        [45,2], [52,2], [57,4], [61,2], [62,2], [0,4],
+        [62,4], [65,2], [69,2], [67,2], [65,2], [0,4],
+        [70,2], [69,2], [67,4], [65,2], [64,2], [62,4],
+        [61,6], [64,2], [69,2], [64,2], [61,2], [0,2],
+        [41,2], [45,2], [50,4], [53,2], [57,2], [0,4],
+        [62,6], [61,2], [57,2], [50,2], [0,2], [50,2]
+      ]
+    }
+  ]
+}

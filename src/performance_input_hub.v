@@ -7,7 +7,7 @@
 // 普通远程虚拟输入取得所有权时清声音，防止被覆盖来源留下持续门控。
 module performance_input_hub #(
  parameter MIDI_ENABLE=0,parameter OPTICAL_ENABLE=0,parameter MIDI_CHANNEL=0,
- parameter PRESSURE_EXPRESSION_ENABLE=0,parameter CONTROL_BANK_ENABLE=0,parameter PHONE_VOLUME_ENABLE=0
+ parameter PRESSURE_EXPRESSION_ENABLE=0,parameter CONTROL_BANK_ENABLE=0,parameter PHONE_VOLUME_ENABLE=0,parameter MAPPING_ENABLE=0
 )(
  input clk,input rst_n,input sample_tick,input allow_performance,input suppress_controls,
  input remote_active,input digital_zero,input midi_rx,input[1:0] optical_beams,
@@ -28,8 +28,22 @@ module performance_input_hub #(
  output hat_closed_hit,hat_open_hit,output [7:0] hat_closed_velocity,hat_open_velocity,
  // 只读实体MIDI按住监视：默认bit0=MIDI41(F2)，bit31=MIDI72(C5)，统一由piano_layout.vh指定，半音逐位。
  // 不并入本地/触摸/虚拟键，不显示已松键的延音或扫弦尾音；范围外另置标志。
- output [31:0] monitor_piano_keys32,output monitor_piano_outside
+ output [31:0] monitor_piano_keys32,output monitor_piano_outside,
+ // 只读演奏诊断：最近一次交付的旋律Note On原始力度，以及解析器弯音/CC1。
+ // 力度0..127（音频内部扩展为0..255）；弯音为归一化9位码，不是Hz。
+ output reg [7:0] monitor_midi_velocity,
+ output signed [8:0] monitor_midi_bend,output [6:0] monitor_midi_modulation,
+    // Mapping config is staged externally. Inputs must be stable at commit handshake.
+    // addr={bank,index[6:0]}; writes/commit are accepted ONLY with their ready high.
+    input wire mapping_enable, mapping_bank, mapping_commit,
+    input wire mapping_wr_en, input wire [7:0] mapping_wr_addr,
+    input wire [6:0] mapping_wr_data,
+    input wire [27:0] mapping_pad_notes, mapping_cc_numbers,
+    output wire mapping_wr_ready, mapping_commit_ready, mapping_commit_ack,
+    output wire monitor_note_receipt, output wire [6:0] monitor_raw_note
 );
+ wire raw_receipt;
+ assign monitor_note_receipt=raw_receipt && !global_cancel;
  wire m_valid,m_on,m_off,m_ready;wire[6:0] m_note;wire[7:0] m_velocity;
  wire[127:0] held;wire m_pc,m_timbre,m_volume_valid,m_bend_valid;
  // 复用解析器held别名，不新增按键状态或改变抑制、panic、音频仲裁语义。
@@ -38,6 +52,8 @@ module performance_input_hub #(
  assign monitor_piano_outside=(|held[`PIANO_BASE_NOTE-1:0]) || (|held[127:`PIANO_LAST_NOTE+1]);
  wire[7:0] m_volume,m_count;wire signed[8:0] m_bend;wire[6:0] m_mod;
  wire m_panic,m_error,m_overflow;
+ assign monitor_midi_bend=m_bend;
+ assign monitor_midi_modulation=m_mod;
  wire m_cc_valid;wire [6:0] m_cc_number,m_cc_value;
  wire m_hit0,m_hit1;wire [7:0] m_drum_velocity0,m_drum_velocity1;
  wire h_closed,h_open;wire [7:0] h_closed_velocity,h_open_velocity;
@@ -47,13 +63,24 @@ module performance_input_hub #(
   if(!rst_n)previous_strum<=0;else previous_strum<=strum_mode;
  wire mode_changed=CONTROL_BANK_ENABLE && (strum_mode!=previous_strum);
  wire ext_suppress=!allow_performance || digital_zero || remote_active;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)monitor_midi_velocity<=0;
+  else if(m_panic || user_panic)monitor_midi_velocity<=0;
+  else if(m_valid && m_ready && m_on && !ext_suppress)
+   monitor_midi_velocity<={1'b0,m_velocity[7:1]};
  // V021全局取消优先于已挂起的新控制/Pad请求；只门控交付，不改解析器状态。
  // 参数0恒为不取消，保持历史实例的控制仲裁、脉冲和力度语义。
  wire global_cancel=CONTROL_BANK_ENABLE && (ext_suppress || panic_audio);
  generate if(MIDI_ENABLE)begin:midi_input
-  midi_keyboard #(.MIDI_CHANNEL(MIDI_CHANNEL)) keyboard(
+  midi_keyboard #(.MIDI_CHANNEL(MIDI_CHANNEL),.MAPPING_ENABLE(MAPPING_ENABLE)) keyboard(
+        .mapping_enable(mapping_enable),.mapping_bank(mapping_bank),.mapping_commit(mapping_commit),
+        .mapping_wr_en(mapping_wr_en),.mapping_wr_addr(mapping_wr_addr),.mapping_wr_data(mapping_wr_data),
+        .mapping_pad_notes(mapping_pad_notes),.mapping_cc_numbers(mapping_cc_numbers),
+        .mapping_wr_ready(mapping_wr_ready),.mapping_commit_ready(mapping_commit_ready),
+        .mapping_commit_ack(mapping_commit_ack),
    .clk(clk),.rst_n(rst_n),.rx(midi_rx),.suppress(ext_suppress || user_panic),.event_ready(m_ready),
    .event_valid(m_valid),.event_on(m_on),.event_off(m_off),.event_note(m_note),.event_velocity(m_velocity),
+   .receipt_note_on(raw_receipt),.receipt_note(monitor_raw_note),
    .held_notes(held),.program_valid(m_pc),.timbre_select(m_timbre),
    .volume_valid(m_volume_valid),.volume(m_volume),.bend_valid(m_bend_valid),.bend(m_bend),
    .modulation(m_mod),.hit0(m_hit0),.hit1(m_hit1),
@@ -63,6 +90,8 @@ module performance_input_hub #(
    .hat_closed_hit(h_closed),.hat_open_hit(h_open),
    .hat_closed_velocity(h_closed_velocity),.hat_open_velocity(h_open_velocity));
  end else begin:no_midi
+  assign raw_receipt=0;assign monitor_raw_note=0;
+  assign mapping_wr_ready=0;assign mapping_commit_ready=0;assign mapping_commit_ack=0;
   assign m_valid=0;assign m_on=0;assign m_off=0;assign m_note=0;assign m_velocity=0;
   assign held=0;assign m_pc=0;assign m_timbre=0;assign m_volume_valid=0;assign m_volume=160;
   assign m_bend_valid=0;assign m_bend=0;assign m_mod=0;assign m_panic=0;assign m_error=0;

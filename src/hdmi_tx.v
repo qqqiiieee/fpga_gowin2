@@ -12,11 +12,33 @@ module hdmi_tx(input pixel_clk,input serial_clk,input rst_n,
     wire [9:0] word0,word1,word2;
     wire [2:0] serial_data;
     // Do not release IOLOGIC reset directly on a pixel-clock edge.
-    (* syn_preserve=1 *) reg [2:0] serializer_reset_sync;
-    always @(posedge serial_clk or negedge rst_n)
-        if(!rst_n)serializer_reset_sync<=0;
-        else serializer_reset_sync<={serializer_reset_sync[1:0],1'b1};
-    wire serializer_reset=!serializer_reset_sync[2];
+    // Isolated V040 Plan B: common first two stages, four local third stages.
+    // Same asynchronous assertion and same third-rising-edge release as reference.
+    // Attributes express intent; mapped netlist must still prove no merging.
+    (* syn_preserve=1, syn_keep=1 *) reg [1:0] serializer_reset_sync;
+    (* syn_preserve=1, syn_keep=1 *) reg serializer_reset_sync_lane0;
+    (* syn_preserve=1, syn_keep=1 *) reg serializer_reset_sync_lane1;
+    (* syn_preserve=1, syn_keep=1 *) reg serializer_reset_sync_lane2;
+    (* syn_preserve=1, syn_keep=1 *) reg serializer_reset_sync_clock;
+    always @(posedge serial_clk or negedge rst_n) begin
+        if(!rst_n) begin
+            serializer_reset_sync<=0;
+            serializer_reset_sync_lane0<=0;
+            serializer_reset_sync_lane1<=0;
+            serializer_reset_sync_lane2<=0;
+            serializer_reset_sync_clock<=0;
+        end else begin
+            serializer_reset_sync<={serializer_reset_sync[0],1'b1};
+            serializer_reset_sync_lane0<=serializer_reset_sync[1];
+            serializer_reset_sync_lane1<=serializer_reset_sync[1];
+            serializer_reset_sync_lane2<=serializer_reset_sync[1];
+            serializer_reset_sync_clock<=serializer_reset_sync[1];
+        end
+    end
+    (* syn_keep=1 *) wire [3:0] serializer_reset_lane;
+    assign serializer_reset_lane={~serializer_reset_sync_clock,
+        ~serializer_reset_sync_lane2,~serializer_reset_sync_lane1,
+        ~serializer_reset_sync_lane0};
     tmds_encoder u_blue(pixel_clk,rst_n,blue,de,hsync,vsync,word0);
     tmds_encoder u_green(pixel_clk,rst_n,green,de,1'b0,1'b0,word1);
     tmds_encoder u_red(pixel_clk,rst_n,red,de,1'b0,1'b0,word2);
@@ -28,7 +50,7 @@ module hdmi_tx(input pixel_clk,input serial_clk,input rst_n,
             .D0(word_ch[0]),.D1(word_ch[1]),.D2(word_ch[2]),
             .D3(word_ch[3]),.D4(word_ch[4]),.D5(word_ch[5]),
             .D6(word_ch[6]),.D7(word_ch[7]),.D8(word_ch[8]),.D9(word_ch[9]),
-            .PCLK(pixel_clk),.FCLK(serial_clk),.RESET(serializer_reset));
+            .PCLK(pixel_clk),.FCLK(serial_clk),.RESET(serializer_reset_lane[ch]));
         TLVDS_OBUF u_out(.I(serial_data[ch]),.O(tmds_data_p[ch]),.OB(tmds_data_n[ch]));
     end endgenerate
     // Clock lane has the same serializer pipeline as the three data lanes.
@@ -37,6 +59,6 @@ module hdmi_tx(input pixel_clk,input serial_clk,input rst_n,
     OSER10 u_clock_serializer(.Q(clock_serial),
         .D0(1'b1),.D1(1'b1),.D2(1'b1),.D3(1'b1),.D4(1'b1),
         .D5(1'b0),.D6(1'b0),.D7(1'b0),.D8(1'b0),.D9(1'b0),
-        .PCLK(pixel_clk),.FCLK(serial_clk),.RESET(serializer_reset));
+        .PCLK(pixel_clk),.FCLK(serial_clk),.RESET(serializer_reset_lane[3]));
     TLVDS_OBUF u_clock_out(.I(clock_serial),.O(tmds_clk_p),.OB(tmds_clk_n));
 endmodule

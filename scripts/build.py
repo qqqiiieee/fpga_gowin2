@@ -4,9 +4,11 @@ import argparse, os, subprocess, hashlib, json, time
 ROOT=Path(__file__).resolve().parents[1]
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--gowin-home',type=Path,default=Path(os.environ.get('GOWIN_HOME','D:/Gowin_V1.9.12.04_x64_win/Gowin/Gowin_V1.9.12.04_x64')))
+    ap.add_argument('--gowin-home',type=Path,default=Path(os.environ['GOWIN_HOME']) if os.environ.get('GOWIN_HOME') else None)
     ap.add_argument('--timeout',type=int,default=1800,help='本脚本Gowin子进程的主机超时秒数')
-    a=ap.parse_args();exe=a.gowin_home/'IDE/bin/gw_sh.exe'
+    a=ap.parse_args()
+    if a.gowin_home is None:ap.error('Set GOWIN_HOME or pass --gowin-home to the Gowin installation root')
+    exe=a.gowin_home/'IDE/bin/gw_sh.exe'
     if not exe.exists():ap.error('找不到 gw_sh.exe；使用 --gowin-home 或 GOWIN_HOME 指定安装根目录')
     subprocess.run([os.sys.executable,str(ROOT/'scripts/generate_ui_text.py'),'--check'],check=True,cwd=ROOT)
     # V016以短文本ID译码。两份生成资产必须与同一份中文文案一致。

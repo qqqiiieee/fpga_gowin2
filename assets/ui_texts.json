@@ -89,7 +89,7 @@
     },
     {
       "name": "TXT_020",
-      "text": "V034 曲库"
+      "text": "V041 曲库"
     },
     {
       "name": "TXT_021",
@@ -153,7 +153,7 @@
     },
     {
       "name": "TXT_033",
-      "text": "V034 操作说明"
+      "text": "V041 可视化"
     },
     {
       "name": "TXT_034",
@@ -207,7 +207,7 @@
     },
     {
       "name": "TXT_044",
-      "text": "V034 32路验证"
+      "text": "V041 32路验证"
     },
     {
       "name": "TXT_045",
@@ -311,7 +311,7 @@
     },
     {
       "name": "TXT_065",
-      "text": "V034 接线诊断"
+      "text": "V041 接线诊断"
     },
     {
       "name": "TXT_066",
@@ -539,7 +539,7 @@
     },
     {
       "name": "TXT_111",
-      "text": "V034 演奏 / PHONE"
+      "text": "V041 演奏"
     },
     {
       "name": "TXT_112",
@@ -666,19 +666,19 @@
     },
     {
       "name": "TXT_COMPACT_01",
-      "text": "演奏 / 曲库 / 说明 / 诊断"
+      "text": "演奏 / 曲库 / 可视化 / 诊断"
     },
     {
       "name": "TXT_COMPACT_02",
-      "text": "2 PLAY / PAUSE"
+      "text": "2 开始 / 暂停"
     },
     {
       "name": "TXT_COMPACT_03",
-      "text": "1 HOLD TIMBRE / 2 HOLD MODE"
+      "text": "长按1切TIMBRE / 长按2切MODE"
     },
     {
       "name": "TXT_COMPACT_04",
-      "text": "3 重开当前曲"
+      "text": "3 重播当前曲"
     },
     {
       "name": "TXT_COMPACT_05",
@@ -750,7 +750,7 @@
     },
     {
       "name": "TXT_COMPACT_22",
-      "text": "4 KEYS: 界面操作"
+      "text": "4键: 界面操作"
     },
     {
       "name": "TXT_COMPACT_23",
@@ -786,7 +786,7 @@
     },
     {
       "name": "TXT_COMPACT_31",
-      "text": "USB TEST: SWEEP / EXIT"
+      "text": "1路数 2巡检 3退出 4全32"
     },
     {
       "name": "TXT_COMPACT_32",
@@ -838,7 +838,7 @@
     },
     {
       "name": "TXT_BUTTON_STATES",
-      "text": "KEY1:0 KEY2:0 KEY3:0 KEY4:0"
+      "text": "键1:0 键2:0 键3:0 键4:0"
     },
     {
       "name": "TXT_MODE_HYBRID",
@@ -846,15 +846,91 @@
     },
     {
       "name": "TXT_HOLD_TIMBRE",
-      "text": "1 HOLD: NEXT TIMBRE"
+      "text": "长按1:切换TIMBRE"
     },
     {
       "name": "TXT_HOLD_MODE",
-      "text": "2 HOLD: KEY > STRUM > HYBRID"
+      "text": "长按2:切换MODE"
     },
     {
       "name": "TXT_HOLD_RELEASE",
-      "text": "HOLD >=0.8s THEN RELEASE"
+      "text": "长按>=0.8s,释放操作"
+    },
+    {
+      "name": "TXT_DIAG_MIDI",
+      "text": "MIDI VEL 000/127 MOD 000/127"
+    },
+    {
+      "name": "TXT_DIAG_BEND",
+      "text": "BEND +000 (-256..255)"
+    },
+    {
+      "name": "TXT_DIAG_FSR",
+      "text": "FSR0 RAW 0x0000 LVL 000 CAL 0"
+    },
+    {
+      "name": "TXT_DIAG_FSR_ROLES",
+      "text": "FSR0 BRIGHT / FSR1 DAMP"
+    },
+    {
+      "name": "TXT_DIAG_RAW_UNITS",
+      "text": "RAW ADC HEX, NOT kg"
+    },
+    {
+      "name": "TXT_HOLD_TEST_RELEASE",
+      "text": "长按3>=0.8s释放:验证"
+    },
+    {
+      "name": "TXT_PANEL_TEST_COUNTS",
+      "text": "32 OSC: 1/4/8/16/32"
+    },
+    {
+      "name": "TXT_PANEL_TEST_KEYS",
+      "text": "1路数 2巡检 3退出 4全32"
+    },
+    {
+      "name": "TXT_ROLL_PLAY",
+      "text": "播放 120 BPM 64 px/拍"
+    },
+    {
+      "name": "TXT_ROLL_PAUSE",
+      "text": "暂停 120 BPM 64 px/拍"
+    },
+    {
+      "name": "TXT_ROLL_DONE",
+      "text": "完成 120 BPM 64 px/拍"
+    },
+    {
+      "name": "TXT_LIVE_NAV1",
+      "text": "1切页 2开始/暂停"
+    },
+    {
+      "name": "TXT_LIVE_NAV2",
+      "text": "3重播 4选曲"
+    },
+    {
+      "name": "TXT_VIS_FFT",
+      "text": "FFT magnitude (log)"
+    },
+    {
+      "name": "TXT_VIS_XY",
+      "text": "Lissajous"
+    },
+    {
+      "name": "TXT_VIS_FFT_INFO",
+      "text": "Fs11718.75Hz 0~5.86kHz"
+    },
+    {
+      "name": "TXT_VIS_XY_INFO",
+      "text": "X:Voice0 Y:Voice1 AUTO"
+    },
+    {
+      "name": "TXT_VIS_FFT_WAIT",
+      "text": "FFT: WAIT"
+    },
+    {
+      "name": "TXT_VIS_XY_WAIT",
+      "text": "Lissajous: WAIT"
     }
   ]
 }

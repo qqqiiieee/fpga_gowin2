@@ -1,0 +1,28 @@
+{
+  "cells": 32,
+  "texts": [
+    {"name": "TXT_V045_LIVE", "text": "V045 演奏"},
+    {"name": "TXT_V045_LIBRARY", "text": "V045 曲库"},
+    {"name": "TXT_V045_HELP", "text": "V045 可视化"},
+    {"name": "TXT_V045_DIAG", "text": "V045 多维诊断"},
+    {"name": "TXT_V045_TEST", "text": "V045 32路验证"},
+    {"name": "TXT_V045_SONG1", "text": "02 灯阶练习曲"},
+    {"name": "TXT_V045_SONG2", "text": "03 溪桥练习曲"},
+    {"name": "TXT_V045_FIXED", "text": "固定BPM"},
+    {"name": "TXT_V045_AUTO", "text": "自动演奏"},
+    {"name": "TXT_V045_PRACTICE", "text": "逐音练习"},
+    {"name": "TXT_V045_PLAY", "text": "演奏     000 BPM"},
+    {"name": "TXT_V045_PAUSE", "text": "暂停     000 BPM"},
+    {"name": "TXT_V045_DONE", "text": "完成     000 BPM"},
+    {"name": "TXT_V045_WAIT", "text": "等待按键 000 BPM"},
+    {"name": "TXT_V045_KEY1", "text": "1短切页 长音色"},
+    {"name": "TXT_V045_KEY2", "text": "2短开始/暂停 长KEY/STRUM/HYBRID"},
+    {"name": "TXT_V045_KEY3", "text": "3短重播 长进入验证"},
+    {"name": "TXT_V045_KEY4", "text": "4短选曲 长固定>自动>逐音"},
+    {"name": "TXT_V045_CYCLE", "text": "4长:固定BPM>自动>逐音>固定BPM"},
+    {"name": "TXT_V045_BPM0", "text": "120 BPM"},
+    {"name": "TXT_V045_BPM1", "text": "原创 112 BPM"},
+    {"name": "TXT_V045_BPM2", "text": "原创 100 BPM"},
+    {"name": "TXT_V045_TEST_KEYS", "text": "1路数 2逐路 3退出 4全32"}
+  ]
+}

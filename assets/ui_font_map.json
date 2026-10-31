@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "font": {
     "hanzi": {
       "path": "C:\\Windows\\Fonts\\simhei.ttf",
@@ -121,10 +121,6 @@
     "部": [
       174,
       175
-    ],
-    "鼓": [
-      176,
-      177
     ],
     "移": [
       178,
@@ -334,14 +330,6 @@
       280,
       281
     ],
-    "采": [
-      282,
-      283
-    ],
-    "样": [
-      284,
-      285
-    ],
     "率": [
       286,
       287
@@ -354,14 +342,6 @@
       290,
       291
     ],
-    "模": [
-      292,
-      293
-    ],
-    "式": [
-      294,
-      295
-    ],
     "切": [
       296,
       297
@@ -369,10 +349,6 @@
     "换": [
       298,
       299
-    ],
-    "中": [
-      300,
-      301
     ],
     "请": [
       302,
@@ -418,10 +394,6 @@
       322,
       323
     ],
-    "际": [
-      324,
-      325
-    ],
     "度": [
       326,
       327
@@ -434,33 +406,13 @@
       330,
       331
     ],
-    "扫": [
-      332,
-      333
-    ],
-    "序": [
-      334,
-      335
-    ],
-    "号": [
-      336,
-      337
-    ],
     "无": [
       338,
       339
     ],
-    "超": [
-      340,
-      341
-    ],
     "时": [
       342,
       343
-    ],
-    "越": [
-      344,
-      345
     ],
     "界": [
       346,
@@ -486,10 +438,6 @@
       356,
       357
     ],
-    "忙": [
-      358,
-      359
-    ],
     "电": [
       360,
       361
@@ -497,10 +445,6 @@
     "脑": [
       362,
       363
-    ],
-    "谱": [
-      364,
-      365
     ],
     "检": [
       366,
@@ -542,49 +486,9 @@
       384,
       385
     ],
-    "木": [
-      386,
-      387
-    ],
-    "管": [
-      388,
-      389
-    ],
-    "暖": [
-      390,
-      391
-    ],
-    "风": [
-      392,
-      393
-    ],
-    "琴": [
-      394,
-      395
-    ],
-    "空": [
-      396,
-      397
-    ],
-    "心": [
-      398,
-      399
-    ],
-    "铜": [
-      400,
-      401
-    ],
     "拨": [
       402,
       403
-    ],
-    "簧": [
-      404,
-      405
-    ],
-    "片": [
-      406,
-      407
     ],
     "明": [
       408,
@@ -593,30 +497,6 @@
     "亮": [
       410,
       411
-    ],
-    "钟": [
-      412,
-      413
-    ],
-    "口": [
-      414,
-      415
-    ],
-    "厚": [
-      416,
-      417
-    ],
-    "合": [
-      418,
-      419
-    ],
-    "金": [
-      420,
-      421
-    ],
-    "属": [
-      422,
-      423
     ],
     "振": [
       424,
@@ -710,10 +590,6 @@
       468,
       469
     ],
-    "说": [
-      470,
-      471
-    ],
     "接": [
       472,
       473
@@ -754,21 +630,9 @@
       490,
       491
     ],
-    "浏": [
-      492,
-      493
-    ],
-    "览": [
-      494,
-      495
-    ],
     "上": [
       496,
       497
-    ],
-    "总": [
-      498,
-      499
     ],
     "供": [
       500,
@@ -793,21 +657,146 @@
     "码": [
       510,
       511
+    ],
+    "停": [
+      176,
+      177
+    ],
+    "光": [
+      282,
+      283
+    ],
+    "入": [
+      284,
+      285
+    ],
+    "力": [
+      300,
+      301
+    ],
+    "原": [
+      324,
+      325
+    ],
+    "响": [
+      344,
+      345
+    ],
+    "唱": [
+      358,
+      359
+    ],
+    "就": [
+      364,
+      365
+    ],
+    "尼": [
+      386,
+      387
+    ],
+    "延": [
+      388,
+      389
+    ],
+    "弯": [
+      390,
+      391
+    ],
+    "情": [
+      392,
+      393
+    ],
+    "播": [
+      394,
+      395
+    ],
+    "暂": [
+      396,
+      397
+    ],
+    "混": [
+      398,
+      399
+    ],
+    "绪": [
+      400,
+      401
+    ],
+    "表": [
+      404,
+      405
+    ],
+    "迟": [
+      406,
+      407
+    ],
+    "阻": [
+      412,
+      413
+    ],
+    "非": [
+      414,
+      415
+    ],
+    "颤": [
+      416,
+      417
+    ],
+    "全": [
+      292,
+      293
+    ],
+    "巡": [
+      294,
+      295
+    ],
+    "化": [
+      332,
+      333
+    ],
+    "可": [
+      334,
+      335
+    ],
+    "视": [
+      336,
+      337
+    ],
+    "创": [
+      340,
+      341
+    ],
+    "动": [
+      418,
+      419
+    ],
+    "桥": [
+      420,
+      421
+    ],
+    "溪": [
+      422,
+      423
+    ],
+    "灯": [
+      470,
+      471
+    ],
+    "短": [
+      492,
+      493
+    ],
+    "维": [
+      494,
+      495
+    ],
+    "阶": [
+      498,
+      499
     ]
   },
-  "hanzi_order": "多音色乐器自由演奏小星跟弹练习完成当前量峰值声部鼓移调符为最低按住键的设定波形状态削鬼过期故障滤远控静盘节拍错误保持等待下一个黄提示绿正确红青角标重开数字采样率验证模式切换中请求活跃逐路固频配置实际度异常扫序号无超时越界索引门释放忙电脑谱检查同独立弦柔和长笛木管暖风琴空心铜拨簧片明亮钟口厚合金属振荡输出退监测进与曲库欢颂两只老虎面项认始操作说接线诊断触主机未启用浏览上总供页选择代码",
-  "vocab_original": "多音色乐器自由演奏小星星跟弹练习完成当前音量峰值声部鼓移调符为最低按住键的设定波形状态削鬼过期故障滤远控静键盘节拍错误保持等待下一个黄提示绿正确红青角标重开数字采样率验证模式切换中请求活跃逐路固定频率配置实际调度异常正常扫序号无超时越界索引门释放忙电脑频谱检查同时独立正弦柔和长笛木管暖风琴空心铜拨簧片明亮钟口厚合成金属",
-  "vocab_append": [
-    "振荡输出退出监测",
-    "进",
-    "与",
-    "曲库欢乐颂两只老虎界面项确认开始操作说明接线诊断触控主机未启用浏览上总供电页选择",
-    "代码"
-  ],
-  "vocab": "多音色乐器自由演奏小星星跟弹练习完成当前音量峰值声部鼓移调符为最低按住键的设定波形状态削鬼过期故障滤远控静键盘节拍错误保持等待下一个黄提示绿正确红青角标重开数字采样率验证模式切换中请求活跃逐路固定频率配置实际调度异常正常扫序号无超时越界索引门释放忙电脑频谱检查同时独立正弦柔和长笛木管暖风琴空心铜拨簧片明亮钟口厚合成金属振荡输出退出监测进与曲库欢乐颂两只老虎界面项确认开始操作说明接线诊断触控主机未启用浏览上总供电页选择代码",
+  "hanzi_order": "多音色乐器自由演奏小星跟弹练习完成当前量峰值声部停移调符为最低按住键的设定波形状态削鬼过期故障滤远控静盘节拍错误保持等待下一个黄提示绿正确红青角标重开数字光入率验证全巡切换力请求活跃逐路固频配置实原度异常化可视无创时响界索引门释放唱电脑就检查同独立弦柔和长笛尼延弯情播暂混绪拨表迟明亮阻非颤动桥溪振荡输出退监测进与曲库欢颂两只老虎面项认始操作灯接线诊断触主机未启用短维上阶供页选择代码",
   "unique_hanzi_count": 192,
-  "original_unique_hanzi_count": 148,
-  "appended_unique_hanzi": "振荡输出退监测进与曲库欢颂两只老虎面项认始操作说接线诊断触主机未启用浏览上总供页选择代码",
   "max_hanzi_count": 192,
   "glyph_bits": 9,
   "row_bits": 4,
@@ -879,7 +868,7 @@
     "width_bits": 8,
     "lines": 8192,
     "format": "two uppercase hex digits per line",
-    "sha256": "307e173dfd2a42be58006327d203327c84d877bf78b85efcd18a6dda0fab5501"
+    "sha256": "9ca345c195c61f5ad65947ef039c4260eab086d10ec2239ea1fe2bc513363e82"
   },
   "module": {
     "path": "src/hdmi_ui_font.v",
@@ -1403,27 +1392,6 @@
         ],
         "source_pixels": 77,
         "cell_pixels": 77,
-        "clipped_pixels": 0
-      },
-      "鼓": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 79,
-        "cell_pixels": 79,
         "clipped_pixels": 0
       },
       "移": {
@@ -2518,48 +2486,6 @@
         "cell_pixels": 56,
         "clipped_pixels": 0
       },
-      "采": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          16
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          -1
-        ],
-        "source_pixels": 82,
-        "cell_pixels": 82,
-        "clipped_pixels": 0
-      },
-      "样": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 79,
-        "cell_pixels": 79,
-        "clipped_pixels": 0
-      },
       "率": {
         "source_ink_bbox": [
           1,
@@ -2623,48 +2549,6 @@
         "cell_pixels": 65,
         "clipped_pixels": 0
       },
-      "模": {
-        "source_ink_bbox": [
-          1,
-          0,
-          16,
-          15
-        ],
-        "cell_ink_bbox": [
-          0,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          -1,
-          0
-        ],
-        "source_pixels": 90,
-        "cell_pixels": 90,
-        "clipped_pixels": 0
-      },
-      "式": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          14
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          1
-        ],
-        "source_pixels": 64,
-        "cell_pixels": 64,
-        "clipped_pixels": 0
-      },
       "切": {
         "source_ink_bbox": [
           1,
@@ -2705,27 +2589,6 @@
         ],
         "source_pixels": 81,
         "cell_pixels": 81,
-        "clipped_pixels": 0
-      },
-      "中": {
-        "source_ink_bbox": [
-          2,
-          1,
-          14,
-          16
-        ],
-        "cell_ink_bbox": [
-          2,
-          0,
-          14,
-          15
-        ],
-        "translation_xy": [
-          0,
-          -1
-        ],
-        "source_pixels": 60,
-        "cell_pixels": 60,
         "clipped_pixels": 0
       },
       "请": {
@@ -2959,27 +2822,6 @@
         "cell_pixels": 60,
         "clipped_pixels": 0
       },
-      "际": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          14
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          14
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 83,
-        "cell_pixels": 83,
-        "clipped_pixels": 0
-      },
       "度": {
         "source_ink_bbox": [
           1,
@@ -3043,69 +2885,6 @@
         "cell_pixels": 93,
         "clipped_pixels": 0
       },
-      "扫": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 88,
-        "cell_pixels": 88,
-        "clipped_pixels": 0
-      },
-      "序": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          14
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          1
-        ],
-        "source_pixels": 64,
-        "cell_pixels": 64,
-        "clipped_pixels": 0
-      },
-      "号": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 59,
-        "cell_pixels": 59,
-        "clipped_pixels": 0
-      },
       "无": {
         "source_ink_bbox": [
           1,
@@ -3127,27 +2906,6 @@
         "cell_pixels": 55,
         "clipped_pixels": 0
       },
-      "超": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 87,
-        "cell_pixels": 87,
-        "clipped_pixels": 0
-      },
       "时": {
         "source_ink_bbox": [
           1,
@@ -3167,27 +2925,6 @@
         ],
         "source_pixels": 72,
         "cell_pixels": 72,
-        "clipped_pixels": 0
-      },
-      "越": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 79,
-        "cell_pixels": 79,
         "clipped_pixels": 0
       },
       "界": {
@@ -3316,27 +3053,6 @@
         "cell_pixels": 73,
         "clipped_pixels": 0
       },
-      "忙": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          14
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          1
-        ],
-        "source_pixels": 60,
-        "cell_pixels": 60,
-        "clipped_pixels": 0
-      },
       "电": {
         "source_ink_bbox": [
           2,
@@ -3377,27 +3093,6 @@
         ],
         "source_pixels": 94,
         "cell_pixels": 94,
-        "clipped_pixels": 0
-      },
-      "谱": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 90,
-        "cell_pixels": 90,
         "clipped_pixels": 0
       },
       "检": {
@@ -3610,174 +3305,6 @@
         "cell_pixels": 84,
         "clipped_pixels": 0
       },
-      "木": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          14
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          1
-        ],
-        "source_pixels": 65,
-        "cell_pixels": 65,
-        "clipped_pixels": 0
-      },
-      "管": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 92,
-        "cell_pixels": 92,
-        "clipped_pixels": 0
-      },
-      "暖": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 102,
-        "cell_pixels": 102,
-        "clipped_pixels": 0
-      },
-      "风": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 64,
-        "cell_pixels": 64,
-        "clipped_pixels": 0
-      },
-      "琴": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 74,
-        "cell_pixels": 74,
-        "clipped_pixels": 0
-      },
-      "空": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          14
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          1
-        ],
-        "source_pixels": 69,
-        "cell_pixels": 69,
-        "clipped_pixels": 0
-      },
-      "心": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          14
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          1
-        ],
-        "source_pixels": 47,
-        "cell_pixels": 47,
-        "clipped_pixels": 0
-      },
-      "铜": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 88,
-        "cell_pixels": 88,
-        "clipped_pixels": 0
-      },
       "拨": {
         "source_ink_bbox": [
           1,
@@ -3797,48 +3324,6 @@
         ],
         "source_pixels": 84,
         "cell_pixels": 84,
-        "clipped_pixels": 0
-      },
-      "簧": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          16
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          -1
-        ],
-        "source_pixels": 96,
-        "cell_pixels": 96,
-        "clipped_pixels": 0
-      },
-      "片": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 52,
-        "cell_pixels": 52,
         "clipped_pixels": 0
       },
       "明": {
@@ -3881,132 +3366,6 @@
         ],
         "source_pixels": 87,
         "cell_pixels": 87,
-        "clipped_pixels": 0
-      },
-      "钟": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          16
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          -1
-        ],
-        "source_pixels": 78,
-        "cell_pixels": 78,
-        "clipped_pixels": 0
-      },
-      "口": {
-        "source_ink_bbox": [
-          3,
-          3,
-          14,
-          15
-        ],
-        "cell_ink_bbox": [
-          2,
-          2,
-          13,
-          14
-        ],
-        "translation_xy": [
-          -1,
-          -1
-        ],
-        "source_pixels": 52,
-        "cell_pixels": 52,
-        "clipped_pixels": 0
-      },
-      "厚": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 91,
-        "cell_pixels": 91,
-        "clipped_pixels": 0
-      },
-      "合": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 70,
-        "cell_pixels": 70,
-        "clipped_pixels": 0
-      },
-      "金": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          14
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          1
-        ],
-        "source_pixels": 87,
-        "cell_pixels": 87,
-        "clipped_pixels": 0
-      },
-      "属": {
-        "source_ink_bbox": [
-          1,
-          1,
-          15,
-          16
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          -1
-        ],
-        "source_pixels": 114,
-        "cell_pixels": 114,
         "clipped_pixels": 0
       },
       "振": {
@@ -4492,27 +3851,6 @@
         "cell_pixels": 58,
         "clipped_pixels": 0
       },
-      "说": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 67,
-        "cell_pixels": 67,
-        "clipped_pixels": 0
-      },
       "接": {
         "source_ink_bbox": [
           1,
@@ -4723,48 +4061,6 @@
         "cell_pixels": 86,
         "clipped_pixels": 0
       },
-      "浏": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          0,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          0
-        ],
-        "source_pixels": 67,
-        "cell_pixels": 67,
-        "clipped_pixels": 0
-      },
-      "览": {
-        "source_ink_bbox": [
-          1,
-          0,
-          15,
-          14
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          15
-        ],
-        "translation_xy": [
-          0,
-          1
-        ],
-        "source_pixels": 71,
-        "cell_pixels": 71,
-        "clipped_pixels": 0
-      },
       "上": {
         "source_ink_bbox": [
           1,
@@ -4784,27 +4080,6 @@
         ],
         "source_pixels": 46,
         "cell_pixels": 46,
-        "clipped_pixels": 0
-      },
-      "总": {
-        "source_ink_bbox": [
-          1,
-          2,
-          15,
-          15
-        ],
-        "cell_ink_bbox": [
-          1,
-          1,
-          15,
-          14
-        ],
-        "translation_xy": [
-          0,
-          -1
-        ],
-        "source_pixels": 61,
-        "cell_pixels": 61,
         "clipped_pixels": 0
       },
       "供": {
@@ -4931,6 +4206,142 @@
         ],
         "source_pixels": 78,
         "cell_pixels": 78,
+        "clipped_pixels": 0
+      },
+      "停": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "光": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "入": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "力": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "原": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "响": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "唱": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "就": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "尼": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "延": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "弯": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "情": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "播": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "暂": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "混": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "绪": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "表": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "迟": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "阻": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "非": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "颤": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "全": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "巡": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "化": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "可": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "视": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "创": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "动": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "桥": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "溪": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "灯": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "短": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "维": {
+        "native_size_px": 16,
+        "clipped_pixels": 0
+      },
+      "阶": {
+        "native_size_px": 16,
         "clipped_pixels": 0
       }
     },
@@ -6924,13 +6335,297 @@
   },
   "validation": {
     "vocab_coverage": "complete",
-    "original_order_preserved": true,
+    "existing_used_codes_preserved": true,
     "all_native_ink_pixels_preserved": true,
-    "pack_unpack_pixel_equality": true,
-    "unused_rom_zero": true,
-    "atlas_source": "decoded ROM bytes",
-    "project_compiled": false,
-    "hardware_accessed": false,
-    "bram_inference": "requested by HDL style; synthesis not run"
+    "rom_depth_unchanged": true,
+    "hardware_accessed": false
+  },
+  "v036_reallocation": {
+    "reused_pairs": [
+      {
+        "removed_unused": "鼓",
+        "added": "停",
+        "codes": [
+          176,
+          177
+        ]
+      },
+      {
+        "removed_unused": "采",
+        "added": "光",
+        "codes": [
+          282,
+          283
+        ]
+      },
+      {
+        "removed_unused": "样",
+        "added": "入",
+        "codes": [
+          284,
+          285
+        ]
+      },
+      {
+        "removed_unused": "中",
+        "added": "力",
+        "codes": [
+          300,
+          301
+        ]
+      },
+      {
+        "removed_unused": "际",
+        "added": "原",
+        "codes": [
+          324,
+          325
+        ]
+      },
+      {
+        "removed_unused": "越",
+        "added": "响",
+        "codes": [
+          344,
+          345
+        ]
+      },
+      {
+        "removed_unused": "忙",
+        "added": "唱",
+        "codes": [
+          358,
+          359
+        ]
+      },
+      {
+        "removed_unused": "谱",
+        "added": "就",
+        "codes": [
+          364,
+          365
+        ]
+      },
+      {
+        "removed_unused": "木",
+        "added": "尼",
+        "codes": [
+          386,
+          387
+        ]
+      },
+      {
+        "removed_unused": "管",
+        "added": "延",
+        "codes": [
+          388,
+          389
+        ]
+      },
+      {
+        "removed_unused": "暖",
+        "added": "弯",
+        "codes": [
+          390,
+          391
+        ]
+      },
+      {
+        "removed_unused": "风",
+        "added": "情",
+        "codes": [
+          392,
+          393
+        ]
+      },
+      {
+        "removed_unused": "琴",
+        "added": "播",
+        "codes": [
+          394,
+          395
+        ]
+      },
+      {
+        "removed_unused": "空",
+        "added": "暂",
+        "codes": [
+          396,
+          397
+        ]
+      },
+      {
+        "removed_unused": "心",
+        "added": "混",
+        "codes": [
+          398,
+          399
+        ]
+      },
+      {
+        "removed_unused": "铜",
+        "added": "绪",
+        "codes": [
+          400,
+          401
+        ]
+      },
+      {
+        "removed_unused": "簧",
+        "added": "表",
+        "codes": [
+          404,
+          405
+        ]
+      },
+      {
+        "removed_unused": "片",
+        "added": "迟",
+        "codes": [
+          406,
+          407
+        ]
+      },
+      {
+        "removed_unused": "钟",
+        "added": "阻",
+        "codes": [
+          412,
+          413
+        ]
+      },
+      {
+        "removed_unused": "口",
+        "added": "非",
+        "codes": [
+          414,
+          415
+        ]
+      },
+      {
+        "removed_unused": "厚",
+        "added": "颤",
+        "codes": [
+          416,
+          417
+        ]
+      },
+      {
+        "removed_unused": "模",
+        "added": "全",
+        "codes": [
+          292,
+          293
+        ]
+      },
+      {
+        "removed_unused": "式",
+        "added": "巡",
+        "codes": [
+          294,
+          295
+        ]
+      },
+      {
+        "removed_unused": "扫",
+        "added": "化",
+        "codes": [
+          332,
+          333
+        ]
+      },
+      {
+        "removed_unused": "序",
+        "added": "可",
+        "codes": [
+          334,
+          335
+        ]
+      },
+      {
+        "removed_unused": "号",
+        "added": "视",
+        "codes": [
+          336,
+          337
+        ]
+      }
+    ],
+    "needed_hanzi": 166,
+    "ascii_sha256": "f36b3b35d1c6d0de535a7d4c72c8b19327403c036c2e531badbab9a80ca091c6",
+    "existing_used_pixels_preserved": true,
+    "rom_depth_unchanged": true,
+    "generated_utc": "2026-10-31T06:16:27.755806+00:00"
+  },
+  "v045_reallocation": {
+    "reused_pairs": [
+      {
+        "removed_unused": "超",
+        "added": "创",
+        "codes": [
+          340,
+          341
+        ]
+      },
+      {
+        "removed_unused": "合",
+        "added": "动",
+        "codes": [
+          418,
+          419
+        ]
+      },
+      {
+        "removed_unused": "金",
+        "added": "桥",
+        "codes": [
+          420,
+          421
+        ]
+      },
+      {
+        "removed_unused": "属",
+        "added": "溪",
+        "codes": [
+          422,
+          423
+        ]
+      },
+      {
+        "removed_unused": "说",
+        "added": "灯",
+        "codes": [
+          470,
+          471
+        ]
+      },
+      {
+        "removed_unused": "浏",
+        "added": "短",
+        "codes": [
+          492,
+          493
+        ]
+      },
+      {
+        "removed_unused": "览",
+        "added": "维",
+        "codes": [
+          494,
+          495
+        ]
+      },
+      {
+        "removed_unused": "总",
+        "added": "阶",
+        "codes": [
+          498,
+          499
+        ]
+      }
+    ],
+    "rom_depth": 8192,
+    "old_used_pixels_preserved": true,
+    "ascii_sha256": "f36b3b35d1c6d0de535a7d4c72c8b19327403c036c2e531badbab9a80ca091c6"
   }
 }

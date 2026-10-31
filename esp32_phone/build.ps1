@@ -1,4 +1,4 @@
-param([string]$ToolchainRoot = '')
+param([string]$ToolchainRoot = (Join-Path $PSScriptRoot '.toolchain'))
 $ErrorActionPreference = 'Stop'
 $bridgeRoot = $PSScriptRoot
 $bridgeExternal = -not [string]::IsNullOrWhiteSpace($ToolchainRoot)
@@ -6,9 +6,7 @@ $bridgeTc = if ($bridgeExternal) { (Resolve-Path -LiteralPath $ToolchainRoot).Pa
 $bridgeWork = Join-Path $bridgeRoot '.build_work'
 $bridgeCli = Join-Path $bridgeTc 'cli\arduino-cli.exe'
 if (-not (Test-Path -LiteralPath (Join-Path $bridgeTc 'manifest.json'))) {
-    if ($bridgeExternal) { throw 'Existing toolchain incomplete; refusing download or baseline modification.' }
-    & python (Join-Path $bridgeRoot 'bootstrap_toolchain.py')
-    if ($LASTEXITCODE -ne 0) { throw 'Isolated toolchain bootstrap failed.' }
+    throw 'Existing offline toolchain incomplete; downloads are forbidden.'
 }
 $bridgeOldTemp = $env:TEMP
 $bridgeOldTmp = $env:TMP
@@ -18,10 +16,11 @@ try {
     New-Item -ItemType Directory -Force -Path $env:TEMP | Out-Null
     New-Item -ItemType Directory -Force -Path (Join-Path $bridgeRoot 'build') | Out-Null
     # CLI scans sketch headers recursively, including hidden .toolchain folders.
-    # Stage only the three authoritative source files to avoid huge include lists.
+    # Stage every root .h/.ino, including V041 extensions; never scan toolchain/cache.
     $bridgeStage = Join-Path $bridgeWork 'sketch\esp32_phone'
     New-Item -ItemType Directory -Force -Path $bridgeStage | Out-Null
-    foreach ($bridgeFile in @('esp32_phone.ino', 'bridge_core.h', 'web_ui.h')) {
+    $bridgeSourceFiles = @(Get-ChildItem -LiteralPath $bridgeRoot -File | Where-Object { $_.Extension -in @('.ino','.h','.cpp') } | Sort-Object Name | ForEach-Object Name)
+    foreach ($bridgeFile in $bridgeSourceFiles) {
         Copy-Item -LiteralPath (Join-Path $bridgeRoot $bridgeFile) -Destination $bridgeStage -Force
     }
     # Core 2.x's SDK include list exceeds CreateProcess's 32767-character limit
@@ -55,7 +54,7 @@ try {
         Tee-Object -FilePath (Join-Path $bridgeRoot 'build\compile.log')
     $bridgeCompileExit = $LASTEXITCODE
     $bridgeHashes = @{}
-    foreach ($bridgeFile in @('esp32_phone.ino', 'bridge_core.h', 'web_ui.h')) {
+    foreach ($bridgeFile in $bridgeSourceFiles) {
         $bridgeHashes[$bridgeFile] = (Get-FileHash -LiteralPath (Join-Path $bridgeStage $bridgeFile) -Algorithm SHA256).Hash
     }
     $bridgeBinaryHashes = @{}

@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "checked_at_utc": "2026-10-31T10:24:22.196296+00:00",
+  "source_sha256": "f3b9542ca23556fa0f73c3eb9b1443b69ac03d9512b570a0d0c24a6de36e85b0",
+  "hex_sha256": "eb14d9981728e24c3a2533752eb62966ac09ff032e8e1b1f0b014bf118916797",
+  "words": 1024,
+  "bits_per_word": 32,
+  "address": "{song[1:0], quarter[7:0]}",
+  "reserved_bank_zero": true,
+  "songs": [
+    {
+      "id": 0,
+      "title": "Twinkle Twinkle Little Star",
+      "event_count": 42,
+      "total_beats": 50,
+      "bpm": 120,
+      "beat_samples": 46875
+    },
+    {
+      "id": 1,
+      "title": "Lantern Steps",
+      "event_count": 48,
+      "total_beats": 34,
+      "bpm": 112,
+      "beat_samples": 50223
+    },
+    {
+      "id": 2,
+      "title": "River Bridges",
+      "event_count": 48,
+      "total_beats": 34,
+      "bpm": 100,
+      "beat_samples": 56250
+    }
+  ],
+  "synthesis": false,
+  "production_build": false,
+  "programming": false,
+  "publication": false
+}

@@ -1,0 +1,8 @@
+{
+  "verified": true,
+  "only_project_file_reserialized_by_gui": true,
+  "gprj_before_sha256": "b78e0579c8bbcd9134a9470fe53717bb9cdf71be31fc1c16d40d708da8d29ed8",
+  "gprj_after_sha256": "bed07339880c4cedf3dc92638918d81a786f303902dd2411f4af18dafd24a0e5",
+  "canonical_source_set_verified": "V046 plus guide_chord_modes.v and guide_chord_events.v",
+  "synthesis_log_both_modules_compiled": true
+}

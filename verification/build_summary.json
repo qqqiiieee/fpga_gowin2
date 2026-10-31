@@ -1,11 +1,11 @@
 {
-  "project": ".",
+  "project": "D:\\Gowin_project\\instrument_phone_extensions_20261031",
   "resources": {
-    "Logic": 16940.0,
-    "Register": 8100.0,
-    "CLS": 9510.0,
-    "BSRAM": 27.0,
-    "DSP": 15.75
+    "Logic": 20381.0,
+    "Register": 9540.0,
+    "CLS": 10353.0,
+    "BSRAM": 41.0,
+    "DSP": 16.25
   },
   "capacities": {
     "Logic": 20736.0,
@@ -15,76 +15,167 @@
     "DSP": 24.0
   },
   "utilization_percent": {
-    "Logic": 81.694,
-    "Register": 50.083,
-    "CLS": 91.725,
-    "BSRAM": 58.696,
-    "DSP": 65.625
+    "Logic": 98.288,
+    "Register": 58.987,
+    "CLS": 99.855,
+    "BSRAM": 89.13,
+    "DSP": 67.708
   },
   "timing_violations": {
     "Setup": 0,
     "Hold": 0
   },
   "fmax_mhz": {
-    "clk27": 30.303,
-    "serial126": 858.728,
-    "pixel25_2": 48.409
+    "clk27": 27.03,
+    "serial126": 473.858,
+    "pixel25_2": 39.06
   },
   "synthesis_hierarchy": {
     "u_alloc": {
       "name": "u_alloc",
       "Register": "648",
       "Alu": "224",
-      "Lut": "312",
+      "Lut": "301",
       "T_Register": "648(648)",
       "T_Alu": "224(224)",
-      "T_Lut": "312(312)"
+      "T_Lut": "301(301)"
     },
     "synth": {
       "name": "synth",
-      "Register": "1610",
+      "Register": "1010",
       "Alu": "187",
-      "Lut": "1687",
+      "Lut": "1429",
       "PADD18": "1",
       "PADD9": "1",
       "MULT9X9": "1",
       "MULT18X18": "2",
       "MULTADDALU18X18": "1",
-      "Bsram": "3",
-      "T_Register": "1610(1610)",
+      "Bsram": "4",
+      "T_Register": "1010(1010)",
       "T_Alu": "187(187)",
-      "T_Lut": "1853(1687)",
+      "T_Lut": "1595(1429)",
       "T_PADD18": "1(1)",
       "T_PADD9": "1(1)",
       "T_MULT9X9": "1(1)",
       "T_MULT18X18": "2(2)",
       "T_MULTADDALU18X18": "1(1)",
-      "T_Bsram": "3(3)"
+      "T_Bsram": "4(4)"
     },
     "u_telemetry": {
       "name": "u_telemetry",
       "Register": "366",
       "Alu": "128",
-      "Lut": "504",
+      "Lut": "453",
       "MULT18X18": "2",
       "MULTALU36X18": "1",
       "MULTADDALU18X18": "3",
       "Bsram": "1",
       "T_Register": "366(366)",
       "T_Alu": "128(128)",
-      "T_Lut": "582(504)",
+      "T_Lut": "531(453)",
       "T_MULT18X18": "2(2)",
       "T_MULTALU36X18": "1(1)",
       "T_MULTADDALU18X18": "3(3)",
       "T_Bsram": "1(1)"
     }
   },
-  "firmware": "instrument_handoff.fs",
-  "usercode": "0x000099D5",
-  "firmware_sha256": "4286301056b4370119f9ec409b112ca28c9e51ae49c21700025ee66bf6c63831",
+  "firmware": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\impl\\pnr\\instrument_handoff.fs",
+  "usercode": "0x00003608",
+  "firmware_sha256": "d7fa4bbe937d33c69dd5b025d68b557c9088ab918d9c4c70d41f276862fc303f",
   "input_hashes_verified": true,
   "hardware_programmed": false,
-  "version": "V034",
-  "status": "PASS",
-  "compile_origin": "Gowin IDE Run All"
+  "baseline": {
+    "project": "D:\\Gowin_project\\instrument_phone_extensions_20261031",
+    "resources": {
+      "Logic": 20465.0,
+      "Register": 9470.0,
+      "CLS": 10362.0,
+      "BSRAM": 41.0,
+      "DSP": 16.25
+    },
+    "capacities": {
+      "Logic": 20736.0,
+      "Register": 16173.0,
+      "CLS": 10368.0,
+      "BSRAM": 46.0,
+      "DSP": 24.0
+    },
+    "utilization_percent": {
+      "Logic": 98.693,
+      "Register": 58.554,
+      "CLS": 99.942,
+      "BSRAM": 89.13,
+      "DSP": 67.708
+    },
+    "timing_violations": {
+      "Setup": 0,
+      "Hold": 0
+    },
+    "fmax_mhz": {
+      "clk27": 27.767,
+      "serial126": 551.087,
+      "pixel25_2": 38.72
+    },
+    "synthesis_hierarchy": {
+      "u_alloc": {
+        "name": "u_alloc",
+        "Register": "648",
+        "Alu": "224",
+        "Lut": "287",
+        "T_Register": "648(648)",
+        "T_Alu": "224(224)",
+        "T_Lut": "287(287)"
+      },
+      "synth": {
+        "name": "synth",
+        "Register": "1010",
+        "Alu": "189",
+        "Lut": "1444",
+        "PADD18": "1",
+        "PADD9": "1",
+        "MULT9X9": "1",
+        "MULT18X18": "2",
+        "MULTADDALU18X18": "1",
+        "Bsram": "4",
+        "T_Register": "1010(1010)",
+        "T_Alu": "189(189)",
+        "T_Lut": "1610(1444)",
+        "T_PADD18": "1(1)",
+        "T_PADD9": "1(1)",
+        "T_MULT9X9": "1(1)",
+        "T_MULT18X18": "2(2)",
+        "T_MULTADDALU18X18": "1(1)",
+        "T_Bsram": "4(4)"
+      },
+      "u_telemetry": {
+        "name": "u_telemetry",
+        "Register": "366",
+        "Alu": "128",
+        "Lut": "459",
+        "MULT18X18": "2",
+        "MULTALU36X18": "1",
+        "MULTADDALU18X18": "3",
+        "Bsram": "1",
+        "T_Register": "366(366)",
+        "T_Alu": "128(128)",
+        "T_Lut": "537(459)",
+        "T_MULT18X18": "2(2)",
+        "T_MULTALU36X18": "1(1)",
+        "T_MULTADDALU18X18": "3(3)",
+        "T_Bsram": "1(1)"
+      }
+    },
+    "firmware": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\impl\\pnr\\instrument_handoff.fs",
+    "usercode": "0x0000F2A4",
+    "firmware_sha256": "4c48a43dd0c7498ac6ab73471cc442fc0a24ef86b6db8b6081eaa0ad85842bef",
+    "input_hashes_verified": true,
+    "hardware_programmed": false
+  },
+  "resource_reduction": {
+    "Logic": 84.0,
+    "Register": -70.0,
+    "CLS": 9.0,
+    "BSRAM": 0.0,
+    "DSP": 0.0
+  }
 }

@@ -1,0 +1,123 @@
+{
+  "status": "pass",
+  "run_directory": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\chords_v047\\results\\20261031T112954_398424Z",
+  "source_sha256": {
+    "src/custom_score_ram.v": "8b465e5f27891d0ef276f0bb59faeb63b8069a24d6d9c5225954de5d437707e6",
+    "src/guide_chord_events.v": "6863aa9a953848424c1182c21d209920dab641120aacb55a309cdd9d1a3791cd",
+    "src/guide_chord_modes.v": "6f76192a8384a9362fca680c19e3b90bd60da5331a2920fad1fd876bdbc403d7",
+    "src/phone_extension_state.v": "3d1e6420dd67b20f0842846ef489dce50b93e4dfeb5744ce8513600edf0118d8",
+    "src/piano_layout.vh": "8a12817352ecd8b2848bb17847c3733e167354796ed4ba8bb40ad2d126e3f233",
+    "src/piano_roll_guide.v": "fe55303281f32d984dd2ebd3675450205d2d1b2c4550435e841c14b93a43a99d",
+    "src/piano_roll_renderer.v": "b24e9fbfae936bfbada7460f81a6839ef87514867bff0635a0f86963e389edb6",
+    "src/piano_roll_score.v": "0850607ea71b05d42b457a71ab3678170f3c522385d725b01c019671b197c4ad",
+    "src/voice_allocator.v": "cba3e2ece7a34c8cf67f2872a69f3c40c7dfc407e6c0440071c5afbd6570e3c1",
+    "tests/chords_v047/tb_modes.v": "6c5991fbcf9e7252e823c40dfd931f8e733a4f6b317d04feba8de9746cb44fcb",
+    "tests/chords_v047/tb_events.v": "777a2713b78320ad2ccf343165c531dfed4d2d449058cfe39fa740007ecd2040",
+    "tests/chords_v047/tb_score_pixels.v": "d613d495ea591fdb3e2f095c6231bce173fe69f4da709b3fff703bccc8b70d95",
+    "tests/chords_v047/run_tests.py": "3849daef26277759c72cb75e6ef0846ffaf67951e921841c7b584c043b3a8c9a"
+  },
+  "tools": {
+    "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe": "803b8844af2cc8ed70b5f08b07ffa749901280e81339617ca3e72cbbb852bd2b",
+    "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe": "e2f442f4d5aa76e55c85c3ff77e4446fbfdb9946b7cfe8a2dff87f275da17b62"
+  },
+  "checks": [
+    {
+      "name": "modes",
+      "passed": true,
+      "compile": {
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2012",
+          "-Wall",
+          "-s",
+          "tb_modes",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\chords_v047\\results\\20261031T112954_398424Z\\modes.vvp",
+          "src/guide_chord_modes.v",
+          "tests/chords_v047/tb_modes.v"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "warning: Some design elements have no explicit time unit and/or\n       : time precision. This may cause confusing timing results.\n       : Affected design elements are:\n       :   -- module guide_chord_modes declared here: src/guide_chord_modes.v:6\n"
+      },
+      "run": {
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\chords_v047\\results\\20261031T112954_398424Z\\modes.vvp"
+        ],
+        "returncode": 0,
+        "stdout": "CHORD_MODES_PASS checks=35 triggers=3\ntests/chords_v047/tb_modes.v:74: $finish called at 2240000 (1ps)\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "events",
+      "passed": true,
+      "compile": {
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2012",
+          "-Wall",
+          "-s",
+          "tb_events",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\chords_v047\\results\\20261031T112954_398424Z\\events.vvp",
+          "src/guide_chord_events.v",
+          "src/voice_allocator.v",
+          "tests/chords_v047/tb_events.v"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "warning: Some design elements have no explicit time unit and/or\n       : time precision. This may cause confusing timing results.\n       : Affected design elements are:\n       :   -- module guide_chord_events declared here: src/guide_chord_events.v:5\n       :   -- module voice_allocator declared here: src/voice_allocator.v:19\n"
+      },
+      "run": {
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\chords_v047\\results\\20261031T112954_398424Z\\events.vvp"
+        ],
+        "returncode": 0,
+        "stdout": "CHORD_EVENTS_PASS checks=145 ons=24 offs=20\ntests/chords_v047/tb_events.v:69: $finish called at 1330000 (1ps)\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "score_pixels",
+      "passed": true,
+      "compile": {
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2012",
+          "-Wall",
+          "-s",
+          "tb_score_pixels",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\chords_v047\\results\\20261031T112954_398424Z\\score_pixels.vvp",
+          "src/phone_extension_state.v",
+          "src/piano_roll_guide.v",
+          "src/piano_roll_renderer.v",
+          "src/custom_score_ram.v",
+          "src/piano_roll_score.v",
+          "tests/chords_v047/tb_score_pixels.v"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "src/piano_roll_guide.v:14: warning: timescale for piano_roll_guide inherited from another file.\nsrc/phone_extension_state.v:1: ...: The inherited timescale is here.\nsrc/piano_roll_renderer.v:15: warning: timescale for piano_roll_renderer inherited from another file.\nsrc/phone_extension_state.v:1: ...: The inherited timescale is here.\nsrc/custom_score_ram.v:10: warning: timescale for custom_score_ram inherited from another file.\nsrc/phone_extension_state.v:1: ...: The inherited timescale is here.\nsrc/piano_roll_score.v:9: warning: timescale for piano_roll_score inherited from another file.\nsrc/phone_extension_state.v:1: ...: The inherited timescale is here.\n"
+      },
+      "run": {
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\chords_v047\\results\\20261031T112954_398424Z\\score_pixels.vvp"
+        ],
+        "returncode": 0,
+        "stdout": "CHORD_SCORE_PIXELS_PASS checks=103 invalid_words=10 bubbles=11\ntests/chords_v047/tb_score_pixels.v:117: $finish called at 652290000 (1ps)\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "production_modified_by_runner": false,
+  "hardware_accessed": false,
+  "full_project_built": false,
+  "synthesized": false,
+  "flashed": false,
+  "changed_inputs_during_run": []
+}

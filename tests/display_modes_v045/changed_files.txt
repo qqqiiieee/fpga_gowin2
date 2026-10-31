@@ -1,0 +1,8 @@
+src/hdmi_live_display.v
+src/hdmi_compact_dashboard.v
+src/hdmi_compact_text.vh
+src/ui_font.hex
+assets/ui_font_map.json
+assets/ui_texts_v045.json
+scripts/generate_v045_display_text.py
+tests/display_modes_v045/ (new tests, frozen baselines, logs, reports, previews; test-local Pillow dependency)

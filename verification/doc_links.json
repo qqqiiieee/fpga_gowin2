@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "documents": [
+    {
+      "file": "docs\\V047_更新与曲谱上传指南.html",
+      "links": 7,
+      "missing": []
+    },
+    {
+      "file": "docs\\V047_演示视频拍摄参考.html",
+      "links": 8,
+      "missing": []
+    },
+    {
+      "file": "docs\\V047_键位重定向详细教程.html",
+      "links": 10,
+      "missing": []
+    }
+  ]
+}

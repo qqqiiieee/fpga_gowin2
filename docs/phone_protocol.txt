@@ -1,0 +1,67 @@
+V038 phone bridge contract v1 + read-only telemetry (2026-10-31; deployment status in release records)
+
+Pins: FPGA phone_uart_rx=L9 <- ESP32 GPIO17/TX2;
+      FPGA phone_uart_tx=N8 -> ESP32 GPIO16/RX2; common GND.
+ESP32 powered from its own USB. Do not connect two regulated 3V3 outputs.
+Classic ESP32-WROOM32 UART2; 115200 baud, 8N1, 3.3V TTL.
+Existing FTDI T13/M11 debug UART remains independent and unchanged.
+
+Request 12 bytes:
+  A5 5A 01 SEQ CMD PARAM VALUE 00 00 00 00 XOR
+Response 12 bytes:
+  5A A5 01 SEQ RESULT PARAM EFFECTIVE FLAGS TIMBRE FX_MODE VOLUME XOR
+XOR = XOR of bytes 2..10 inclusive. SEQ wraps at 256. One request in flight.
+CMD 0=get parameter (VALUE must be 0), 1=set absolute parameter, 2=Panic
+(Panic requires PARAM=0 VALUE=0). Reserved bytes must all be zero.
+RESULT 0=ok, 1=unsupported command, 2=unknown/read-only parameter,
+3=value out of range, 4=unsupported version/reserved bytes.
+Bad XOR/partial packet: no action and no response. Interbyte timeout 20 ms.
+Only validated SET causes a one-clock apply pulse. Response after settling
+reflects actual FPGA state, not an echo of the requested value. No audio data.
+Retry GET/SET/Panic with same sequence after 250 ms is safe (absolute SET).
+
+Parameters (all integer, inclusive limits):
+0 master volume 0..255 (shares existing ownership with physical slider/CC7)
+1 timbre 0..1 (flute/pluck)
+2 input mode 0..2 (KEY/STRUM/HYBRID)
+3 FX mode 0..3 (OFF/Delay/Chorus/Reverb)
+4 FX wet 0..255
+5 FX time 0..255
+6 FX feedback 0..255 (audio_effects still bounds actual stable coefficient)
+7 FX modulation 0..255
+8 attack 0..255
+9 decay 0..255
+10 sustain 0..255
+11 release 0..255
+12 HDMI page 0..3
+13 filter enable 0..1
+14 digital zero/mute 0..1
+15 status flags (read only; SET rejected)
+
+FLAGS bits: 0=MIDI seen/held, 1=ADS fault, 2=touch fault or diagnostic menu hold,
+3=optical ready, 4=STRUM selected, 5=MIDI overflow,
+6=actual digital zero (including FTDI zero) enabled, 7=reserved zero.
+MIDI knobs fixed in all UI pages: CC93=Delay intensity, CC91=Chorus intensity,
+CC71=Reverb intensity, CC74=master volume. Soft pickup after phone retarget.
+Pads stay percussion channel 10 notes 36/37/38/39 and existing GM aliases.
+
+V023 debug09 extension: diag2 bit11=raw-beam capability,
+bit9=filtered electrical beam A, bit10=filtered electrical beam B.
+V021 bit11=0; bits4/5 in both versions are relative-to-startup blocked state.
+
+V038 read-only telemetry extension (same v1 packet/XOR; not audio):
+GET31 returns capability A7; GET16 atomically captures 15 bytes/120 bits.
+GET17..30 read that held snapshot; reset invalidates it. SET parameter >=15 is rejected.
+Adjacent same-SEQ GET16 retry reuses the captured snapshot, preventing torn ADC bytes.
+Other valid requests clear that dedup marker, so ordinary SEQ wrap does not freeze capture.
+16 A0 low; 17 A0 high; 18 A1 low; 19 A1 high; 20/21 FSR0/1 LVL.
+22 sensor flags: valid7 overflow6 MIDIerror5 opticalready4 ADCstale3 ADCfault2 CAL1 CAL0.
+23 beam flags: testowned7 testmode6 strumbusy5 opticalenabled4 blockedB3 blockedA2 levelB1 levelA0.
+24 VEL; 25 BEND low; 26 BEND bit8 (other bits zero); 27 MOD;
+28 active voices; 29 requested test voices; 30 index[7:3],overrun2,sweep1,testowned0.
+BEND is signed nine-bit -256..255, raw ADC is 16-bit code, LVL is 0..255, none is kg.
+ESP only publishes after GET16..30 plus end GET22 agrees with original flags and valid bit7.
+Snapshot deadline 500ms; age starts at first GET16 request; stale >=1000ms.
+SET/Panic preempt between packets; partial, invalid, expired data never becomes a fresh snapshot.
+GET31 RESULT2/wrong magic means unsupported; transient failure re-probes at bounded ~1s intervals.
+The phone telemetry object is separate from params and never imported/exported as a writable preset.

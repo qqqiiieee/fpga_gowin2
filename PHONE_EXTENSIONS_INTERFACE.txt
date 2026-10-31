@@ -1,0 +1,208 @@
+PHONE FPGA EXTENSIONS — SHARED INTERFACE / HANDOFF
+Workspace: D:/Gowin_project/instrument_phone_extensions_20261031
+Current delivery: V046 = FPGA V045 + ESP32 V046; protocol and FPGA unchanged from V045. Build and hardware evidence are in the versioned release validation directory; source alone is not proof of deployment.
+
+A. MAPPING — exact same appended ports on all four authorized modules
+
+Build-time parameter integer MAPPING_ENABLE=0 on:
+  midi_keyboard, performance_input_hub, instrument_inputs, instrument_audio_top.
+Set MAPPING_ENABLE=1 on instrument_audio_top for the extension. It propagates to
+instrument_inputs -> performance_input_hub -> midi_keyboard. MIDI_ENABLE must also
+be1; otherwise mapping ready/ack outputs remain0.
+MAPPING_ENABLE=0 removes mapping storage/logic by generate branch, ignores the new
+inputs and preserves original standalone behavior. Production top.v enables the extension and owns the guide mode.
+Runtime mapping_enable is STAGED: changing it alone does not change active mapping.
+Even with build-time enable1, runtime state resets to mapping disabled (V040 behavior).
+
+Exact mapping ports (all SAME clk domain):
+  input          mapping_enable: Staged runtime enable; effective only on accepted commit.0 restores identity and original GM aliases/CCs.
+  input          mapping_bank: Staged target note bank; effective on commit.
+  input          mapping_commit: Request; hold config stable until ack. A held request is accepted once until deasserted.
+  input          mapping_wr_en: Write strobe accepted only with mapping_wr_ready.
+  input  [7:0] mapping_wr_addr: {bank,index[6:0]}
+  input  [6:0] mapping_wr_data: Mapped melody target0..127, including valid note0.
+  input  [27:0] mapping_pad_notes: [6:0]Kick,[13:7]Snare,[20:14]closed hat,[27:21]open hat.
+  input  [27:0] mapping_cc_numbers: Low to high: Delay,Chorus,Reverb,master volume knob raw CC numbers.
+  output         mapping_wr_ready: Write acceptance. While enabled only inactive bank writable; both banks writable when runtime disabled.
+  output         mapping_commit_ready: Safe parser/line boundary, not a performance-idle indication. Parent additionally checks performance idle.
+  output         mapping_commit_ack: One clk pulse after actual commit acceptance, coincident with MIDI panic pulse.
+
+Commit/write handshake and acceptance boundary:
+- A write is accepted on rising clk only if mapping_wr_en && mapping_wr_ready.
+  Address/data must meet setup/hold on that edge. No write ack pulse is added.
+- When runtime enabled, active bank writes have ready0 and are ignored. Inactive
+  bank can be staged during playing. Runtime disabled permits either bank writes.
+- No write is accepted while mapping_commit is high. Commit ready requires
+  mapping_wr_en=0. Do not assert the two requests together (neither is accepted).
+- Commit ready requires rst_n, no current panic, RX high continuously for about one
+  full UART byte (10*864=8640clks at27MHz), no rx_valid, no first-data half message,
+  no system-common bytes pending, no SysEx, and no already-accepted held request.
+  This is NOT performance idle. Parent checks performance idle AND ready, returning
+  BUSY otherwise; never bypass the bound or hot-switch a bank.
+- A request may be held through BUSY until accepted. Keep enable/bank/Pad/CC values
+  stable through ack. One held request is accepted only once; deassert commit to
+  rearm. ack is one clk and is the actual acceptance proof. Parent MAPCOMMIT replies
+  20 only after ack. Parent op0x38 stages mapping_enable0 and waits for the SAME ack.
+- Acceptance atomically captures enable/bank/Pad/CC, then uses original MIDI panic
+  -> performance_input_hub.panic_audio -> audio_rst_n/test_clear chain. It clears
+  raw held/pedal/release/delivered/FIFO state and active audio; the real allocator
+  is reset. Parser running status is cleared so orphan bytes cannot become notes.
+  Panic retains its existing control reset semantics (program/bend/modulation etc.).
+- At boot both256x7 map banks have identity contents via configuration-time initial
+  values. Runtime reset does not clear/rewrite RAM. This is one256x7 synchronous
+  simple-dual-port BRAM coding pattern, not256 asynchronous register muxes.
+- First raw NoteOn/Off data byte requests the synchronous table read. Its result is
+  latched next clock, long before the final velocity byte. Release scans use an
+  address tag and wait for matching synchronous data instead of dropping an Off.
+- Accepted commit invalidates pending lookup context, clearing old notes first.
+  Modifying the active table without commit is not permitted while mapping enabled.
+
+Default identifiers extracted from ORIGINAL source:
+  mapping_pad_notes low-to-high: [36,38,37,39]
+    [6:0] Kick / hit0       original GM aliases35,36
+    [13:7] Snare / hit1     original GM aliases38,40
+    [20:14] ClosedHat       original aliases37,42
+    [27:21] OpenHat         original aliases39,46
+  mapping_cc_numbers low-to-high: [93,91,71,74]
+    Delay amount, Chorus amount, Reverb amount, master-volume knob.
+  Dynamic enabled mode recognizes ONLY the four configured drum raw note numbers;
+  disabled mode restores ALL original aliases, not merely the four preferred notes.
+  Default MIDI melody channel0, drum channel9 remain original parameter semantics.
+
+Raw-versus-mapped semantics:
+- The note table applies ONLY to MIDI melody NoteOn and NoteOff (including velocity0
+  On used as Off). Drum recognition uses the separate raw Pad assignments.
+- held_notes, physical held/display bits, pedal/suppress/release bookkeeping and
+  optical held-note chord selection are RAW MIDI note indexed. Event FIFO carries
+  an additional raw tag so suppress never maps a delivered mapped note a second time.
+- event_note to the audio allocator is mapped; raw/display semantics are unchanged.
+  Local/touch notes and optical strum-generated notes do not use this MIDI table.
+  Parent UI must explain that optical held and display remain raw when mapping on.
+- Arbitrary many-to-one maps are accepted, but original allocator semantics apply:
+  an Off releases same mapped pitch/source slots. Independent release of colliding
+  raw keys is not newly guaranteed. Use a one-to-one map where that is required.
+- No note value is a mute sentinel: mapped0 is a valid note.
+
+Dynamic CC semantics and compatibility:
+- midi_keyboard normalizes the four configured raw knob CC numbers to original
+  canonical93/91/71/74 before the unchanged CC control-bank path. Unassigned old knob
+  IDs are hidden from that path when enabled, so the new identifiers replace defaults.
+- Unknown/non-knob CCs otherwise retain their passthrough behavior. Built-in CC1,7,
+  64,120,123 inspect RAW first_data and retain original actions. CC120 panic wins
+  over generic CC delivery. Explicitly assigning a reserved CC does not erase its
+  built-in behavior. Duplicate configured CCs/Pads choose lowest vector index first.
+- Original soft pickup is preserved: matching current value only acquires pickup;
+  an actual changed value is needed to select an effect. Repeated unchanged values
+  do not steal mode. No midi_control_bank/controller/phone-link source was edited.
+
+B. phone_record_tap — standalone passive tap, exact ports
+
+Parameter integer MAX_SAMPLES=468750 (production30s); shorter values are for tests.
+Valid internal limit is clamped to1..468750. Production uses the default.
+  input               clk
+  input               rst_n
+  input               sample_tick
+  input signed [15:0] pcm
+  input               start
+  input               stop
+  output              active
+  output       [31:0] sample_count
+  output       [15:0] dropped
+  output              packet_valid
+  output       [7:0] packet_type
+  output       [47:0] packet_payload
+  input               packet_ready
+  output       [31:0] pcm_crc32
+  output              busy
+
+Parent hookup: clk/rst_n from audio domain, sample_tick=monitor_tick,
+  pcm=$signed(monitor_pcm). This is FINAL PCM at DAC load boundary, not a separate
+  oscillator or serial DIN reconstruction. No instance was added to top.v or to
+  instrument_audio_top; the parent owns the final recorder/RPC packet arbitration.
+
+Sampling/session rules:
+- Production clk27MHz / sample_tick93750Hz. Every6 signed PCM16 samples produces
+  one signed mean (division by6 truncates toward zero), output15625Hz16-bit mono.
+  This is a6-point boxcar decimator; no stronger anti-alias filtering is claimed.
+- start is accepted only when busy0. It clears old queue metadata/count/drop/CRC;
+  a tick on the accepted start edge is not collected. While busy, start is ignored.
+- active means acquisition only. busy includes acquisition, draining, serial CRC,
+  stalled DATA and EOF; busy drops ONLY after EOF valid&&ready handshake.
+- stop wins over same-edge tick and discards a <6-input partial group. No extra
+  output/CRC/count is generated from that residual group. A final complete group
+  at the limit is included; active falls after MAX_SAMPLES generated averages.
+- sample_count is total valid generated averages, including those dropped at FIFO.
+  Audio has no ready input and is never backpressured by recording.
+
+DATA type8'h40:
+  payload[15:0]=sample0, [31:16]=sample1, [47:32]=sample2.
+  Serialize payload least-significant byte first for PCM little-endian ordering.
+  Final1/2-sample DATA packet pads missing HIGH samples with zero. True valid count
+  comes from EOF/sample_count, provided no drops occurred. Packet/type/payload are
+  stable while valid && !ready. DATA packets precede the sole EOF packet.
+EOF type8'h41:
+  payload[31:0]=sample_count, payload[47:32]=dropped.
+  FIFO/assembly are completely drained and final CRC is complete before valid EOF.
+
+FIFO/failure rules:
+- One512x16 synchronous RAM FIFO; no array reset, no asynchronous read. Metadata
+  invalidates old storage. At full occupancy a simultaneous read does not admit a
+  same-edge write, avoiding vendor-dependent same-address read/write behavior.
+- Three packet samples may be held outside FIFO, so tested no-ready capacity is515.
+  New averages beyond this are discarded without blocking audio. dropped saturates
+  at65535. ANY dropped!=0 is a FAILED recording, even if later packets/EOF arrive.
+- There is no resend/gap index. Packet loss after ready cannot be detected at this
+  tap; parent/ESP must check received valid sample count and CRC. Never label an
+  incomplete stream a complete WAV. No physical link throughput claim is made.
+
+CRC32:
+- Standard IEEE reflected polynomial32'hEDB88320, initial32'hFFFFFFFF, final invert.
+- Process each generated average as low byte then high byte, LSB-first. Signed PCM
+  is its exact two's-complement16-bit representation. Cover all generated samples,
+  INCLUDING samples lost at FIFO, but exclude DATA padding, framing, count and EOF.
+- Serial16-bit processing uses16clks per generated sample, not an unrolled wide XOR
+  tree. Production spacing is1728clks. Functional tests keep >=17clks per average;
+  a simulation-only assertion rejects violating that source-rate contract.
+- pcm_crc32 can evolve during collection; it is final when EOF valid and stable
+  after completion until next ACCEPTED start. Empty recording CRC is00000000.
+- Parent GET_REC_CRC op0x32 reads it after EOF. CRC's RPC byte representation is the
+  parent protocol's responsibility. Complete the read before accepting a new start,
+  or parent-latch the finished session CRC. Tap does not implement RPC or ESP code.
+- ESP compares locally computed stream CRC AND valid count, and requires dropped0.
+  A nonzero dropped/transport loss invalidates recording; do not salvage as complete.
+
+VALIDATION / HANDOFF
+- Icarus functional simulation; no Gowin synthesis, BRAM primitive mapping report,
+  PnR/timing, GUI, FPGA programming, DAC/phone/ESP/RPC or hardware testing.
+- 256x7 and512x16 synchronous coding patterns have block_ram attributes. Actual Gowin
+  BRAM inference/resource fit remain for the parent build, not a measured claim.
+- 10 tests PASS. Python zlib.crc32 independently checks generated signed little-endian
+  samples; testbench validates handshake stability, tail zeros and EOF sequencing.
+- Default MAPPING_ENABLE0 legacy UART/keyboard/release/CC/control-bank regressions PASS.
+- Real27MHz/31250baud integration through actual instrument_audio_top confirms mapped
+  NoteOn/Off, pedal and CC123 scans,4 custom Pads/CCs, originalCC1/7/64/120, active-bank
+  write rejection, atomic commit ack/panic reaching allocator, half-message BUSY and
+  runtime disable. Fast focused test also checks raw suppress tags, queue cancellation
+  under backpressure, identity bank and every restored GM alias after disable.
+- Recorder cases:7-output automatic limit;5-output stop with partial-group discard;
+  700-output overflow;70000-output dropped saturation; each followed by empty restart.
+  All CRCs checked against Python zlib; dropped stream deliberately fails completeness.
+- Canonical source hash is unchanged. Other tasks changed display/score modules in the
+  same workspace; these were observed read-only and preserved, not edited/reverted here.
+
+Latest validation JSON: D:\Gowin_project\instrument_phone_extensions_20261031\validation\phone_extensions\20261031T091131Z\results.json
+
+
+V045 GUIDE ADDENDUM
+OP20: legacy payload0..3 controls custom score. Explicit builtin/custom: bit16=1, song[9:8]=0..3, action[1:0]=select-paused/start/toggle/restart.
+OP21: absolute guide mode0=fixed BPM,1=auto demo,2=fresh-correct-note practice. Test ownership rejects BUSY.
+OP22: read actual24-bit guide status; full bit layout in docs/phone_extensions_protocol.json. ACK is distinct from actual-state confirmation.
+Fresh raw NoteOn receipt is matched before FIFO delivery and before note remapping; drum,velocity0,suppressed,paused/old-held events cannot satisfy practice.
+Auto demo is source3, real input has priority, repeated pitch emits Off then On. Panic stops transport as well as voices.
+Synchronous builtin score ROM is duplicated per clock domain and ready-qualified. New HDMI bundle fields are appended without moving existing fields.
+
+V046 STORAGE ADDENDUM
+PCM writes are append-only after44 reserved bytes. No seek0/write-header at finalize. Rename only follows EOF/CRC/sample/length success. HTTP and USB use wav_view.h to overlay a correct header on reads. Never stream the internal placeholder prefix directly. Saved HTTP recordings are structurally checked after reboot, not freshly CRC-verified; USB requires current-boot completion.
+
+V047 CHORD ADDENDUM
+CAP bit3 indicates chord groups; full reply0x0001000f. ESP47 accepts legacy10007 but rejects chord upload without bit3. Pair FPGA47 and ESP47 for new chord JSON. Source-tag3 uses four slots, all obsolete Offs before new Ons, live input priority. Practice checks fresh raw NoteOn AND simultaneous physical held for every target. See docs/phone_extensions_protocol.json for packed word31=1 layout. Existing mono word31=0 unchanged. Events within a chord share timing; not arbitrary overlapping multi-track MIDI. Guide OP22 expected_note reports root only; HDMI highlights all members. Three builtins unchanged; new original study is uploaded to replaceablecustomslot. V046 append-only recording fix MUST remain.

@@ -5,11 +5,23 @@ static const char PHONE_HTML[] PROGMEM = R"PHONEHTML(<!doctype html>
 <meta name="color-scheme" content="dark"><title>Tang20K 乐器控制</title>
 <style>
 :root{font:16px/1.55 system-ui,-apple-system,"Microsoft YaHei",sans-serif;color:#edf1fb;background:#10151f}*{box-sizing:border-box}body{margin:0}main{max-width:860px;margin:auto;padding:22px 16px 60px}h1{font-size:27px;margin:0 0 4px}h2{font-size:19px;margin:0 0 16px}p{margin:8px 0;color:#b9c7db}header{margin-bottom:20px}.badge{display:inline-block;padding:4px 12px;border-radius:20px;background:#4c3629;color:#ffcc96;margin:12px 0 4px}.badge.good{background:#153f39;color:#9eedd1}.card{background:#1b2432;border:1px solid #344056;border-radius:16px;padding:20px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 24px}.control{min-width:0}.control label{display:block;font-weight:600}.actual{display:block;color:#9aacc4;font-size:13px;min-height:22px}.draft{float:right;color:#9ee4db}select,input[type=range]{width:100%;min-height:44px;margin:6px 0}select{background:#111b29;color:inherit;border:1px solid #59718f;border-radius:8px;padding:8px}input{accent-color:#70d9c3}button,.file{font:inherit;display:inline-block;background:#244c50;color:#e8ffff;border:1px solid #5f9c9b;border-radius:9px;min-height:44px;padding:9px 16px;cursor:pointer}button:disabled,input:disabled,select:disabled,.disabled{opacity:.45;cursor:not-allowed}.actions{display:flex;gap:10px;flex-wrap:wrap}.panic{background:#602b36;border-color:#e58b96;width:100%;font-weight:700}.small{font-size:13px}#notice{padding:12px;border-radius:10px;min-height:48px;background:#243247;color:#d9e8fb;overflow-wrap:anywhere}#notice.error{background:#4b2631;color:#ffc2c9}#flags{white-space:pre-line}#file{display:none}summary{cursor:pointer;color:#b8d9ef}footer{color:#8ba0b9;font-size:13px}a{color:#9ee4db}@media(max-width:520px){.grid{grid-template-columns:1fr}.card{padding:16px}main{padding:16px 12px 40px}}
+.live-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.live-grid>div{min-width:0}progress{width:100%;height:18px;accent-color:#70d9c3}.live-value{white-space:pre-line;overflow-wrap:anywhere}.live-warning{color:#ffcc96}#live-status{white-space:pre-line}#live-fsr[data-stale=true]{opacity:.6}@media(max-width:520px){.live-grid{grid-template-columns:1fr}}
 </style></head><body><main>
-<header><h1>Tang20K 乐器控制</h1><p>手机参数面板 · 声音由 FPGA 乐器输出</p>
+<header><h1>Tang20K 乐器控制</h1><p><a href="/extensions">曲谱上传 · Note/Pad/CC 映射 · 实际PCM录音</a></p><p>手机参数面板 · 声音由 FPGA 乐器输出</p>
 <div id="link" class="badge" role="status">正在连接 ESP32，FPGA 状态未知</div>
 <div id="telemetry" class="small"></div></header>
 <div id="notice" role="status" aria-live="polite">等待完整回读。调整后以 FPGA 实际确认为准。</div>
+  <section class="card" id="live-panel"><h2>实时诊断 · 只读</h2>
+  <p id="live-status" role="status" aria-live="polite">等待遥测能力探测；参数控制可独立使用。</p>
+  <div class="live-grid" id="live-fsr" data-stale="true">
+    <div><strong>FSR0 · 明亮度</strong><p class="live-value" id="fsr0-value">RAW — · LVL — · CAL —</p><progress id="fsr0-bar" max="255" value="0" aria-label="FSR0 表情量"></progress></div>
+    <div><strong>FSR1 · 拨弦阻尼</strong><p class="live-value" id="fsr1-value">RAW — · LVL — · CAL —</p><progress id="fsr1-bar" max="255" value="0" aria-label="FSR1 表情量"></progress></div>
+  </div>
+  <p class="live-value live-warning" id="live-adc">ADC 状态未知</p>
+  <p class="live-value" id="live-midi">VEL — · BEND — · MOD —</p>
+  <p class="live-value" id="live-beams">光电状态未知</p>
+  <p class="live-value" id="live-voices">声部与测试状态未知</p>
+  <p class="small">RAW 为十六进制 ADC 原码，LVL 为 0–255 表情量，CAL 为校准状态；不是 kg 或电压。此区只读，不写入参数预设。</p></section>
 <section class="card"><h2>演奏</h2><div id="play" class="grid"></div>
 <p class="small">KEY：琴键直接发声，关闭光电扫弦。STRUM：按住琴键选择和弦，由光电触发扫弦，琴键本身不直接发声。HYBRID 混合：琴键立即发声，光电可独立扫出当前按住的和弦。切换结果以 FPGA 实际回读为准。</p></section>
 <section class="card"><h2>效果器</h2><div id="fx" class="grid"></div>
@@ -21,9 +33,9 @@ static const char PHONE_HTML[] PROGMEM = R"PHONEHTML(<!doctype html>
 <p class="small">仅参数通信与 JSON 导入导出。导入先校验整份文件；未知/重复字段、非整数或越界值整份拒绝。通过后依次 SET，硬件执行并非多参数原子事务；中途断链会停止剩余写入并重新回读。</p></section>
 <section class="card"><h2>紧急停音</h2><button id="panic" class="panic" disabled>Panic · 清除持续音</button><p class="small">会取消尚未发出的参数写入；等待当前 UART 请求结束后优先发送。只有收到 FPGA 正常 ACK 才显示确认。</p></section>
 <section class="card"><details><summary>硬件状态 / 演奏提示</summary><p id="flags">等待 FPGA 状态</p>
-<p>Pad 保持打击乐通道 10，音符 36 / 37 / 38 / 39 和既有 GM 别名；手机不改变 Pad 映射。</p>
-<p>主音量也可由实体滑杆 / MIDI CC7 改变，面板持续回读实际值。网页无音频采集、录音或音频传输。</p>
-<p>接线：ESP32 GPIO17 TX → FPGA T11；FPGA P11 TX → ESP32 GPIO16 RX；两端共 GND。ESP32 自己用 USB 供电，两端 3V3 输出不要相连。</p></details></section>
+<p>Pad 使用打击乐通道 10。默认有 36 / 37 / 38 / 39 及既有 GM 别名；“曲谱、映射、录音”扩展页可配置四个 Pad 音符和 CC 映射。</p>
+<p>主音量可由 K4 / MIDI CC7 改变，面板持续回读实际值。扩展页可录制 FPGA 的实际数字 PCM 并下载 WAV；不是手机麦克风录音，也不是模拟线路采样。</p>
+  <p>接线：ESP32 GPIO17 TX → FPGA L9；FPGA N8 TX → ESP32 GPIO16 RX；两端共 GND。ESP32 自己用 USB 供电，两端 3V3 输出不要相连。</p></details></section>
 <footer>AP：Tang20K-Music · 地址 http://192.168.4.1 · 仅本地网络控制</footer>
 </main><script>
 'use strict';
@@ -43,6 +55,42 @@ const controls=new Map(), pending=new Map(), draft=new Map();
 let ready=false,sending=false,panicQueued=false,panicRevision=0,token=0,state=null,boot=null,failureLatched=false;
 let lastStateAt=0,pumpTimer=0,polling=false;
 const $=id=>document.getElementById(id);
+let liveSample=null,liveReceivedAt=0,liveConnected=false;
+function clearLive(message){
+ $('live-status').textContent=message;$('live-fsr').dataset.stale='true';
+ for(let i=0;i<2;i++){$('fsr'+i+'-value').textContent='RAW — · LVL — · CAL —';$('fsr'+i+'-bar').value=0;}
+ $('live-adc').textContent='ADC 状态未知';$('live-midi').textContent='VEL — · BEND — · MOD —';
+ $('live-beams').textContent='光电状态未知';$('live-voices').textContent='声部与测试状态未知';
+}
+function paintLive(){
+ const t=liveSample;
+ if(!liveConnected){clearLive('链路未就绪，遥测未知；旧值已清除。');return;}
+ if(!t){clearLive('当前 FPGA/桥接未提供遥测；参数控制可继续使用。');return;}
+ if(t.status==='unsupported'){clearLive('当前 FPGA 不支持遥测；参数控制可继续使用。');return;}
+ if(t.status==='unavailable'){clearLive('遥测能力探测或读取失败；参数控制可继续使用。');return;}
+ if(!t.enabled||t.status==='disabled'){clearLive('遥测未启用；参数控制可继续使用。');return;}
+ if(t.status!=='supported'){clearLive('正在探测遥测能力；参数控制可继续使用。');return;}
+ if(!t.valid||!t.snapshot_valid||!Number.isFinite(t.age_ms)){clearLive('等待完整、有效的 FPGA 遥测快照。');return;}
+ const age=Math.max(0,t.age_ms)+Math.max(0,Date.now()-liveReceivedAt);
+ if(t.stale||age>=1000){clearLive('遥测过期（'+Math.floor(age)+' ms），当前值未知；参数控制独立运行。');return;}
+ const integer=(x,max)=>Number.isInteger(x)&&x>=0&&x<=max;
+ if(!Array.isArray(t.fsr)||t.fsr.length!==2||!t.fsr.every(f=>integer(f.raw,65535)&&integer(f.level,255)&&typeof f.calibrated==='boolean')||
+    !t.adc||!t.midi||!t.beams||!t.test||!integer(t.midi.velocity,127)||!integer(t.midi.modulation,127)||
+    !Number.isInteger(t.midi.bend)||t.midi.bend< -256||t.midi.bend>255||!integer(t.voices,32)||!integer(t.test.requested,32)){
+   clearLive('遥测格式不完整，当前值未知。');return;
+ }
+ $('live-status').textContent='快照 #'+t.snapshot_id+' · 采集起点距今 '+Math.floor(age)+' ms（只读）';
+ $('live-fsr').dataset.stale=String(!!t.adc.stale||!!t.adc.fault);
+ for(let i=0;i<2;i++){
+   const f=t.fsr[i];$('fsr'+i+'-value').textContent='RAW 0x'+f.raw.toString(16).toUpperCase().padStart(4,'0')+' · LVL '+f.level+' · CAL '+(f.calibrated?'已校准':'未校准');
+   $('fsr'+i+'-bar').value=f.level;
+ }
+ $('live-adc').textContent='ADC '+(t.adc.fault?'故障':'无故障')+' · '+(t.adc.stale?'采样已过期':'采样有效');
+ $('live-midi').textContent='VEL '+t.midi.velocity+' · BEND '+t.midi.bend+' · MOD '+t.midi.modulation+'\nMIDI 帧错误：'+(t.midi.frame_error?'有':'无')+' · 溢出：'+(t.midi.overflow?'有':'无');
+ const b=t.beams;
+ $('live-beams').textContent='光电 '+(b.enabled?'已启用':'未启用')+' · '+(b.ready?'就绪':'未就绪')+' · '+(b.busy?'扫弦忙':'空闲')+'\nA 电平 '+Number(!!b.electrical_a)+' / '+(b.blocked_a?'遮挡':'未遮挡')+'；B 电平 '+Number(!!b.electrical_b)+' / '+(b.blocked_b?'遮挡':'未遮挡');
+ $('live-voices').textContent='活动声部 '+t.voices+' / 32 · 测试请求 '+t.test.requested+'\n测试 '+(t.test.active?'活动':'未活动')+' · 巡检 '+(t.test.sweep?'运行':'停止')+' · 索引 '+t.test.index+' · overrun '+(t.test.overrun?'有':'无')+' · 测试所有权 '+(t.test.owned?'有':'无')+' · 测试音源 '+(t.test.mode?'开启':'关闭');
+}
 function notice(text,error=false){$('notice').textContent=text;$('notice').className=error?'error':'';}
 function enable(){
  for(const c of controls.values()) c.input.disabled=!ready;
@@ -95,7 +143,7 @@ function forgetWrites(reason){
  for(const c of controls.values()){c.wanted.textContent='';c.editing=false;}
  if(had) notice(reason,true);
 }
-function offline(reason){ready=false;forgetWrites(reason);$('link').textContent=reason+'；旧值已过期';$('link').className='badge';
+function offline(reason){ready=false;liveConnected=false;paintLive();forgetWrites(reason);$('link').textContent=reason+'；旧值已过期';$('link').className='badge';
  for(const c of controls.values()) if(c.seen)c.actual.textContent=c.actual.textContent.replace(/（过期）$/,'')+'（过期）';enable();}
 async function transmit(raw,entries){
  sending=true;enable();
@@ -161,6 +209,7 @@ function render(s){
   'MIDI 已见/按住：'+!!(b&1),'ADS 故障：'+!!(b&2),'触摸故障：'+!!(b&4),'光学就绪：'+!!(b&8),
   '光电输入已启用（STRUM / HYBRID，bit4）：'+!!(b&16),'MIDI 溢出：'+!!(b&32),'数字归零：'+!!(b&64)].join('\n');}
  else $('flags').textContent='状态过期，等待 FPGA 回读';
+ liveSample=s.telemetry??null;liveReceivedAt=Date.now();liveConnected=!!ready;paintLive();
  enable();
 }
 async function poll(){
@@ -187,5 +236,6 @@ $('file').addEventListener('change',async()=>{
  }catch(error){notice('预设未应用：'+error.message,true);}
 });
 setInterval(()=>{if(ready&&Date.now()-lastStateAt>1800)offline('手机状态心跳超时');},300);
+setInterval(paintLive,100); // local freshness also expires between HTTP replies
 poll();
 </script></body></html>)PHONEHTML";

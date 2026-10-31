@@ -20,11 +20,18 @@
 // S13+S15恰好双键长按进入，S1..S5选1/4/8/16/32声部，S6启动逐路OFF/ON，
 // S16新单键上升沿退出；按键边沿在每 clk 识别，计时与渐变用 sample_tick。
 // WAIT_RELEASE 等干净全松才恢复；无按键释放承诺，测试超时不是强行复位键盘。
+// V035可选外部面板：EXTERNAL_UI_ENABLE=1时，external_enter脉冲绕过旧2s
+// 组合键计时，但仍复用原有淡出/零增益清零/32路淡入路径。external_exit与
+// S16等优先级，可以取消进入或恢复渐变；同时进入/退出时退出优先。
+// external_count_valid/count只接受1/4/8/16/32；count和sweep仅在ACTIVE且
+// 已清洁松键武装后生效。有效路数命令优先于同拍sweep命令；无效数不保活。
+// 外部控制是单clk事件，不缓存；默认关闭时未连接的外部端口不影响旧行为。
 module oscillator_test_control #(
     parameter integer HOLD_SAMPLES       = 187500,
     parameter integer MAX_SAMPLES        = 5625000,
     parameter integer SWEEP_HALF_SAMPLES = 46875,
-    parameter integer RAMP_DIV           = 8
+    parameter integer RAMP_DIV           = 8,
+    parameter integer EXTERNAL_UI_ENABLE = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -43,7 +50,12 @@ module oscillator_test_control #(
     output wire [3:0]  state_debug,
     // 允许普通输入与输出所有权分开：退出渐入时必须接收新按下/松开/鼓击。
     // owned 仍覆盖这段渐入，使音量渐变、菜单和教学暂停规则保持不变。
-    output wire        normal_input_ready
+    output wire        normal_input_ready,
+    input  wire        external_enter,
+    input  wire        external_exit,
+    input  wire        external_count_valid,
+    input  wire [5:0]  external_count,
+    input  wire        external_sweep_start
 );
     // count只需容纳0..LIMIT-1；LIMIT=1仍至少1位，避免[-1:0]或零宽寄存器。
     // 仿真/综合传入0或负参数时按1处理，既不回绕，也不生成永不结束的状态。
@@ -107,8 +119,29 @@ module oscillator_test_control #(
     wire count_16 = !ghost && (keys == 16'h0008) && rising_keys[3];
     wire count_32 = !ghost && (keys == 16'h0010) && rising_keys[4];
     wire start_sweep = !ghost && (keys == 16'h0020) && rising_keys[5];
+    // 参数常量0会在综合期删去外部逻辑；0 && Z在仿真中也为0，允许旧实例
+    // 完全省略新端口，而不是依赖浮空输入的默认电平。
+    wire external_enter_request = EXTERNAL_UI_ENABLE && external_enter;
+    wire external_exit_request = EXTERNAL_UI_ENABLE && external_exit;
+    wire external_count_request = EXTERNAL_UI_ENABLE && external_count_valid &&
+                         ((external_count == 6'd1) || (external_count == 6'd4) ||
+                          (external_count == 6'd8) || (external_count == 6'd16) ||
+                          (external_count == 6'd32));
+    wire select_1 = count_1 || (external_count_request && external_count == 6'd1);
+    wire select_4 = count_4 || (external_count_request && external_count == 6'd4);
+    wire select_8 = count_8 || (external_count_request && external_count == 6'd8);
+    wire select_16 = count_16 || (external_count_request && external_count == 6'd16);
+    wire select_32 = count_32 || (external_count_request && external_count == 6'd32);
+    wire select_count = select_1 || select_4 || select_8 || select_16 || select_32;
+    wire select_sweep = !select_count &&
+                       (start_sweep || (EXTERNAL_UI_ENABLE && external_sweep_start));
     wire new_control = controls_armed &&
-                       (count_1 || count_4 || count_8 || count_16 || count_32 || start_sweep);
+                       (select_count || select_sweep);
+    wire legacy_entry_request = entry_chord && sample_tick &&
+                               ((hold_count == 0) || remote_active == hold_source) &&
+                               (hold_count >= HOLD_LIMIT - 1);
+    wire enter_request = !exit_key && !external_exit_request &&
+                         (external_enter_request || legacy_entry_request);
     // 来源切换只触发一次退出；切换后remote_active可以长期保持新值，不能因此
     // 在恢复正常音量时反复退出、永久卡在owned。S16的新上升沿仍可取消恢复。
     wire source_exit = owned && !source_exit_seen && (remote_active != entry_source);
@@ -144,7 +177,7 @@ module oscillator_test_control #(
 
             // 退出优先于准备完成、测试渐入完成以及任何控制/扫频推进。
             // 已在FADE_OUT/WAIT_RELEASE时不重置渐变计数，否则持续输入会拖延退出。
-            if (owned && (exit_key || source_exit) &&
+            if (owned && (exit_key || external_exit_request || source_exit) &&
                 (state != FADE_OUT) && (state != WAIT_RELEASE)) begin
                 state <= FADE_OUT;
                 ramp_count <= 0;
@@ -160,22 +193,24 @@ module oscillator_test_control #(
                         source_exit_seen <= 1'b0;
                         // 即使两次采样之间出现短暂无效/ghost/来源变化，也破坏连续意图。
                         // 不跨输入来源拼接长按时间；HOLD_LIMIT个有效采样才获得owned。
-                        if (entry_chord) begin
+                        if (enter_request) begin
+                            // 两个入口只有此处获得所有权；后续的音量斜坡、
+                            // clear_audio边界与默认全32路完全共用。
+                            state <= FADE_NORMAL_OUT;
+                            entry_source <= remote_active;
+                            ramp_count <= 0;
+                            idle_count <= 0;
+                            controls_armed <= 1'b0;
+                            sweep_active <= 1'b0;
+                            sweep_index <= 5'd0;
+                            sweep_count <= 0;
+                            sweep_on <= 1'b0;
+                        end else if (entry_chord) begin
                             if ((hold_count != 0) && (remote_active != hold_source)) begin
                                 hold_count <= 0;
                             end else if (sample_tick) begin
                                 hold_source <= remote_active;
-                                if (hold_count >= HOLD_LIMIT - 1) begin
-                                    state <= FADE_NORMAL_OUT;
-                                    entry_source <= remote_active;
-                                    ramp_count <= 0;
-                                    idle_count <= 0;
-                                    controls_armed <= 1'b0;
-                                    sweep_active <= 1'b0;
-                                    sweep_index <= 5'd0;
-                                    sweep_count <= 0;
-                                    sweep_on <= 1'b0;
-                                end else begin
+                                if (hold_count < HOLD_LIMIT - 1) begin
                                     hold_count <= hold_count + 1'b1;
                                 end
                             end else begin
@@ -225,22 +260,22 @@ module oscillator_test_control #(
                             sweep_count <= 0;
                             sweep_index <= 5'd0;
                             sweep_on <= 1'b0;
-                            sweep_active <= start_sweep;
-                            if (count_1) begin
+                            sweep_active <= select_sweep;
+                            if (select_1) begin
                                 requested_count <= 6'd1;
                                 gate_mask <= 32'h00000001;
-                            end else if (count_4) begin
+                            end else if (select_4) begin
                                 requested_count <= 6'd4;
                                 gate_mask <= 32'h0000000f;
-                            end else if (count_8) begin
+                            end else if (select_8) begin
                                 requested_count <= 6'd8;
                                 gate_mask <= 32'h000000ff;
-                            end else if (count_16) begin
+                            end else if (select_16) begin
                                 requested_count <= 6'd16;
                                 gate_mask <= 32'h0000ffff;
                             end else begin
                                 requested_count <= 6'd32;
-                                gate_mask <= start_sweep ? 32'hfffffffe : 32'hffffffff;
+                                gate_mask <= select_sweep ? 32'hfffffffe : 32'hffffffff;
                             end
                         end else if (sample_tick) begin
                             if (idle_count >= IDLE_LIMIT - 1) begin

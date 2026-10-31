@@ -1,0 +1,12 @@
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const output=path.join(__dirname,'build');
+const bytes=fs.readFileSync(path.join(output,'v039-usb-state.json'),'utf8');
+assert.equal(bytes.split('\n').length,2);assert(bytes.endsWith('\n'));
+const usb=JSON.parse(bytes),http=JSON.parse(fs.readFileSync(path.join(output,'v039-http-state.json'),'utf8'));
+assert.deepEqual(usb,http);assert.equal(usb.firmware_version,'V039');
+assert.equal(usb.raw_uart_rx_bytes,28);assert.equal(usb.rx,1);
+assert.equal(Object.keys(usb.params).length,16);assert.equal(usb.telemetry.fsr.length,2);
+for(const key of ['boot_id','linked','synced','stale','ack_age_ms','revision','queued','inflight','tx','rx','raw_uart_rx_bytes','retries','ignored','panic','params','telemetry'])assert(Object.hasOwn(usb,key),key);
+assert(!Object.hasOwn(usb.params,'firmware_version'));assert(!Object.hasOwn(usb.params,'raw_uart_rx_bytes'));
+fs.writeFileSync(path.join(output,'v039-usb-result.json'),JSON.stringify({passed:true,usb_http_full_json_equal:true,firmware_version:'V039',raw_uart_rx_bytes:28,accepted_ack_frames:1,hardware_access:false},null,2));
+console.log('PASS USB + HTTP full JSON schema/equality / V039 identity / raw28 vs rx1 / unchanged 16-param object');

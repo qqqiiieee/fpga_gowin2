@@ -8,7 +8,7 @@ module tb_v034_top_phone;
  tri1 scl,sda;wire tx;
  top #(.BUTTON_DEBOUNCE_CYCLES(DB),.BUTTON_LONG_PRESS_CYCLES(HOLD)) dut(
   .clk(clk),.ui_buttons_n(keys_n),.phone_uart_rx(rx),.phone_uart_tx(tx),
-  .uart_rx(1'b1),.midi_rx(1'b1),.optical_beams(2'b11),.touch_miso(1'b0),.adc_scl(scl),.adc_sda(sda));
+  .uart_rx(1'b1),.midi_rx(1'b1),.optical_beams(2'b11),.adc_scl(scl),.adc_sda(sda));
  defparam dut.u_phone.CLK_HZ=BC*115200;
  wire [7:0] byte_rx;wire valid,error;
  midi_uart_rx #(.CLK_HZ(BC*115200),.BAUD(115200)) monitor(

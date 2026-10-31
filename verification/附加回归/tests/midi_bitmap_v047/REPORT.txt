@@ -1,0 +1,20 @@
+V047 MIDI bitmap differential verification
+
+Passed: True; frozen final comparison: True
+Baseline SHA256: 08c12d1f527fdb8d2e74dd57df86b8e744931176d47f398d069ae6be84a2a58d
+Current SHA256: 0a51924531c4c981398d5ab98182a31da8c668ccdf5ec8311b73cf604de22969
+All snapshot input hashes unchanged after run: True
+Outputs compared: 33; every pre-edge and post-NBA sample including invalid fields.
+Real 31250baud UART frames at 250000Hz (8 clocks/bit); original mapping idle formula gives 80 clocks.
+Two distinct full seeds required for packaging: True
+MAPPING_ENABLE=1 throughout, runtime disabled/identity-enabled stages plus shifted bank1 raw-note checks.
+ACTIVE_SENSE_MS=20 for accelerated timeout coverage; default 350ms and 27MHz timing are not certified here.
+Baseline is unchanged; only its derived module declaration is renamed. This verification run did not edit production files; the earlier authorized CE/SOP edit is the frozen candidate under test.
+No Gowin build, resource/timing estimate, hardware flashing, or internet access.
+Full results: D:\Gowin_project\instrument_phone_extensions_20261031\tests\midi_bitmap_v047\results\20261031T114743_158943Z\results.json
+
+Seed 1: passed=True metrics={'cycles': 504858, 'comparisons': 1009715, 'cases': 31, 'events': 1799, 'receipts': 1065, 'panics': 85, 'stall_checks': 57793, 'suppress_pop_on': 3, 'suppress_pop_off': 2, 'suppress_key_on': 2, 'suppress_key_off': 2, 'suppress_panic_oldheld': 2, 'scan_retrigger': 2, 'full_pop_push': 2, 'scan_stall': 4374, 'scan_direct': 2, 'seed': 1} log=D:\Gowin_project\instrument_phone_extensions_20261031\tests\midi_bitmap_v047\results\20261031T114743_158943Z\run_seed_1.log
+Seed 203047: passed=True metrics={'cycles': 503019, 'comparisons': 1006037, 'cases': 31, 'events': 1808, 'receipts': 1060, 'panics': 88, 'stall_checks': 57977, 'suppress_pop_on': 3, 'suppress_pop_off': 2, 'suppress_key_on': 2, 'suppress_key_off': 2, 'suppress_panic_oldheld': 2, 'scan_retrigger': 2, 'full_pop_push': 2, 'scan_stall': 4374, 'scan_direct': 2, 'seed': 203047} log=D:\Gowin_project\instrument_phone_extensions_20261031\tests\midi_bitmap_v047\results\20261031T114743_158943Z\run_seed_203047.log
+
+Earlier 1MHz TIMEOUT/cancelled runs are retained separately and are NOT counted as passes.
+Receipt and held negative controls both detected the injected mismatch at250kHz (cycles340 and341).

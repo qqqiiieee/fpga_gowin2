@@ -1,0 +1,1247 @@
+{
+  "passed": true,
+  "scope": "25 current focused cases; 2 earlier complete-period passes with executable input equivalence",
+  "source_frozen": true,
+  "frozen_at_utc": "2026-10-31T10:33:18.973389+00:00",
+  "focused_case_count": 25,
+  "tests": [
+    {
+      "name": "rom",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 3.094,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_builtin_rom",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\rom.vvp",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/tb_builtin_rom.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "rom_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\rom_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.547,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\rom.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "rom.log",
+        "metrics": [
+          "BUILTIN_ROM_PASS addresses=1024 metadata=1024 synchronous=1 reserved_zero=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\rom.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "builtin_guide_0",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 2.828,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_builtin_guide",
+          "-Ptb_builtin_guide.B=0",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_0.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/tb_builtin_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_0_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_0_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.266,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_0.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_0.log",
+        "metrics": [
+          "BUILTIN_GUIDE_PASS B=0 checks=1613 bubbles=118 songs=3 exact_BPM_duration=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_0.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "legacy_guide_0",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 3.094,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_piano_roll_guide",
+          "-Ptb_piano_roll_guide.TEST_BEAT_SAMPLES=0",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_0.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_roll_score.v",
+          "tests/tb_piano_roll_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_0_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_0_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.547,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_0.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_0.log",
+        "metrics": [
+          "PIANO_ROLL_GUIDE_TEST_PASS B=1 checks=1702 lookup=256 full_songs=3 no_drift=1 pause_restart=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_0.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "builtin_guide_1",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 3.094,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_builtin_guide",
+          "-Ptb_builtin_guide.B=1",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_1.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/tb_builtin_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_1_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_1_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 1.594,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_1.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_1.log",
+        "metrics": [
+          "BUILTIN_GUIDE_PASS B=1 checks=1613 bubbles=118 songs=3 exact_BPM_duration=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_1.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "legacy_guide_1",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 3.578,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_piano_roll_guide",
+          "-Ptb_piano_roll_guide.TEST_BEAT_SAMPLES=1",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_1.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_roll_score.v",
+          "tests/tb_piano_roll_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_1_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_1_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.578,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_1.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_1.log",
+        "metrics": [
+          "PIANO_ROLL_GUIDE_TEST_PASS B=1 checks=1702 lookup=256 full_songs=3 no_drift=1 pause_restart=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_1.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "builtin_guide_7",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 3.047,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_builtin_guide",
+          "-Ptb_builtin_guide.B=7",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_7.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/tb_builtin_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_7_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_7_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.968,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_7.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_7.log",
+        "metrics": [
+          "BUILTIN_GUIDE_PASS B=7 checks=10463 bubbles=472 songs=3 exact_BPM_duration=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_7.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "legacy_guide_7",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 3.047,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_piano_roll_guide",
+          "-Ptb_piano_roll_guide.TEST_BEAT_SAMPLES=7",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_7.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_roll_score.v",
+          "tests/tb_piano_roll_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_7_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_7_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.968,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_7.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_7.log",
+        "metrics": [
+          "PIANO_ROLL_GUIDE_TEST_PASS B=7 checks=9382 lookup=256 full_songs=3 no_drift=1 pause_restart=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_7.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "builtin_guide_63",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 2.562,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_builtin_guide",
+          "-Ptb_builtin_guide.B=63",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_63.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/tb_builtin_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_63_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_63_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 1.219,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_63.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_63.log",
+        "metrics": [
+          "BUILTIN_GUIDE_PASS B=63 checks=89759 bubbles=472 songs=3 exact_BPM_duration=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_63.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "legacy_guide_63",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 3.656,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_piano_roll_guide",
+          "-Ptb_piano_roll_guide.TEST_BEAT_SAMPLES=63",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_63.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_roll_score.v",
+          "tests/tb_piano_roll_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_63_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_63_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 6.0,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_63.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_63.log",
+        "metrics": [
+          "PIANO_ROLL_GUIDE_TEST_PASS B=63 checks=81062 lookup=256 full_songs=3 no_drift=1 pause_restart=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_63.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "builtin_guide_64",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 3.282,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_builtin_guide",
+          "-Ptb_builtin_guide.B=64",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_64.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/tb_builtin_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_64_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_64_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 1.422,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_64.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_64.log",
+        "metrics": [
+          "BUILTIN_GUIDE_PASS B=64 checks=91175 bubbles=472 songs=3 exact_BPM_duration=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_64.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "legacy_guide_64",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 3.266,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_piano_roll_guide",
+          "-Ptb_piano_roll_guide.TEST_BEAT_SAMPLES=64",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_64.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_roll_score.v",
+          "tests/tb_piano_roll_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_64_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_64_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 5.984,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_64.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_64.log",
+        "metrics": [
+          "PIANO_ROLL_GUIDE_TEST_PASS B=64 checks=82342 lookup=256 full_songs=3 no_drift=1 pause_restart=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_64.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "builtin_guide_65",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 2.484,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_builtin_guide",
+          "-Ptb_builtin_guide.B=65",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_65.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/tb_builtin_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_65_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_65_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 1.407,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_65.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_65.log",
+        "metrics": [
+          "BUILTIN_GUIDE_PASS B=65 checks=91529 bubbles=472 songs=3 exact_BPM_duration=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_65.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "legacy_guide_65",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.156,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_piano_roll_guide",
+          "-Ptb_piano_roll_guide.TEST_BEAT_SAMPLES=65",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_65.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_roll_score.v",
+          "tests/tb_piano_roll_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_65_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_65_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 5.578,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_65.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_65.log",
+        "metrics": [
+          "PIANO_ROLL_GUIDE_TEST_PASS B=65 checks=82712 lookup=256 full_songs=3 no_drift=1 pause_restart=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_65.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "builtin_guide_67",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.156,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_builtin_guide",
+          "-Ptb_builtin_guide.B=67",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_67.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/tb_builtin_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_67_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_67_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.875,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_67.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_67.log",
+        "metrics": [
+          "BUILTIN_GUIDE_PASS B=67 checks=92237 bubbles=472 songs=3 exact_BPM_duration=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_67.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "legacy_guide_67",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.14,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_piano_roll_guide",
+          "-Ptb_piano_roll_guide.TEST_BEAT_SAMPLES=67",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_67.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_roll_score.v",
+          "tests/tb_piano_roll_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_67_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_67_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 6.219,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_67.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_67.log",
+        "metrics": [
+          "PIANO_ROLL_GUIDE_TEST_PASS B=67 checks=83480 lookup=256 full_songs=3 no_drift=1 pause_restart=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_67.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "builtin_guide_1001",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.157,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_builtin_guide",
+          "-Ptb_builtin_guide.B=1001",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_1001.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/tb_builtin_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_1001_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_1001_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 5.125,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_guide_1001.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_guide_1001.log",
+        "metrics": [
+          "BUILTIN_GUIDE_PASS B=1001 checks=422873 bubbles=472 songs=3 exact_BPM_duration=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_guide_1001.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "legacy_guide_1001",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.157,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_piano_roll_guide",
+          "-Ptb_piano_roll_guide.TEST_BEAT_SAMPLES=1001",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_1001.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_roll_score.v",
+          "tests/tb_piano_roll_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_1001_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_1001_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 10.64,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_guide_1001.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_guide_1001.log",
+        "metrics": [
+          "PIANO_ROLL_GUIDE_TEST_PASS B=1001 checks=442136 lookup=256 full_songs=3 no_drift=1 pause_restart=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_guide_1001.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "builtin_pixels",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.156,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_builtin_pixels",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_pixels.vvp",
+          "src/piano_roll_renderer.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/tb_builtin_pixels.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_pixels_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_pixels_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 78.078,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\builtin_pixels.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "builtin_pixels.log",
+        "metrics": [
+          "BUILTIN_PIXELS_PASS checks=4443200 rows=5554 pipeline=2 keys=32 midi=41..72 boundaries=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\builtin_pixels.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "ready_switch",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.11,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_ready_switch",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\ready_switch.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/tb_ready_switch.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "ready_switch_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\ready_switch_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.297,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\ready_switch.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "ready_switch.log",
+        "metrics": [
+          "BUILTIN_READY_SWITCH_PASS checks=19 reset_song_bank_invalid=1"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\ready_switch.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "legacy_baseline",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.109,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_custom_builtin_compat",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_baseline.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_roll_renderer.v",
+          "src/piano_roll_score.v",
+          "tests/custom_score/tb_custom_builtin_compat.v",
+          "tests/builtin_score_v045/guide_golden.v",
+          "tests/builtin_score_v045/renderer_golden.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_baseline_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_baseline_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 1.25,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\legacy_baseline.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "legacy_baseline.log",
+        "metrics": [
+          "CUSTOM_BUILTIN_COMPAT_PASS songs=3 frozen_baseline=1 guide_and_renderer=1 cycles=15009"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\legacy_baseline.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "custom_guide_23437",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.109,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_custom_score_guide",
+          "-Ptb_custom_score_guide.SPB=23437",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\custom_guide_23437.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/custom_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "custom_guide_23437_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\custom_guide_23437_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 12.922,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\custom_guide_23437.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "custom_guide_23437.log",
+        "metrics": [
+          "CUSTOM_GUIDE_PASS SPB=23437 countin_samples=46874 duration_samples=117185 checks=1412019"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\custom_guide_23437.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "custom_guide_46875",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.094,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_custom_score_guide",
+          "-Ptb_custom_score_guide.SPB=46875",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\custom_guide_46875.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/custom_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "custom_guide_46875_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\custom_guide_46875_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 28.656,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\custom_guide_46875.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "custom_guide_46875.log",
+        "metrics": [
+          "CUSTOM_GUIDE_PASS SPB=46875 countin_samples=93750 duration_samples=234375 checks=2824157"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\custom_guide_46875.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "custom_guide_187500",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.11,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_custom_score_guide",
+          "-Ptb_custom_score_guide.SPB=187500",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\custom_guide_187500.vvp",
+          "src/piano_roll_guide.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/custom_guide.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "custom_guide_187500_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\custom_guide_187500_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 181.531,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\custom_guide_187500.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "custom_guide_187500.log",
+        "metrics": [
+          "CUSTOM_GUIDE_PASS SPB=187500 countin_samples=375000 duration_samples=937500 checks=11296813"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\custom_guide_187500.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "custom_pixels_0",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.125,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_custom_score_pixels",
+          "-Ptb_custom_score_pixels.PIXEL_PHASE=0",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\custom_pixels_0.vvp",
+          "src/piano_roll_renderer.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/custom_pixels.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "custom_pixels_0_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\custom_pixels_0_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 44.422,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\custom_pixels_0.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "custom_pixels_0.log",
+        "metrics": [
+          "CUSTOM_PIXELS_PASS phase_ns=0 pixels=1468800 rows=1836 commits=15 renderer_stages=2 prefetch_blank_pixels=34"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\custom_pixels_0.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "custom_pixels_11",
+      "compile": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 0.234,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+          "-g2001",
+          "-Wall",
+          "-I",
+          ".",
+          "-s",
+          "tb_custom_score_pixels",
+          "-Ptb_custom_score_pixels.PIXEL_PHASE=11",
+          "-o",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\custom_pixels_11.vvp",
+          "src/piano_roll_renderer.v",
+          "src/custom_score_ram.v",
+          "src/piano_builtin_score_ram.v",
+          "tests/builtin_score_v045/custom_pixels.v"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "custom_pixels_11_compile.log",
+        "metrics": [],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\custom_pixels_11_compile.log"
+      },
+      "passed": true,
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 115.313,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\custom_pixels_11.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\snapshot",
+        "log": "custom_pixels_11.log",
+        "metrics": [
+          "CUSTOM_PIXELS_PASS phase_ns=11 pixels=1468800 rows=1836 commits=15 renderer_stages=2 prefetch_blank_pixels=34"
+        ],
+        "absolute_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\custom_pixels_11.log"
+      },
+      "reused_from": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102423_163553Z\\report.json",
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    }
+  ],
+  "prior_complete_period_checks": [
+    {
+      "name": "builtin_guide_46875",
+      "passed": true,
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102054_122084Z\\report.json",
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 116.735,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102054_122084Z\\builtin_guide_46875.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102054_122084Z\\snapshot",
+        "log": "builtin_guide_46875.log",
+        "metrics": [
+          "BUILTIN_GUIDE_PASS B=46875 checks=17960015 bubbles=472 songs=3 exact_BPM_duration=1"
+        ]
+      },
+      "compared_inputs": [
+        "src/piano_roll_guide.v",
+        "src/custom_score_ram.v",
+        "src/piano_builtin_score_ram.v",
+        "tests/builtin_score_v045/tb_builtin_guide.v",
+        "src/piano_song_rom_v045.vh",
+        "src/piano_builtin_score.hex",
+        "tests/song_library_v045/source.json",
+        "tests/builtin_score_v045/oracle.hex"
+      ],
+      "comment_only_differences": [
+        "src/piano_roll_guide.v"
+      ],
+      "executable_inputs_equivalent": true,
+      "latest_repeat": "Stopped at user request to finish focused validation; not a functional assertion failure",
+      "stopped_repeat_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    },
+    {
+      "name": "legacy_guide_46875",
+      "passed": true,
+      "evidence_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102054_122084Z\\report.json",
+      "simulation": {
+        "exit": 0,
+        "passed": true,
+        "seconds": 141.079,
+        "argv": [
+          "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\vvp.exe",
+          "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102054_122084Z\\legacy_guide_46875.vvp"
+        ],
+        "cwd": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102054_122084Z\\snapshot",
+        "log": "legacy_guide_46875.log",
+        "metrics": [
+          "PIANO_ROLL_GUIDE_TEST_PASS B=46875 checks=18057752 lookup=256 full_songs=3 no_drift=1 pause_restart=1"
+        ]
+      },
+      "compared_inputs": [
+        "src/piano_roll_guide.v",
+        "src/custom_score_ram.v",
+        "src/piano_roll_score.v",
+        "tests/tb_piano_roll_guide.v",
+        "src/piano_song_rom_v045.vh",
+        "src/piano_builtin_score.hex",
+        "tests/song_library_v045/source.json",
+        "tests/builtin_score_v045/oracle.hex"
+      ],
+      "comment_only_differences": [
+        "src/piano_roll_guide.v"
+      ],
+      "executable_inputs_equivalent": true,
+      "latest_repeat": "Stopped at user request to finish focused validation; not a functional assertion failure",
+      "stopped_repeat_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json"
+    }
+  ],
+  "prior_complete_period_count": 2,
+  "latest_long_repeats_stopped": true,
+  "source_sha256": {
+    "src/piano_roll_guide.v": "f127cd6d47019843623971e631fc4c28d6dddc1817e14f7186eae9ff1bc149e3",
+    "src/piano_roll_renderer.v": "b15d2ff8fa3d2f9791782339b8f60f67c63d15caf548a5b66e64bb52f6dca013",
+    "src/piano_roll_score.v": "0850607ea71b05d42b457a71ab3678170f3c522385d725b01c019671b197c4ad",
+    "src/piano_builtin_score_ram.v": "a61d3965c58c6dbcd49bbb527eab7213d4362b5f7433eb379df75bab34ba6585",
+    "src/custom_score_ram.v": "8b465e5f27891d0ef276f0bb59faeb63b8069a24d6d9c5225954de5d437707e6",
+    "src/piano_builtin_score.hex": "eb14d9981728e24c3a2533752eb62966ac09ff032e8e1b1f0b014bf118916797",
+    "src/piano_layout.vh": "8a12817352ecd8b2848bb17847c3733e167354796ed4ba8bb40ad2d126e3f233",
+    "src/piano_song_rom_v045.vh": "09197fea591f6b350ef9ca64ac26b50b7ece7bb4453363dccd5a1c2ab8369b78"
+  },
+  "resource_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\resource_report.json",
+  "experimental_resource_mapping_passed": true,
+  "production_build": false,
+  "programming": false,
+  "publication": false,
+  "raw_latest_attempt_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\builtin_score_v045\\results\\20261031T102913_962136Z\\report.json",
+  "unresolved_rtl_failures": []
+}

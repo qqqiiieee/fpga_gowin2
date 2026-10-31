@@ -14,3 +14,25 @@ set_false_path -hold -from [get_cells {*u_status/held_status*}] -to [get_cells {
 set_max_delay 39.0 -from [get_cells {*u_scope/capture_gain*}] -to [get_cells {*u_scope/scope_gain*}]
 set_false_path -hold -from [get_cells {*u_scope/capture_gain*}] -to [get_cells {*u_scope/scope_gain*}]
 set_false_path -to [get_pins {*reset_sync*/CLEAR}]
+# V036 visual banks cross only single-bit request/ack toggles. The first
+# metastability stage is asynchronous; its second stage remains timed.
+# Source/pixel_ready are the only registers receiving the common async reset;
+# all functional control registers use their own domain's synchronized release.
+# Do not false-path either entire clock domain or the dual-clock RAM data ports.
+set_false_path -to [get_cells {*visualization.buffers/fft_req_meta*}]
+set_false_path -to [get_cells {*visualization.buffers/xy_req_meta*}]
+set_false_path -to [get_cells {*visualization.buffers/fft_ack_meta*}]
+set_false_path -to [get_cells {*visualization.buffers/xy_ack_meta*}]
+set_false_path -to [get_pins {*visualization.buffers/source_ready*/CLEAR}]
+set_false_path -to [get_pins {*visualization.buffers/pixel_ready*/CLEAR}]
+
+# V041 custom-score bundled-data handshake: request/ack first stages alone
+# are asynchronous. Their synchronizer second/third stages remain timed.
+# held_config stays constant until pixel frame-commit is acknowledged; capture
+# occurs after three pixel synchronizer clocks, so bound the entire bus to 39ns.
+# This is a DATA maximum, not a false path over the display/audio clock domains.
+set_false_path -to [get_cells {*custom_score.req_meta*}]
+set_false_path -to [get_cells {*custom_score.ack_meta*}]
+set_false_path -to [get_cells {extension_state/ack_meta*}]
+set_max_delay 39.0 -from [get_cells {*custom_score.held_config*}] -to [get_cells {*custom_score.pending_config*}]
+set_false_path -hold -from [get_cells {*custom_score.held_config*}] -to [get_cells {*custom_score.pending_config*}]

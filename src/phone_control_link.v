@@ -7,13 +7,15 @@
 module phone_control_link #(
     parameter integer CLK_HZ=27000000,
     parameter integer BAUD=115200,
-    parameter integer TIMEOUT_CYCLES=540000
+    parameter integer TIMEOUT_CYCLES=540000,
+    parameter integer TELEMETRY_ENABLE=0 // V038：新增只读16..31，0保留原协议范围。
 )(
     input wire clk,rst_n,rx,
     output wire tx,
     output reg set_valid,panic,
     output reg [7:0] param,value,
-    input wire [7:0] read_value,status_flags,current_timbre,current_fx,current_volume
+    input wire [7:0] read_value,status_flags,current_timbre,current_fx,current_volume,
+    output reg get_valid // 合法GET提交；同序号紧邻重试GET16不再次锁存快照。
 );
     localparam integer BC=(CLK_HZ+BAUD/2)/BAUD;
     localparam integer BW=BC<2?1:$clog2(BC);
@@ -30,6 +32,10 @@ module phone_control_link #(
     reg [TW-1:0] age;
     reg [7:0] version,seq,command,checksum,result;
     reg reserved_bad;
+    // GET16具有锁存快照的副作用。同一笔请求因丢ACK重发时必须复用原
+    // 快照，保证重试返回的低字节与后续高字节仍属于同一次采样。
+    reg [7:0] previous_request_seq;
+    reg previous_was_snapshot;
     reg [2:0] settle;
     reg [95:0] packet;
     reg [9:0] serial_word;
@@ -47,7 +53,8 @@ module phone_control_link #(
             else if(cmd>2)command_result=1;
             else if(cmd==2)begin
                 if(idx!=0 || val!=0)command_result=3;
-            end else if(idx>15 || (cmd==1 && idx==15))command_result=2;
+            end else if(idx>(TELEMETRY_ENABLE ? 31 : 15) ||
+                        (cmd==1 && idx>=15))command_result=2;
             else if(cmd==0 && val!=0)command_result=3;
             else if(cmd==1)begin
                 case(idx)
@@ -66,10 +73,11 @@ module phone_control_link #(
         if(!rst_n)begin
             state<=RECEIVE;pos<=0;age<=0;version<=0;seq<=0;command<=0;
             checksum<=0;result<=0;reserved_bad<=0;param<=0;value<=0;
-            set_valid<=0;panic<=0;settle<=0;packet<=0;serial_word<=10'h3ff;
+            set_valid<=0;panic<=0;get_valid<=0;settle<=0;packet<=0;serial_word<=10'h3ff;
             bit_timer<=0;bit_index<=0;byte_index<=0;
+            previous_request_seq<=0;previous_was_snapshot<=0;
         end else begin
-            set_valid<=0;panic<=0;
+            set_valid<=0;panic<=0;get_valid<=0;
             case(state)
                 RECEIVE:begin
                     if(pos==0)age<=0;
@@ -99,6 +107,13 @@ module phone_control_link #(
                                     result<=checked_result;
                                     set_valid<=checked_result==0 && command==1;
                                     panic<=checked_result==0 && command==2;
+                                    get_valid<=checked_result==0 && command==0 &&
+                                        !(TELEMETRY_ENABLE && param==16 &&
+                                          previous_was_snapshot && seq==previous_request_seq);
+                                    if(checked_result==0)begin
+                                        previous_request_seq<=seq;
+                                        previous_was_snapshot<=command==0 && param==16;
+                                    end
                                     settle<=0;state<=SETTLE;
                                 end
                             end

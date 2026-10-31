@@ -17,7 +17,8 @@
 module instrument_audio #(parameter LOWPASS_ENABLE=1,parameter NUM_VOICES=32,
     parameter TRANSITION_INPUT_ENABLE=0,parameter REDUCED_TIMBRES=0,
     parameter SOURCE_TAG_ENABLE=0,parameter PHASE_RAM=0,parameter PRESSURE_EXPRESSION_ENABLE=0,
-    parameter CONTROL_BANK_ENABLE=0,parameter LIVE_ADSR_ENABLE=0,parameter EFFECTS_ENABLE=0)(
+    parameter CONTROL_BANK_ENABLE=0,parameter LIVE_ADSR_ENABLE=0,parameter EFFECTS_ENABLE=0,
+    parameter VISUAL_MONITOR_ENABLE=0)(
     input clk,input rst_n,input note_on,input note_off,input [6:0] note,
     input [7:0] velocity,input [3:0] timbre,
     input [7:0] slider_volume,input signed [8:0] slider_pitch,
@@ -34,7 +35,8 @@ module instrument_audio #(parameter LOWPASS_ENABLE=1,parameter NUM_VOICES=32,
     input [7:0] pressure_brightness,input pressure_brightness_ready,
     input [7:0] attack_ctrl,decay_ctrl,sustain_ctrl,release_ctrl,damping,mix_balance,
     input hat_closed_hit,hat_open_hit,input [7:0] hat_closed_velocity,hat_open_velocity,
-    input [1:0] fx_mode,input [7:0] fx_amount,fx_time,fx_feedback,fx_mod
+    input [1:0] fx_mode,input [7:0] fx_amount,fx_time,fx_feedback,fx_mod,
+    output signed [15:0] monitor_voice0,monitor_voice1
 );
     wire fs_tick,frame_done;
     wire [NUM_VOICES-1:0] gate,retrigger,voice_busy,voice_audible;
@@ -81,8 +83,9 @@ module instrument_audio #(parameter LOWPASS_ENABLE=1,parameter NUM_VOICES=32,
     // wavetable_synth 的默认值仍为 0，独立调用及任意 FILE 不受此选择影响。
     // 生产仅实例化2x512点半表；原16音色表只作冻结基准，不占用生产ROM。
     wavetable_synth #(.NUM_VOICES(NUM_VOICES),.COMPACT_ROM(1),
-        .PHASE_RAM(PHASE_RAM),
+        .PHASE_RAM(PHASE_RAM),.STATE_RAM(PHASE_RAM),
         .LIVE_ADSR_ENABLE(LIVE_ADSR_ENABLE),
+        .VISUAL_MONITOR_ENABLE(VISUAL_MONITOR_ENABLE),
         .TIMBRE_BITS(TIMBRE_BITS),.NUM_TIMBRES(REDUCED_TIMBRES?2:16),
         .DUAL_PROFILE(REDUCED_TIMBRES),
         .FILE(REDUCED_TIMBRES?"src/timbre_dual.hex":"src/timbre_soft.hex"),
@@ -96,7 +99,8 @@ module instrument_audio #(parameter LOWPASS_ENABLE=1,parameter NUM_VOICES=32,
         .sample(mixed),.frame_done(frame_done),.overrun(overrun),
         .voice_busy(voice_busy),.voice_audible(voice_audible),
         .attack_ctrl(attack_ctrl),.decay_ctrl(decay_ctrl),.sustain_ctrl(sustain_ctrl),
-        .release_ctrl(release_ctrl),.damping(damping));
+        .release_ctrl(release_ctrl),.damping(damping),
+        .monitor_voice0(monitor_voice0),.monitor_voice1(monitor_voice1));
     drum_voice kick(.clk(clk),.rst_n(audio_rst_n),.fs_tick(fs_tick),
         .clear(digital_zero_test || test_mode),
         .hit(hit0 && accept_normal_input),.velocity(velocity0),.sample(kick_sample),.busy(kick_busy));

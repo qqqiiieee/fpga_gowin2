@@ -1,5 +1,8 @@
 // V021全局旋律/打击乐平衡：音量控制与声部合成仍在FPGA中完成。
-// 四鼓先用18位有符号求和后除4，保留四路同时峰值的数字余量；
+// V047：四鼓先用18位有符号求和后除2，相对旧版鼓组+6.02dB；
+// 默认balance=128时单鼓为原PCM的1/4，旋律权重不变。真实四鼓各峰值<=8159。
+// 任意16位输入的鼓和/2范围[-65536,65534]，现有18位寄存器和26位乘积足够；
+// 保留末级16位饱和，极端同相输入限幅而不符号回绕；固定移位不增加乘法器。
 // 再将旋律和鼓组以互补Q8权重混合，权重总和恒为256，不靠截断回绕限幅。
 // tick为每帧一次的采样使能。处理管线4个clk，输出下一个tick之前已稳定。
 // balance=0只留旋律，255几乎只留鼓；128各半。目标每帧最多移动1码，避免旋钮拉链声。
@@ -28,7 +31,7 @@ module performance_mixer(
    if(tick)begin
     if(balance_smooth<balance)balance_smooth<=balance_smooth+1'b1;
     else if(balance_smooth>balance)balance_smooth<=balance_smooth-1'b1;
-    drums_q<=drums_sum>>>2;melody_q<=$signed(melody);
+    drums_q<=drums_sum>>>1;melody_q<=$signed(melody);
    end
    if(valid[0])begin
     melody_product<=melody_q*melody_gain;

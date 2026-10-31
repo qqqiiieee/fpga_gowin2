@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>V047 演示视频拍摄参考</title>
+<style>
+:root{font:16px/1.8 system-ui,"Microsoft YaHei",sans-serif;color:#203449;background:#edf2f6}*{box-sizing:border-box}body{max-width:1160px;margin:auto;padding:26px}header,section{background:#fff;border:1px solid #d8e3eb;border-radius:14px;padding:24px 30px;margin:18px 0}header{border-top:6px solid #147d82}h1{font-size:30px;line-height:1.4}h2{font-size:23px;color:#135f6a}h3{font-size:18px}a{color:#006e88}nav{display:flex;flex-wrap:wrap;gap:8px 18px}.tag,.muted{font-size:14px;color:#526b7e}.note,.pending{padding:13px 17px;border-left:4px solid #168884;background:#eff9f7;margin:15px 0}.pending{border-color:#b57a19;background:#fff6e2}table{width:100%;border-collapse:collapse;margin:15px 0;font-size:15px}th,td{border:1px solid #cedce5;padding:10px;vertical-align:top;text-align:left}th{background:#edf5f8}code,pre{font-family:Consolas,"Microsoft YaHei",monospace}code{background:#eef3f6;padding:1px 4px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#142b3b;color:#eef7fb;padding:16px;border-radius:8px}li{margin:7px 0}.scroll{overflow-x:auto}footer{font-size:14px;color:#526b7e;padding:12px}strong{color:#153e59}@media(max-width:700px){body{padding:10px}header,section{padding:17px}h1{font-size:25px}table{font-size:13px}td,th{padding:7px}.shots{min-width:760px}}@media print{body{background:#fff;padding:0;font-size:10pt}header,section{border:0;padding:10px 0}h2,h3{break-after:avoid}tr,.pending,.note{break-inside:avoid}.scroll{overflow:visible}.shots{min-width:0}a{color:inherit}nav{display:none}}
+</style>
+</head>
+<body>
+<header>
+<p class="tag">TANG PRIMER 20K · 2026-10-31 · 离线拍摄脚本</p>
+<h1>演示视频拍摄参考</h1>
+<p>建议主片约<strong>7分30秒</strong>，可缩为6分钟或扩为8分钟。这是内容编排建议，<strong>不是比赛规定时限</strong>；实际要求以用户提供的正式规则为准。</p>
+<div class="pending"><strong>当前边界：</strong>FPGA与ESP32均已部署V047，上传接口和数字录音实测已通过。测试谱已清除，自定义曲库为空，等用户从手机上传JSON；真实琴键/和弦和鼓垫听感仍需现场确认。已有ESP重启问题在V046修复，不列为V047新成果。整机模拟音频延迟尚未用示波器测量。</div>
+<nav><a href="#setup">机位与录音</a><a href="#timeline">7分30秒分镜</a><a href="#modes">三模式与和弦</a><a href="#phone">手机证据</a><a href="#evidence">可说与不可说</a><a href="#length">6–8分钟调整</a><a href="#check">拍摄核对</a></nav>
+</header>
+
+<section id="setup"><h2>1．机位：让操作与结果同时可见</h2>
+<table><thead><tr><th>机位</th><th>画面与用途</th><th>拍摄要点</th></tr></thead><tbody>
+<tr><td>A：主机位</td><td>斜前方中景，包含操作者双手、键盘、FPGA、HDMI屏和发声设备。</td><td>锁定构图，保留若干不切镜头的“按键→屏幕→出声”片段。开场和三模式演示以它为主。</td></tr>
+<tr><td>B：手部俯拍</td><td>键盘、四Pad、四旋钮、两片FSR及两路光电。</td><td>标记光电A/B，手不遮住关键标签。琴键与压力动作要能辨认；不可用后期快放充当响应证据。</td></tr>
+<tr><td>C：屏幕特写 / HDMI采集</td><td>演奏页、曲库页、FFT/李萨如、多维诊断及32路验证视图。</td><td>避免反光、屏幕闪烁；若插入仿真图，醒目标注“RTL仿真预览”。与手部同期画面拼接时保持同步。</td></tr>
+<tr><td>D：手机特写 / 录屏</td><td>实际状态回读、JSON导入、完整提交、映射、WAV完成和下载。</td><td>录屏辅以一段实拍连接关系；按键后等结果出现再切镜头。下拉选项和入队提示不是生效证据。</td></tr>
+<tr><td>E：硬件近景</td><td>FPGA、ESP32、MIDI接收、ADS、双光电与PCM5102A链路。</td><td>短镜头配箭头即可。I²S为BCK=B12、LRCK=C12、DIN=B13；接线说明不等于电气指标测量。</td></tr>
+</tbody></table>
+<p>只有一台拍摄设备时，先拍完整主机位演奏，再补特写；补拍的参数和曲目保持一致。手机既控制又拍摄不方便时，用电脑录屏或另一个现有设备；不必为本片新增设备。</p>
+<p class="note"><strong>声音来源分清：</strong>现场音用来证明扬声器/耳机模拟链路可听；FPGA WAV可用于干净的同期对照，标注“最终数字PCM录音”。WAV不包含PCM5102A、连线、音箱的模拟噪声，不能拿它证明模拟输出无噪声。禁用无关背景音乐，FX对比各段保持相同录音增益。</p>
+<p>先短录检查收音不削顶；32路前降低音量。画面与音频可用一次明确的击键作同步标记。若用已录WAV替换现场音，保留同步关系并标注；不要把替换音轨拿来量输入延迟。</p>
+</section>
+
+<section id="timeline"><h2>2．主片分镜：7分30秒</h2>
+<p>以下“预期证据”是要现场取得的材料，不是已通过的验证记录。待测功能失败就保留“待测”或换成已验证片段，不能把计划字幕写成成果。</p>
+<div class="scroll"><table class="shots"><thead><tr><th>时间 / 时长</th><th>机位与内容</th><th>操作顺序</th><th>预期证据 / 可用旁白</th></tr></thead><tbody>
+<tr><td>0:00–0:20<br>20秒</td><td>A + E<br>系统全貌与I²S链路</td><td>拍全机，再指向“输入→FPGA合成/效果→I²S→PCM5102A→模拟输出”；实际按键出一声。</td><td>“FPGA负责声音合成与显示，ESP32提供手机控制。”镜头证明接线和可听输出；不宣称延迟、信噪比或失真指标。</td></tr>
+<tr><td>0:20–0:45<br>25秒</td><td>A + C<br>基础键盘与音色</td><td>默认映射、KEY模式，轻重各弹一次；按住一音后松开。长按面板1并松手切Flute/Pluck，重复同一音。</td><td>手部、原始按键高亮及声音相应变化；说明力度与音色。字幕区分KEY/STRUM/HYBRID输入模式和下段三种曲谱模式。</td></tr>
+<tr><td>0:45–1:50<br>65秒</td><td>A + C + D<br>曲谱三模式</td><td>选短片段：自动演奏约20秒；逐音约25秒，先错再对；固定BPM约20秒，留一拍不弹再跟弹。每次设置后读回实际状态，切模式后重新开始。</td><td>自动：手离键仍出声；逐音：错误时等待、新正确键推进；固定：漏弹仍走拍、本人不弹时不自动出旋律。无评分系统就不说自动打分。</td></tr>
+<tr><td>1:50–2:10<br>20秒</td><td>B + A<br>四Pads</td><td>在通道10依次触发来源36、38、37、39，再做一遍简短节奏。</td><td>Kick、Snare、Closed Hat、Open Hat四种鼓声可分辨。默认物理Pad顺序需先实测；不可只按位置猜编号。</td></tr>
+<tr><td>2:10–2:50<br>40秒</td><td>B + D + A<br>FX与四旋钮</td><td>先干声短音；K1软接管并变化听Delay；K2听Chorus；K3听Reverb；K4短示音量。每个效果留出声音变化或尾音。</td><td>页面实际FX/强度回读与声音同时变化。“一次启用一种效果，旋钮先经过保存值完成软接管。”不能演成三效果串联。</td></tr>
+<tr><td>2:50–3:20<br>30秒</td><td>B + C / D<br>双FSR</td><td>保持音高与力度大致相同：压FSR0比明亮度；选Pluck，改变FSR1压力，反复弹同一音比阻尼/衰减。</td><td>有效RAW/LVL变化及音色/衰减对比。FSR1不靠Flute响度判断；显示不是公斤值。数据过期/ADS故障时该镜头不算通过。</td></tr>
+<tr><td>3:20–3:55<br>35秒</td><td>B + A + C<br>双光电与输入模式</td><td>STRUM按住原始60、64、67；依次A→B、B→A扫过，每次完全释放两束。再切HYBRID，键盘发声同时扫弦。</td><td>双束先后顺序与上/下行扫弦；STRUM琴键选和弦、光电触发；HYBRID双来源发声。单束超时后备不能证明双束方向或测速。</td></tr>
+<tr><td>3:55–4:25<br>30秒</td><td>C + B<br>FFT与李萨如</td><td>切第2页，手动弹一音、再弹两个不同音；回看频谱与XY图形变化。</td><td>“FFT监视最终数字PCM；李萨如显示两独立声部的XY关系。”单声部可能是线。此页冻结曲谱，不能等待自动曲继续走来配图。</td></tr>
+<tr><td>4:25–4:55<br>30秒</td><td>C + A<br>32路振荡器验证</td><td>长按面板3并松手进入测试；短按1换路数，2逐路查看，4请求全32路；拍requested/gate/busy/overrun；短按3退出。</td><td>区分请求数、实际门控与含尾音的busy。稳定32路状态及声音才是现场证据；只看到“32”菜单不足。未观察到的overrun结果不预填。</td></tr>
+<tr><td>4:55–5:35<br>40秒</td><td>D + C + A<br>JSON上传与新曲片段</td><td>导入本地JSON，拍“尚未上传”；点保存并上传，保留最终结果；选择自定义并开始，拍约10–15秒片段。</td><td>新曲是额外自定义曲，不替换预置3曲。新原创和弦曲仅在配套V047验证后使用；否则用教程里的V046单音三音示例。</td></tr>
+<tr><td>5:35–6:20<br>45秒</td><td>D + B + C<br>键位映射及恢复</td><td>60→62与62→60同时填写，提交完成后读取确认；分别按两键，对比原始高亮与声音；提交FPGA默认映射并再弹一次。</td><td>完整单射置换、实际生效、raw显示不变、恢复生效四项都有证据。只改一个格或导入后直接弹不能当成功片段。</td></tr>
+<tr><td>6:20–7:05<br>45秒</td><td>D + A<br>WAV录制、下载与回放</td><td>先开始演奏/自动曲，再开始约8–12秒录音；停止并排空；等校验完成、drops=0，再下载并播放。录音期间不再配置曲谱/映射。</td><td>录到真实最终PCM，15625Hz、16bit、mono；保存完成和文件可播放。CRC证据来自该次完成记录，不把重启后的旧文件播放当重新校验。</td></tr>
+<tr><td>7:05–7:30<br>25秒</td><td>A + C<br>收束与验证边界</td><td>回到正常演奏状态，展示曲库和版本记录，结尾保留一段实际声音。</td><td>准确列出实际拍到的功能。“模拟输入到声音的整机延迟尚待示波器测量。”V047未部署时明确写拟交付，不用旧版实拍冒充新版通过。</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="modes"><h2>3．三模式与新原创和弦：关键镜头怎么拍</h2>
+<p>曲谱三模式为<strong>固定BPM检验 / 自动演奏 / 逐音练习</strong>；输入三模式为<strong>KEY / STRUM / HYBRID</strong>。前者决定曲谱走法，后者决定实际输入如何发声。三模式教学默认KEY，避免STRUM下按键只选和弦而误判无声。</p>
+<table><thead><tr><th>曲谱模式</th><th>最能说明行为的操作</th><th>避免的误导</th></tr></thead><tbody>
+<tr><td>自动演奏</td><td>先拍实际模式回读，开始后留出两拍预备；双手离开键盘，声音与谱面同步。</td><td>切到FFT或其他页会暂停曲谱；不要剪成换页后仍自动播放的假连续过程。</td></tr>
+<tr><td>逐音练习</td><td>到目标时停住，按一次错误键仍停；松开后新按正确键，走完时值进入下一目标。连续同音要再按。</td><td>不能拿提前按住或踏板延音充当新按键；实际状态读回比下拉框更可靠。</td></tr>
+<tr><td>固定BPM检验</td><td>留一拍不弹，谱面仍走；随后自己跟弹。</td><td>它不等待、也不替用户自动演奏；没有自动评分和准确率结算的宣称。</td></tr>
+</tbody></table>
+<div class="pending"><strong>V047和弦仅作待验证拍摄位：</strong>原创曲已保存为<a href="../examples/V047/霓虹阶梯_黑白键双音四音_V047.json">霓虹阶梯_黑白键双音四音_V047.json</a>（59组、144音、32拍、116 BPM）。确定格式为<code>tang20k.score/2</code>，每个events组用<code>pitches</code>表示1..4个升序唯一音（MIDI41..72，F2–C5），同组共享start/duration/velocity，最多63组、不同组不能重叠。配套新FPGA与ESP47支持后，固定BPM、自动演奏及逐音和弦镜头才可标为实机功能；旧score/1单音继续兼容。</div>
+<ol>
+<li><strong>新曲选择：</strong>从“霓虹阶梯”中选10–15秒清晰片段；已落盘文件包含单音、双音、三音、四音组，音域41–72。片段的实际声音与显示效果仍须配套版本验收，文件存在不代表已烧录通过。</li>
+<li><strong>正向证据：</strong>自动演奏拍同组一起起音、一起结束；逐音在目标到达后新按各目标键并全部保持，满足后才推进。固定BPM保留漏弹仍继续的对照。</li>
+<li><strong>反例证据：</strong>将目标音逐个点下又松开，目标不应因此推进；只按部分目标保持也不能当作完成。再全部新按并同时保持，证明不是把先前零散按键简单累加。</li>
+<li><strong>恢复与备选：</strong>拍摄前恢复默认Note映射。V047未最终验证时保留V046实机三模式片段，并用<a href="../examples/V047/上传验证_兼容V046单音.json">上传验证_兼容V046单音.json</a>（16个单音、8拍、100 BPM）；也可使用<a href="V047_键位重定向详细教程.html#score">教程内三音示例</a>。和弦内容只标待验证功能。</li>
+</ol>
+<p>新曲上传到独立的自定义槽，三首预置曲保留；并非无限曲库或多轨伴奏。本文没有版权曲谱，也不直接提供《Bad Apple!!》转谱；用户提供有权使用的文件后可另行转换。主片优先使用新原创素材及自编功能检查片段。</p>
+</section>
+
+<section id="phone"><h2>4．手机三个闭环，必须拍到“结果”</h2>
+<h3>JSON：导入 → 上传 → 实际运行</h3>
+<p>提前把文件放在手机，离线连接Tang20K-Music。拍清格式、导入有效但尚未上传、完整上传完成、自定义选中并开始、FPGA实际状态/屏幕响应。不要依赖在线URL，热点不提供互联网且URL还受CORS限制。文件保存与FPGA生效是两件事，重启FPGA后需重新上传/激活。</p>
+<h3>映射：完整交换 → 确认 → 原始显示对比 → 恢复</h3>
+<p>可直接导入<a href="../examples/V047/映射演示_交换C4与D4.json">映射演示_交换C4与D4.json</a>。该文件已设<code>panic_before_commit:true</code>；导入会勾选提交前Panic，正式提交前核对停音选项。</p>
+<p>先备份；交换60/62必须两项同时修改。松键、松踏板、停止演奏后提交，需要停音时显式勾选Panic；Panic会清持续音并停导奏。拍最终作业完成，再点“读取已保存 / 当前映射”显示本次确认。60发62、62发60，但高亮仍是原始键位；逐音比较仍看原始音。最后“提交 FPGA 默认映射”并实弹恢复，不能只点“编辑框恢复默认”。完整操作见<a href="V047_键位重定向详细教程.html">详细教程</a>。</p>
+<p>若扩展拍摄Pad/CC映射，务必说明Pad是通道10来源、CC槽顺序是Delay/Chorus/Reverb/Volume，禁止1/7/64/120/121/123且四项互不重复。FX旋钮软接管后继续改变才选效果。主片时间有限时把这部分放补充镜头。</p>
+<h3>WAV：开始 → 实奏 → 排空校验 → 下载回放</h3>
+<p>演示前先下载要保留的上一段；开始新录音会替换它。最大30秒，依页面空间上限设置8–12秒即可。按停止后还要等EOF、序号、样本/长度、drops及CRC校验完成；“停止请求已发送”不是完成。录音期间暂停手机配置和导奏刷新，先选曲并启动再录；这不等于FPGA本身停止演奏。</p>
+<p class="note">拍到完整结果后才说“本段数字PCM录音校验通过”。重启后HTTP可读取保存WAV，但结构检查不等于当前再次通过FPGA CRC；不要把灰色/过期状态剪成当前实时读回。不要为拍片初始化LittleFS，它会清空曲谱、映射和录音。</p>
+</section>
+
+<section id="evidence"><h2>5．哪些结论需要哪些证据</h2>
+<table><thead><tr><th>展示项目</th><th>可以据实说</th><th>不能仅凭这些画面说</th></tr></thead><tbody>
+<tr><td>I²S与PCM5102A</td><td>实现的数字音频输出路径；现场确实可听时说明模拟链路有声。</td><td>低于某毫秒的端到端延迟、低失真、无模拟底噪。尚无对应仪器测量。</td></tr>
+<tr><td>双光电</td><td>双束先后触发用于方向/速度相关处理；现场方向与声音结果分别记录。</td><td>只遮一束、两束几乎同时触发或约150ms超时后备能证明方向/速度。50ms级状态轮询不是内部快速测量时基。</td></tr>
+<tr><td>FFT / 李萨如</td><td>内部数字PCM频谱与独立声部XY关系，单声部/高度相关时可能成线。</td><td>模拟输出频响、真实左右声道、DAC噪声或示波器测量报告。</td></tr>
+<tr><td>32路</td><td>设计有32声部；请求数、门控、busy和逐路索引各有含义。稳定门控与声音是本次演示证据。</td><td>只选“32”就证明所有路正常，或没有看overrun就宣布零溢出。FFT峰数不必等于声部数。</td></tr>
+<tr><td>FSR</td><td>有效ADC原码/表情量变化，并对应明亮度或拨弦阻尼变化。</td><td>未经力学校准的公斤数、精确压力测量；过期值不能当实时数据。</td></tr>
+<tr><td>手机状态</td><td>本次有效回读与最终作业确认；保留提交/恢复的实弹证据。</td><td>网页打开即FPGA已连接、下拉框即真实模式、保存文件即断电后自动生效。</td></tr>
+<tr><td>新曲 / 和弦</td><td>开发约定及最终配套验证后的实机表现；新曲为额外自定义曲。</td><td>未烧录的V047已经板上通过，旧V046支持score/2，或新曲替换了三首预置曲。</td></tr>
+<tr><td>模拟音频延迟</td><td><strong>“尚未使用示波器测量整机输入到模拟输出延迟。”</strong></td><td>用仿真周期、WAV、手机UI刷新速度、剪辑观感推算已实测低延迟。</td></tr>
+</tbody></table>
+<p>以后补测延迟时，另行记录可重复的输入触发点、模拟输出观测点、统一时基及测量方法；在得到仪器记录前，不在片中放假波形或虚构数值。本参考不要求当前进行该测量。</p>
+</section>
+
+<section id="length"><h2>6．调整到6分钟或8分钟</h2>
+<table><thead><tr><th>版本</th><th>调整方式</th><th>必须留下</th></tr></thead><tbody>
+<tr><td>6分钟</td><td>以7:30版减90秒：开场减5秒、音色减5秒、三模式减15秒、Pads减5秒、FX减10秒、FSR减5秒、光电减5秒、FFT减5秒、32路减5秒、上传减5秒、映射减10秒、录音减10秒、结尾减5秒。</td><td>每项至少一个可辨认的动作和结果；三模式差异、四Pad、FX、FSR、双光电、I²S、FFT/李萨如、32路、上传/映射/WAV及验证边界仍覆盖。等待过程可剪短并标“等待后”。</td></tr>
+<tr><td>7分30秒</td><td>使用第2节时间表。</td><td>适合兼顾完整操作链和声音对比；若最终曲片段不够短，可调整其余段落。</td></tr>
+<tr><td>8分钟</td><td>在7:30版上加30秒：和弦逐音反例15秒，双键独立松键验证10秒，版本与证据说明5秒。</td><td>和弦未验证时把15秒改成单音逐音正确/错误对照，不能为了凑时长宣称待开发功能已完成。</td></tr>
+</tbody></table>
+<p>每个效果至少留一段听得出的声音。宁可缩短口头介绍和重复菜单，不要把完成状态、失败提示或必要恢复剪没。</p>
+</section>
+
+<section id="check"><h2>7．开拍前与交片前核对</h2>
+<ul>
+<li>记录实际使用的FPGA版本、ESP版本和烧录记录；两端新版未部署时明确标注。拔下ESP期间不安排手机实机镜头，不擅自连接或烧录。</li>
+<li>默认映射、KEY模式、合理音量、录音未占用、曲谱已暂停；备份映射和上一段WAV。新曲JSON先离线检查，确认版本兼容。</li>
+<li>硬件功能先短试：四Pad来源、软接管、两FSR数据有效、光电双束释放和方向、模拟输出可听；失败项保留待测。</li>
+<li>四键普通模式：短1切页、短2开始/暂停/继续、短3重播、短4选曲；长1音色、长2输入模式、长3测试、长4曲谱模式。长按约0.8秒后松手执行，测试视图按键含义另行切换。</li>
+<li>切离演奏页会暂停曲谱；拍FFT改用手动琴键。导奏实际状态过期时先刷新，录音期间不拿暂停刷新的页面当实时测量。</li>
+<li>映射镜头后已提交默认并实弹；32路镜头后已退出验证；WAV本次完成、drops与校验结果有证据，下载文件能打开。</li>
+<li>片中标明实拍、仿真预览、旧录音回放、待发布功能；不编造比赛时限，不填未测模拟延迟，不提供版权曲谱。</li>
+</ul>
+</section>
+
+<footer>依据：<a href="V046_手机控制与显示屏指南.html">V046手机控制与显示屏指南</a>、当前esp32_phone/v041_core.h、v041_json.h、v041_ui.h、v041_runtime.h及<a href="../PHONE_EXTENSIONS_INTERFACE.txt">接口说明</a>；光电、软接管与输入模式另核对当前RTL。新和弦段为V047开发约定，最终以配套发布和实机验证为准。相关操作见<a href="V047_键位重定向详细教程.html">键位重定向详细教程</a>。</footer>
+<!-- resource-latency-v047 --><section><h2>资源与延迟补充拍摄</h2><p><a href="V047_资源与延迟展示指南.html">打开V047真实资源表与有/无示波器的测量展示步骤</a>。资源原始报告可以短拍；模拟延迟仍待仪器测量。注意当前单光束150ms兜底等待。</p></section></body>
+</html>

@@ -1,6 +1,6 @@
 /* Offline browser test: all HTTP is intercepted, no board/network/serial access. */
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
-const {chromium}=require('playwright');
+const {chromium}=require(require.resolve('playwright',{paths:[path.join(path.dirname(process.execPath),'..')]}));
 const root=path.resolve(__dirname,'../../esp32_phone');
 const html=fs.readFileSync(path.join(root,'web_ui.h'),'utf8').split('R"PHONEHTML(')[1].split(')PHONEHTML";')[0];
 assert(!/getUserMedia|MediaRecorder|<audio|<video/.test(html));
@@ -14,10 +14,8 @@ const output=path.join(__dirname,'build');fs.mkdirSync(output,{recursive:true});
 const tmp=path.join(output,'browser-temp');fs.mkdirSync(tmp,{recursive:true});
 process.env.TEMP=tmp;process.env.TMP=tmp;
 async function main(){
- const browserExecutable=process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE;
- if(browserExecutable&&!fs.existsSync(browserExecutable))throw new Error('PLAYWRIGHT_CHROMIUM_EXECUTABLE does not exist: '+browserExecutable);
  const context=await chromium.launchPersistentContext(path.join(output,'browser-profile'),{
-  ...(browserExecutable?{executablePath:browserExecutable}:{}),headless:true,
+  executablePath:'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',headless:true,
   viewport:{width:390,height:844},deviceScaleFactor:1,
   env:{...process.env,TEMP:tmp,TMP:tmp},args:['--disable-background-networking','--disable-component-update','--no-first-run']});
  const page=context.pages()[0]||await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));

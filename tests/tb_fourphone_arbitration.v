@@ -13,7 +13,7 @@ module tb_fourphone_arbitration;
  top #(.BUTTON_DEBOUNCE_CYCLES(DB),.GUIDE_BEAT_SAMPLES(7),
        .TEST_HOLD_SAMPLES(4),.TEST_RAMP_DIV(1),.TEST_MAX_SAMPLES(10000)) dut(
   .clk(clk),.ui_buttons_n(buttons_n),.phone_uart_rx(phone_rx),.phone_uart_tx(phone_tx),
-  .uart_rx(1'b1),.midi_rx(1'b1),.touch_miso(1'b1),.optical_beams(2'b11),
+  .uart_rx(1'b1),.midi_rx(1'b1),.optical_beams(2'b11),
   .adc_scl(scl),.adc_sda(sda));
  defparam dut.u_phone.CLK_HZ=BC*115200;
  wire [7:0] rx_byte;wire rx_valid,rx_error;

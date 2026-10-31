@@ -31,3 +31,20 @@ __pycache__/
 .codex/
 conversations/
 transcripts/
+
+# Current simulation and local build outputs
+**/results/
+**/snapshot/
+**/artifacts/
+**/tool_deps/
+**/yosys_cache/
+/tests/**/latest_report.json
+/tests/**/final_latest.json
+/tests/**/mutation_latest.json
+/tests/**/selfcheck_latest.json
+/tests/**/native_result.json
+/tests/**/native.cmd
+/tests/**/native.log
+*.vcd
+*.fst
+*.wlf

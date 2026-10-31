@@ -95,6 +95,26 @@ public:
 };
 
 struct Item { uint8_t cmd=0,param=0,value=0; uint32_t revision=0; };
+
+// Separate from the 15 writable parameters: staging is never visible to callers.
+// GET16 is a capture command, so it must NEVER be retried against the same burst.
+struct Telemetry {
+  enum Feature { UNKNOWN, SUPPORTED, UNSUPPORTED, UNAVAILABLE };
+  Feature feature=UNKNOWN;
+  bool probed=false, valid=false, active=false, started=false, validating=false;
+  uint8_t bytes[15]={}, staging[15]={}, next=16;
+  uint32_t captureStart=0, capturedAt=0, lastStart=0, snapshots=0, aborted=0;
+  uint32_t lastCapabilityProbe=0;
+  void reset() { *this=Telemetry(); }
+  bool stale(uint32_t now) const { return !valid || uint32_t(now-capturedAt)>=1000; }
+  uint32_t age(uint32_t now) const { return uint32_t(now-capturedAt); }
+  uint16_t raw0() const { return uint16_t(bytes[0]) | (uint16_t(bytes[1])<<8); }
+  uint16_t raw1() const { return uint16_t(bytes[2]) | (uint16_t(bytes[3])<<8); }
+  int16_t bend() const {
+    uint16_t v=uint16_t(bytes[9]) | (uint16_t(bytes[10]&1)<<8);
+    return v&256 ? int16_t(v)-512 : int16_t(v);
+  }
+};
 typedef void (*Send)(const uint8_t*,size_t,void*);
 struct Core {
   Send send; void* context;
@@ -110,7 +130,9 @@ struct Core {
   uint32_t sentAt=0,lastAck=0,lastProbe=0,lastPoll=0,lastVolume=0;
   bool probeStarted=false;
   uint32_t txCount=0,rxCount=0,retries=0,ignored=0;
-  Core(Send fn,void* ctx=0):send(fn),context(ctx){}
+  bool telemetryEnabled;
+  Telemetry telemetry;
+  Core(Send fn,void* ctx=0,bool enableTelemetry=false):send(fn),context(ctx),telemetryEnabled(enableTelemetry){}
   uint32_t nextRevision() { if(++revision==0) ++revision; return revision; }
   void fail(const Item& item,uint8_t error) {
     if(!item.revision) return;
@@ -123,6 +145,7 @@ struct Core {
     queued=0; inflight=false; linked=false; synced=false;
     memset(valid,0,sizeof(valid)); parser.reset(); scan=0;
     lastProbe=now; probeStarted=true;
+    telemetry.reset();
   }
   bool ready() const { return linked && synced; }
   bool enqueue(const Values& batch,uint32_t& rev) {
@@ -162,8 +185,58 @@ struct Core {
     if(b[0]!=0x5A || b[1]!=0xA5 || b[2]!=1 || b[11]!=checksum(b)) return false;
     if(!inflight || b[3]!=frame[3] || b[5]!=current.param || b[4]>4) return false;
     if(b[7]&0x80 || b[8]>1 || b[9]>3) return false;
-    if(b[4]==0 && (b[5]>=COUNT || b[6]>LIMITS[b[5]])) return false;
+    if(b[5]>=16) {
+      if(!telemetryEnabled || current.cmd!=0 || b[5]>31) return false;
+      if(b[4]==0) {
+        if((b[5]==24 || b[5]==27) && b[6]>127) return false;
+        if(b[5]==26 && b[6]>1) return false;
+        if((b[5]==28 || b[5]==29) && b[6]>32) return false;
+      }
+    } else if(b[4]==0 && b[6]>LIMITS[b[5]]) return false;
     return true;
+  }
+  void abortTelemetry() {
+    if(telemetry.active) ++telemetry.aborted;
+    telemetry.active=false; telemetry.validating=false; telemetry.next=16;
+    memset(telemetry.staging,0,sizeof(telemetry.staging));
+    if(inflight && current.param>=16 && current.param<=30) {
+      inflight=false; parser.reset();
+    }
+  }
+  void receiveTelemetry(const uint8_t* b,uint32_t now) {
+    const uint8_t p=b[5];
+    if(p==31) {
+      telemetry.feature=b[4]==2 ? Telemetry::UNSUPPORTED :
+        (b[4]==0 ? (b[6]==0xA7 ? Telemetry::SUPPORTED : Telemetry::UNSUPPORTED) : Telemetry::UNAVAILABLE);
+      return;
+    }
+    // A delayed packet must not resurrect or refresh an expired capture.
+    if(!telemetry.active || p!=telemetry.next || uint32_t(now-telemetry.captureStart)>=500) {
+      abortTelemetry(); return;
+    }
+    if(b[4]!=0 && !telemetry.validating) {
+      if(b[4]==2) telemetry.feature=Telemetry::UNAVAILABLE;
+      abortTelemetry(); return;
+    }
+    if(!telemetry.validating) {
+      telemetry.staging[p-16]=b[6];
+      if(p<30) ++telemetry.next;
+      else {
+        // Only this core issues GET16. A reset can still clear the FPGA cache
+        // AFTER we read slot22; re-read its entire flags byte before publishing.
+        telemetry.validating=true; telemetry.next=22;
+      }
+      return;
+    }
+    if(b[4]!=0 || !(b[6]&0x80) || b[6]!=telemetry.staging[6]) {
+      telemetry.valid=false; memset(telemetry.bytes,0,15);
+      abortTelemetry(); telemetry.started=false; // fresh GET16, no 200ms wait
+      return;
+    }
+    memcpy(telemetry.bytes,telemetry.staging,15);
+    telemetry.capturedAt=telemetry.captureStart;
+    telemetry.valid=true; ++telemetry.snapshots;
+    telemetry.active=false; telemetry.validating=false; telemetry.next=16;
   }
   void receive(uint8_t v,uint32_t now) {
     uint8_t b[12]; if(!parser.feed(v,now,b)) return;
@@ -171,7 +244,9 @@ struct Core {
     ++rxCount; lastAck=now; linked=true;
     values[0]=b[10]; values[1]=b[8]; values[3]=b[9]; values[15]=b[7];
     valid[0]=valid[1]=valid[3]=valid[15]=true;
-    if(b[4]==0) {
+    if(current.param>=16) {
+      receiveTelemetry(b,now);
+    } else if(b[4]==0) {
       // Panic PARAM=0 also reports the effective master volume.
       values[b[5]]=b[6]; valid[b[5]]=true;
       if(current.revision) {
@@ -185,7 +260,18 @@ struct Core {
   }
   void tick(uint32_t now) {
     if(linked && uint32_t(now-lastAck)>=LINK_MS) { disconnect(now); return; }
+    // Deadline is measured from capture REQUEST, including control preemption.
+    if(telemetryEnabled && telemetry.active && uint32_t(now-telemetry.captureStart)>=500)
+      abortTelemetry();
     if(inflight) {
+      if(telemetryEnabled && current.param>=16) {
+        // Initial/bounded capability probes time out without disabling controls.
+        // Snapshot requests wait only for the burst deadline, with NO retries.
+        if(current.param==31 && uint32_t(now-sentAt)>=ACK_MS) {
+          inflight=false; parser.reset(); telemetry.feature=Telemetry::UNAVAILABLE;
+        }
+        return;
+      }
       if(uint32_t(now-sentAt)>=ACK_MS) {
         if(attempts<3) {++attempts; ++retries; sentAt=now; send(frame,12,context); ++txCount;}
         else disconnect(now);
@@ -205,6 +291,27 @@ struct Core {
     // Never enqueue polling requests. Writes always win at this boundary.
     if(!synced) {
       for(uint8_t p=0;p<COUNT;++p) if(!valid[p]) {Item get; get.param=p; start(get,now); return;}
+    }
+    // Only transient UNAVAILABLE is retried. Unsupported boards stay quiet until
+    // reconnect. Overdue regular polls and queued SET/Panic outrank re-probes.
+    if(telemetryEnabled && (!telemetry.probed ||
+       (telemetry.feature==Telemetry::UNAVAILABLE &&
+        uint32_t(now-telemetry.lastCapabilityProbe)>=1000 &&
+        uint32_t(now-lastPoll)<120))) {
+      telemetry.probed=true; telemetry.lastCapabilityProbe=now;
+      Item get; get.param=31; start(get,now); return;
+    }
+    if(telemetryEnabled && telemetry.active) {
+      Item get; get.param=telemetry.next; start(get,now); return;
+    }
+    // Keep normal parameter/volume polling alive between telemetry bursts.
+    if(telemetryEnabled && telemetry.feature==Telemetry::SUPPORTED &&
+       uint32_t(now-lastPoll)<120 &&
+       (!telemetry.started || uint32_t(now-telemetry.lastStart)>=200)) {
+      telemetry.active=true; telemetry.started=true;
+      telemetry.captureStart=telemetry.lastStart=now;
+      telemetry.next=16; memset(telemetry.staging,0,15);
+      Item get; get.param=16; start(get,now); return;
     }
     if(uint32_t(now-lastPoll)<120) return;
     Item get;

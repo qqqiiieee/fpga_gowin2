@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>V047 资源与延迟展示指南</title><style>*{box-sizing:border-box}body{font:17px/1.8 system-ui,"Microsoft YaHei",sans-serif;color:#173348;background:#edf3f6;max-width:1100px;margin:auto;padding:22px}section,header{padding:24px 30px;margin:16px 0;background:white;border:1px solid #d0dfe6;border-radius:12px}h1{font-size:30px}h2{font-size:23px;color:#126b79}table{border-collapse:collapse;width:100%}td,th{padding:9px;border:1px solid #cfdee5;text-align:left}th{background:#edf4f7}li{margin:7px 0}.note{background:#fff4d9;border-left:4px solid #be8b32;padding:15px}a{color:#006d8d}code{background:#edf3f6;padding:2px 5px}.small{font-size:14px;color:#516d7c}@media(max-width:600px){body{padding:7px}section,header{padding:16px}table{font-size:14px}}@media print{body{background:white}section,header{break-inside:avoid}}</style>
+<header><p class="small">2026-10-31 · Tang Primer 20K · V047</p><h1>资源报告怎么拍，演奏延迟怎么量</h1><p>资源用最终布局布线报告佐证；模拟输出延迟须用同一时基记录输入参考与音频起始。以下接线与步骤是测量计划，不是已经测得的结果。</p>
+<p>官方要求：控制信号至音频输出基础≤10ms，拓展≤5ms且确定性无抖动。原题没有单列“必须拍资源表截图”；资源表是工程佐证。核心评分还看同时活跃可闻独立振荡器数量×实际采样率及独立谱峰。</p><p><a href="https://www.gowinsemi.com.cn/university/match2026">高云官方赛题：选题二</a></p></header>
+<section id="resource"><h2>1．可直接展示的真实资源表</h2><p>来自V047成功布局布线后的报告；固件UserCode 0x00003608，完整SHA256见版本说明。</p><table><tr><th>工具资源名称</th><th>已用 / 总量</th><th>按用量计算的占用率</th></tr><tr><td>Logic</td><td>20381 / 20736</td><td>98.29%</td></tr><tr><td>Register</td><td>9540 / 16173</td><td>58.99%</td></tr><tr><td>CLS</td><td>10353 / 10368</td><td>99.86%</td></tr><tr><td>BSRAM</td><td>41 / 46</td><td>89.13%</td></tr><tr><td>DSP</td><td>16.25 / 24</td><td>67.71%</td></tr></table>
+<p>Logic包含LUT/ALU等，不应把20381全部称为LUT。工具整数显示会把CLS四舍五入为100%；实际10353/10368，剩15个CLS。DSP的16.25是工具折算口径，照报告标注。</p>
+<p>Setup/Hold违例均为0。主时钟目标27MHz，报告Fmax为27.03MHz，时序余量很紧。占用率高本身不代表得分高或性能强。</p>
+<p>拍摄约10秒：版本名→这张表→Gowin布局报告原表及时序摘要。讲解：“本系统在Primer20K上集成32声部、效果器和HDMI可视化等逻辑，资源与时序以最终布局布线结果为准。”32声部仍用频谱及独立声部控制证明，不能只拿资源表替代。</p>
+<p><a href="../verification/布局资源报告.txt">原始布局资源报告</a> · <a href="../verification/时序报告.tr">原始时序报告</a></p></section>
+<section id="scope"><h2>2．有示波器：先测MIDI输入到模拟音频</h2>
+<p>准备双通道示波器和两支探头。停止自动演奏及测试模式，固定同一音色/力度/音量，FX先关闭，ADSR Attack先设较短，确保每次触发前有安静基线。再补测常用配置、32声部负载和效果器开启等条件。</p>
+<table><tr><th>通道</th><th>探头尖端</th><th>测量意义</th></tr><tr><td>CH1</td><td>FPGA PMOD0 T8 / midi_rx</td><td>定位本次Note On报文的起点；默认31250 baud、8N1。完整3字节占0.96ms，必须说明是否包括这段传输。</td></tr><tr><td>CH2</td><td>PCM5102A L_OUT（或3.5mm左声道）</td><td>实际DAC模拟输出开始出现音频的位置。</td></tr><tr><td>两个地夹</td><td>共同GND / 与公共地相连的AGND</td><td>地夹不能接L_OUT、R_OUT或功放喇叭输出。</td></tr></table>
+<p>该起点不包括琴键机械行程、键盘内部扫描、以及MIDI接收模块在T8之前的延迟；应命名为“MIDI RX到DAC模拟输出延迟”。若要证明手指动作至声音，还需独立的动作参考。</p>
+<ol><li>两支探头设×10，示波器相应设×10；CH1先1V/div，CH2先100mV/div，再按实际幅度调整，避免削顶。</li><li>水平先1ms/div或2ms/div，CH1下降沿触发，电平约1.5V，使用Single并保留预触发。若捕到MIDI时钟/Active Sensing或别的报文，该次不当作琴键触发。</li><li>通过串口解码或波形确认对应Note On；运行状态可能省略状态字节，此时注明实际报文及参考起点，不能假设每次都是三个字节。</li><li>游标A放在本次报文定义的起点；B放在模拟音频起始，读Δt。预先规定输出起始判定，例如超过已测噪声阈值并持续一定时间；首次偏离零、可检测音频和主观可闻不是同一指标。</li><li>重复至少30次，记录最小/平均/最大及最大−最小；导出截图或CSV，注明配置。单张漂亮截图、平均值或显示器刷新不能证明“确定性无抖动”。若要宣称拓展达标，还须覆盖所宣称的演奏路径及工作条件。</li></ol>
+<p>屏幕截图同时保留两条波形、时基、游标Δt和起止点注释。<a href="https://www.tek.com/en/documents/primer/setting-and-using-oscilloscope">Tektronix：探头、接地、触发与双通道测量基础</a></p></section>
+<section id="sensors"><h2>3．光电与FSR要另测，当前有一个明确的等待</h2>
+<p>光电CH1可接P8（A）或P9（B）的输入，CH2仍接DAC输出。两束都要测时优先用3通道同时采A、B、音频。若只以第二束为起点，报告中必须明确，不得将其当作第一束动作到声音的总延迟。</p>
+<div class="note">V047当前optical_strum默认FILTER_CYCLES=27000，约1ms过滤；PAIR_WINDOW_CYCLES=4050000，约150ms。只有一束被遮挡时会等配对超时再兜底发声，因此该单束路径达不到10ms/5ms。双束路径还包括两次遮挡的实际间隔。这个等待需要单独讨论和优化，不能靠换测量起点掩盖。</div>
+<p>FSR是表情控制，宜把压力引起的电压阶跃与输出音量/音色包络变化同时记录，注明t10/t90或其他响应阈值；它的ADC扫描、转换和平滑响应不等于琴键Note On的首声延迟。</p></section>
+<section id="no-scope"><h2>4．没有示波器，哪些展示成立</h2>
+<table><tr><th>方法</th><th>能说明什么</th><th>边界</th></tr><tr><td>手机连续拍快速弹奏、拨弦与声音</td><td>实时交互、跟手性、功能表现</td><td>不能精确证明≤5ms或≤10ms；240fps一帧约4.17ms，还存在动作判定和音画同步误差。</td></tr><tr><td>现有RTL仿真</td><td>旧V040的MIDI数字链路首非零I²S word约1.04–1.06ms</td><td>必须标“V040数字链路仿真”，不是V047模拟输出实测；不含键盘内部/传感器/DAC/模拟输出。</td></tr><tr><td>借逻辑分析仪，或新增FPGA周期计数监测</td><td>输入事件到I²S有效采样的数字链路延迟</td><td>不能包含DAC模拟滤波。周期计数功能尚需设计及重新验证，当前版没有这个测量面板。</td></tr><tr><td>双通道同步采集声卡</td><td>一通道录输入参考，另一通道录DAC输出，可在同一采样时基测模拟响应</td><td>参考信号需匹配音频输入量程、限幅/隔直并标定通道差；不能把3.3V GPIO直接插Line In，也不能分两台设备分别录后相减。</td></tr></table>
+<p>只有手机和内置麦克风时，先拍功能展示，字幕写“实时演奏展示；整机延迟待仪器验证”。内部录音WAV只含输出，没有同步输入参考，无法单独求演奏延迟。手机网页ACK耗时也不是音频延迟。</p>
+<p>V040参考报告见 <code>D:/Gowin_project/latency_probe_v040_20261031/REPORT.md</code>。其中单束回退、FSR及部分参数组合未完成验证，不能扩大为所有路径通过。</p></section></html>

@@ -1,0 +1,1 @@
+V045_NATIVE_GLYPH_PASS: all 8 added glyphs match native 16px SimHei, no clipping. Font SHA256=9b1959db3b3abeb7efdaec26edf7dfe871a6039de8d614af7248575207be629e

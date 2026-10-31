@@ -1,0 +1,115 @@
+{
+  "version": "V047",
+  "clock_hz": 27000000,
+  "phone_uart_baud": 1000000,
+  "usb_uart_baud": 115200,
+  "frame_bytes": 12,
+  "request_layout": [
+    "A5",
+    "5A",
+    1,
+    "seq",
+    "cmd",
+    "op_or_param",
+    "payload_byte0",
+    "payload_byte1",
+    "payload_byte2",
+    "payload_byte3",
+    "payload_byte4",
+    "xor_2_to_10"
+  ],
+  "legacy": "CMD0/1/2 unchanged including zero reserved bytes; only CMD3 permits bytes7..10 payload",
+  "extension_ack": "5A A5 01 seq 20 op status reply_u32_le XOR; error uses result21 and byte6 error",
+  "audio": "5A A5 01 audio_seq 40 sample0_le16 sample1_le16 sample2_le16 XOR",
+  "audio_eof": "same header, result41, payload bytes5..8=count_u32_le,9..10=dropped_u16_le",
+  "audio_sequence": "FPGA global uint8 counter increments for result40 AND result41, resets only on FPGA reset, NOT REC_START. ESP learns first packet per recording, checks all following packets including EOF modulo256, then verifies full sample count and PCM CRC. Learning start never waives count/CRC verification.",
+  "errors": {
+    "1": "unsupported",
+    "2": "range/format",
+    "3": "busy",
+    "4": "sequence/index",
+    "5": "checksum",
+    "6": "not_ready"
+  },
+  "ops": {
+    "0": "CAP reply=0x0001000f with CHORD_SCORE_ENABLE=1 (bit3 chords); legacy=0x00010007. ESP47 supports both; only bit3 permits chord uploads.",
+    "1": "STATE reply low5 bits0scorevalid,1mapvalid,2recordactive,3recordbusy,4drop; status0",
+    "16": "SCORE_BEGIN payload byte0 steps1..63,byte1 total_quarters9..252 includes2beats countin,bytes2..4 samples_per_beat u24 23437..187500; reject if display bank ack!=current activebank; clear inactive256 words beforeACK",
+    "17": "SCORE_WRITE byte0 sequential quarter address0..total_quarters-1; bytes1..4 word32 LE",
+    "18": "SCORE_COMMIT payload low16=sum16(all4 bytes of each quarter word); require complete count; activate staged config/bank and signal source restart if custom current",
+    "19": "SCORE_CANCEL discards staging only",
+    "32": "MAP_BEGIN initialize inactive identity128 entries; defaultPads/CC fromV040; no active switch",
+    "33": "NOTE_WRITE byte0 index0..127 in order; byte1 outputNote0..127; rest0; sum16 += index+target",
+    "34": "PAD_WRITE byte0 padIndex0..3 sequential after128notes;byte1 incomingNote0..127; sum16 += index+value",
+    "35": "CC_WRITE byte0 knobIndex0..3 sequential after4pads;byte1 incomingCC0..127; sum16 += index+value",
+    "36": "MAP_COMMIT low16 expected_sum16; require136 writes; only if performance idle OR acknowledged explicit panic then activate and emit mapping_commit; never allow hanging held notes",
+    "37": "MAP_CANCEL discards staged map",
+    "48": "REC_START payload0; reject if recordbusy, reset samplecount/drops/CRC; first audio afterACK",
+    "49": "REC_STOP stop capture then drain queue and sendEOF; ack not EOF",
+    "50": "REC_CRC reply standard reflected IEEE CRC32 (EDB88320,initFFFFFFFF,finalxorFFFFFFFF) over real little endian sample bytes only, afterEOF; busy error beforeEOF",
+    "51": "REC_STATE reply bits31drop/30busy/29active and low29samplecount; status0",
+    "20": "GUIDE_CONTROL legacy0..3=custom; bit16=1 explicit song bits9:8(0..3), actionbits1:0(0 select paused,1start,2toggle,3restart); otherbitszero. Builtins need no custom upload. Test-owned rejects BUSY.",
+    "38": "MAP_DISABLE/restore exact V040 identity+GM aliases, payload0; idle+commit-ready required, acknowledge only after MIDI decoder commit ack",
+    "21": "GUIDE_MODE payload0fixedBPM/1auto/2step; resets selected score; ACK means accepted. Use op22 readback for actual mode and selection.",
+    "22": "GUIDE_STATE payload0, replybits1:0mode,3:2roll_song,4active,5done,6practice_hold,7external_suspend,13:8step,20:14expected_note,21expected_valid,23:22selected_song; high8zero"
+  },
+  "score_word": {
+    "0..6": "note7",
+    "7..12": "step6",
+    "13": "valid",
+    "14": "onset",
+    "15": "longnote",
+    "16..22": "next_note7",
+    "23": "next_valid",
+    "24..31": "legacy only: velocity7 at24..30; bit31=0"
+  },
+  "score_config": {
+    "31": "active_bank",
+    "30": "valid",
+    "24..29": "steps",
+    "18..23": "ceil(total_quarters/4), includescountin",
+    "0..17": "samples_per_beat"
+  },
+  "score_table": "2 banks x256 quarter entries; source/pixel each SDP BRAM; BEGINclear/write broadcast inactivebank; controller waits pixelbankack for safe reuse",
+  "mapping_ports": "mapping_enable,bank,commit; wr_en,addr[7:0]={bank,index7},data[6:0]; active pad_notes[27:0] and cc_numbers[27:0], low7 index0",
+  "recording": {
+    "source": "final monitor_pcm after volume/FX/cleanup",
+    "fs_hz": 15625,
+    "format": "PCM16LE mono",
+    "decimate": 6,
+    "max_samples": 468750,
+    "max_seconds": 30,
+    "audio_fifo_samples": 512,
+    "eof_tail": "last payload padded to3 samples; WAV uses exact EOF count; CRC excludes pad"
+  },
+  "scheduling": "RX parser always active even duringTX; stop-and-waitRPC; ACK priority at packet boundaries; audio never blocks synth; duplicate identical seq/op/payload repeats cachedACK without repeating side effects; same seq different payload error",
+  "scope_limits": "No physical latency claim; boxcar6 anti alias limited; no new pins/purchases; both FPGA+ESP must use1M paired, rollbackV040+ESP39 uses115200",
+  "default_pad_targets": {
+    "kick": 36,
+    "snare": 38,
+    "closed_hat": 37,
+    "open_hat": 39
+  },
+  "default_cc_targets": [
+    93,
+    91,
+    71,
+    74
+  ],
+  "guide_practice": "Fresh raw melody NoteOn receipt plus all group physical held_keys required. Every target needs new NoteOn after step begins; release clears unaccepted member, suspended drops incomplete attempt. Once accepted, time continues for group duration. Repeated or common-note chords require re-strike. Rests/count-in run; no scoring system.",
+  "score_word_chord": {
+    "31": "1 means chord group",
+    "0..15": "same note-root,step,valid,onset,longnote as legacy",
+    "16..20": "delta1 positive1..31",
+    "21..25": "delta2 positive or0absent",
+    "26..30": "delta3 positive or0absent",
+    "constraints": "valid=1; at leastdelta1; strictlyascending positiveoffsets then trailingzeros; all root+delta<=72; root41..72",
+    "note": "No next_note or per-event velocity in chordword; demo uses existing constantvelocity192 for mono andchord."
+  },
+  "score_json_v2": {
+    "schema": "tang20k.score/2",
+    "pitches": "sorted unique1..4 MIDI41..72, mutuallyexclusive withpitch/note",
+    "timing": "All notes within event share start/duration; nonoverlapping chronological groups;1/4beatgrid;63eventsmax;61scorebeats plus2countinbeats; existing mono score/1 remainsvalid",
+    "library": "Three originalbuiltin slots unchanged; one replaceablecustomslot, ESPsavedJSON supportsreupload afterpowercycle"
+  }
+}

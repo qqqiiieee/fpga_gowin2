@@ -1,0 +1,18 @@
+{
+  "source_frozen": true,
+  "files": {
+    "src/hdmi_live_display.v": "57331a1bfe211e645168acdbc536f7c7e2c47aeab84fc68e8989061a474dd559",
+    "src/hdmi_compact_dashboard.v": "a930f02a84b51958c5e1c75e2c419c7e77eae4ff61d160dbaf91382624a6d882",
+    "src/hdmi_compact_text.vh": "8b83e42597512266eea2499fbf0e247264bc1f387f553e7e46b77135d53d7e8a",
+    "src/ui_font.hex": "9ca345c195c61f5ad65947ef039c4260eab086d10ec2239ea1fe2bc513363e82",
+    "assets/ui_font_map.json": "08a2e79b389fdf6ef7808c8345cc4dcb40a077ceb1cd0e044ff12cc43782fa99",
+    "assets/ui_texts_v045.json": "72c6a6e68e6e198a832721e79886788913405f1f3591a92c81b9aa8dc79b4722",
+    "scripts/generate_v045_display_text.py": "e35b2af706204cd56b284db87fdaaf87fb03710b6efbd542c0fcced7625a3111"
+  },
+  "top_integration": "Parent owns top; SONG_LIBRARY_ENABLE=1, guide_mode[1:0], practice_wait in source domain",
+  "production_status_bits": 401,
+  "gowin_run": false,
+  "flashed": false,
+  "pending": [],
+  "validation_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\display_modes_v045\\results\\20261031T102823_332982Z\\targeted_report.json"
+}

@@ -1,0 +1,534 @@
+{
+  "path": "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\验证\\V047_HTTP_20261031_210527",
+  "success": true,
+  "phone_browser_tested": false,
+  "previous_wifi_profile": "HUST_WIRELESS",
+  "old_wav_backed_up": true,
+  "old_score_backed_up": false,
+  "requests": [
+    {
+      "path": "/api/state",
+      "method": "GET",
+      "status": 200,
+      "bytes": 2246
+    },
+    {
+      "path": "/extensions",
+      "method": "GET",
+      "status": 200,
+      "bytes": 22251
+    },
+    {
+      "path": "/api/scores/download",
+      "method": "GET",
+      "status": 404,
+      "error": "{\"error\":\"没有已上传曲谱\"}"
+    },
+    {
+      "path": "/api/mapping",
+      "method": "GET",
+      "status": 200,
+      "bytes": 523
+    },
+    {
+      "path": "/api/recordings/last.wav",
+      "method": "GET",
+      "status": 200,
+      "bytes": 468822
+    },
+    {
+      "path": "/api/scores",
+      "method": "POST",
+      "status": 202,
+      "bytes": 125
+    },
+    {
+      "path": "/api/extensions/job",
+      "method": "GET",
+      "status": 200,
+      "bytes": 127
+    },
+    {
+      "path": "/api/extensions/job",
+      "method": "GET",
+      "status": 200,
+      "bytes": 127
+    },
+    {
+      "path": "/api/scores/download",
+      "method": "GET",
+      "status": 200,
+      "bytes": 4452
+    },
+    {
+      "path": "/api/extensions/config",
+      "method": "GET",
+      "status": 200,
+      "bytes": 137
+    },
+    {
+      "path": "/api/mapping",
+      "method": "GET",
+      "status": 200,
+      "bytes": 523
+    },
+    {
+      "path": "/api/state",
+      "method": "GET",
+      "status": 200,
+      "bytes": 2246
+    }
+  ],
+  "initial_state": {
+    "firmware_version": "V047",
+    "boot_id": 3256472913,
+    "linked": true,
+    "synced": true,
+    "stale": false,
+    "ack_age_ms": 78,
+    "revision": 0,
+    "queued": 0,
+    "inflight": false,
+    "tx": 3794,
+    "rx": 3794,
+    "raw_uart_rx_bytes": 45528,
+    "retries": 0,
+    "ignored": 0,
+    "panic": {
+      "requested": 0,
+      "applied": 0,
+      "failed": 0,
+      "error": 0
+    },
+    "params": {
+      "volume": {
+        "value": 160,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "timbre": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "input_mode": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_mode": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_wet": {
+        "value": 64,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_time": {
+        "value": 96,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_feedback": {
+        "value": 80,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_modulation": {
+        "value": 48,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "attack": {
+        "value": 32,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "decay": {
+        "value": 96,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "sustain": {
+        "value": 192,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "release": {
+        "value": 128,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "hdmi_page": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "filter": {
+        "value": 1,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "digital_zero": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "status_flags": {
+        "value": 8,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      }
+    },
+    "telemetry": {
+      "enabled": true,
+      "status": "supported",
+      "supported": true,
+      "valid": true,
+      "stale": false,
+      "age_ms": 94,
+      "snapshot_id": 214,
+      "snapshot_valid": true,
+      "aborted_bursts": 0,
+      "fsr": [
+        {
+          "raw": 62400,
+          "level": 0,
+          "calibrated": true
+        },
+        {
+          "raw": 61792,
+          "level": 0,
+          "calibrated": true
+        }
+      ],
+      "adc": {
+        "fault": false,
+        "stale": false
+      },
+      "midi": {
+        "velocity": 0,
+        "bend": 0,
+        "modulation": 0,
+        "frame_error": false,
+        "overflow": false
+      },
+      "beams": {
+        "electrical_a": true,
+        "electrical_b": true,
+        "blocked_a": false,
+        "blocked_b": false,
+        "enabled": true,
+        "ready": true,
+        "busy": false
+      },
+      "voices": 0,
+      "test": {
+        "mode": false,
+        "owned": false,
+        "requested": 0,
+        "active": false,
+        "sweep": false,
+        "overrun": false,
+        "index": 0
+      }
+    }
+  },
+  "old_score_present": false,
+  "old_mapping_backed_up": true,
+  "old_wav_present": true,
+  "old_wav_sha256": "f4f706b045a7f8c77fdd7231cdbc9db1a649773fcc58a0e0567db8092b89b9e2",
+  "old_wav_bytes": 468822,
+  "score_upload_ack": {
+    "id": 1,
+    "running": true,
+    "ok": false,
+    "progress": 0,
+    "total": 138,
+    "error": 0,
+    "status": 0,
+    "reply": 0,
+    "message": "等待FPGA能力确认"
+  },
+  "score_upload_job": {
+    "id": 1,
+    "running": false,
+    "ok": true,
+    "progress": 138,
+    "total": 138,
+    "error": 0,
+    "status": 0,
+    "reply": 4220042603,
+    "message": "FPGA已确认"
+  },
+  "uploaded_score": "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\source\\examples\\V047\\霓虹阶梯_黑白键双音四音_V047.json",
+  "uploaded_score_sha256": "8624f55705c656aef73f396cb843ed384bd135d2caa6033269f3750ef6040f44",
+  "score_http_roundtrip": true,
+  "configuration": {
+    "score_active_confirmed": true,
+    "mapping_active_confirmed": false,
+    "baud": 1000000,
+    "max_events": 63,
+    "max_beats_with_countin": 63,
+    "fs_hz": 15625
+  },
+  "mapping_unchanged": true,
+  "final_state": {
+    "firmware_version": "V047",
+    "boot_id": 3256472913,
+    "linked": true,
+    "synced": true,
+    "stale": false,
+    "ack_age_ms": 11,
+    "revision": 0,
+    "queued": 0,
+    "inflight": false,
+    "tx": 4006,
+    "rx": 4006,
+    "raw_uart_rx_bytes": 49764,
+    "retries": 0,
+    "ignored": 0,
+    "panic": {
+      "requested": 0,
+      "applied": 0,
+      "failed": 0,
+      "error": 0
+    },
+    "params": {
+      "volume": {
+        "value": 160,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "timbre": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "input_mode": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_mode": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_wet": {
+        "value": 64,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_time": {
+        "value": 96,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_feedback": {
+        "value": 80,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_modulation": {
+        "value": 48,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "attack": {
+        "value": 32,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "decay": {
+        "value": 96,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "sustain": {
+        "value": 192,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "release": {
+        "value": 128,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "hdmi_page": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "filter": {
+        "value": 1,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "digital_zero": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "status_flags": {
+        "value": 8,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      }
+    },
+    "telemetry": {
+      "enabled": true,
+      "status": "supported",
+      "supported": true,
+      "valid": true,
+      "stale": false,
+      "age_ms": 51,
+      "snapshot_id": 226,
+      "snapshot_valid": true,
+      "aborted_bursts": 0,
+      "fsr": [
+        {
+          "raw": 62396,
+          "level": 0,
+          "calibrated": true
+        },
+        {
+          "raw": 62554,
+          "level": 0,
+          "calibrated": true
+        }
+      ],
+      "adc": {
+        "fault": false,
+        "stale": false
+      },
+      "midi": {
+        "velocity": 0,
+        "bend": 0,
+        "modulation": 0,
+        "frame_error": false,
+        "overflow": false
+      },
+      "beams": {
+        "electrical_a": true,
+        "electrical_b": true,
+        "blocked_a": false,
+        "blocked_b": false,
+        "enabled": true,
+        "ready": true,
+        "busy": false
+      },
+      "voices": 0,
+      "test": {
+        "mode": false,
+        "owned": false,
+        "requested": 0,
+        "active": false,
+        "sweep": false,
+        "overrun": false,
+        "index": 0
+      }
+    }
+  },
+  "wifi_restore_requested": true,
+  "previous_wifi_restored": true,
+  "finished_beijing": "2026-10-31T21:05:41.671766+08:00"
+}

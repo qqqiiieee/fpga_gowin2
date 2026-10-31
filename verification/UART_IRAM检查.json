@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "isr_symbol": "400812a8 g     F .iram0.text\t00000133 _ZN13RecordingUart10receiveIsrEPv",
+  "data_symbol": "3ffc0e3c l     O .dram0.data\t00008018 _ZL8fpgaUart",
+  "calls": [],
+  "elf_sha256": "11e78db76df8d8388618fe1bacfca0a34932090e38a3d0389c6023a420c7f6cf",
+  "scope": "Linked IRAM function, internal DRAM object, no external calls. Actual no-loss recording still requires hardware.",
+  "reference": "https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/intr_alloc.html"
+}

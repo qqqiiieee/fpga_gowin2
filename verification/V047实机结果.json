@@ -1,0 +1,2309 @@
+{
+  "success": true,
+  "hardware_accessed": true,
+  "phone_browser_tested": false,
+  "headphone_listening_tested": false,
+  "physical_practice_key_tested": false,
+  "physical_keyboard_tested": false,
+  "physical_latency_measured": false,
+  "hdmi_visually_observed": false,
+  "mapping_modified": false,
+  "steps": [
+    {
+      "time_beijing": "2026-10-31T21:09:10.421724+08:00",
+      "raw": 12583068,
+      "mode": 0,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": true,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:10.628303+08:00",
+      "raw": 12583070,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": true,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:10.652194+08:00",
+      "raw": 12583070,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": true,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:10.813728+08:00",
+      "raw": 12582942,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:11.019939+08:00",
+      "raw": 12582942,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:11.226515+08:00",
+      "raw": 12582942,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:11.388527+08:00",
+      "raw": 12582942,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:11.549967+08:00",
+      "raw": 12582942,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:11.712566+08:00",
+      "raw": 15548510,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": true,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 53,
+      "expected_valid": true,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:11.924201+08:00",
+      "raw": 15548510,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": true,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 53,
+      "expected_valid": true,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:12.136507+08:00",
+      "raw": 15548510,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": true,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 53,
+      "expected_valid": true,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:12.348172+08:00",
+      "raw": 15548510,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": true,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 53,
+      "expected_valid": true,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:12.559976+08:00",
+      "raw": 15548510,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": true,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 53,
+      "expected_valid": true,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:12.816221+08:00",
+      "raw": 15548510,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": true,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 53,
+      "expected_valid": true,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:13.028122+08:00",
+      "raw": 15548510,
+      "mode": 2,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": true,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 53,
+      "expected_valid": true,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:13.052303+08:00",
+      "raw": 12583068,
+      "mode": 0,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": true,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:13.076464+08:00",
+      "raw": 12583068,
+      "mode": 0,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": true,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:13.237835+08:00",
+      "raw": 12582940,
+      "mode": 0,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:13.399903+08:00",
+      "raw": 12582940,
+      "mode": 0,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:13.562130+08:00",
+      "raw": 12582940,
+      "mode": 0,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:13.724172+08:00",
+      "raw": 12582940,
+      "mode": 0,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:13.886302+08:00",
+      "raw": 12582940,
+      "mode": 0,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:14.048066+08:00",
+      "raw": 12582940,
+      "mode": 0,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:14.210008+08:00",
+      "raw": 15548444,
+      "mode": 0,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 53,
+      "expected_valid": true,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:14.416276+08:00",
+      "raw": 15597852,
+      "mode": 0,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 1,
+      "expected_note": 56,
+      "expected_valid": true,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:14.764260+08:00",
+      "raw": 12583069,
+      "mode": 1,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": true,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:14.832217+08:00",
+      "raw": 12583069,
+      "mode": 1,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": true,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:09:14.993747+08:00",
+      "raw": 12582941,
+      "mode": 1,
+      "roll_song": 3,
+      "active": true,
+      "done": false,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 0,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    },
+    {
+      "time_beijing": "2026-10-31T21:13:30.442187+08:00",
+      "raw": 12597805,
+      "mode": 1,
+      "roll_song": 3,
+      "active": false,
+      "done": true,
+      "practice_hold": false,
+      "external_suspend": false,
+      "step": 58,
+      "expected_note": 0,
+      "expected_valid": false,
+      "selected_song": 3
+    }
+  ],
+  "started_beijing": "2026-10-31T21:09:09.907086+08:00",
+  "output": "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\验证\\V047_实机_20261031_210909_906564",
+  "boundaries": [
+    "USB bridge plus prior desktop HTTP evidence; no phone-browser or listening test.",
+    "No synthetic MIDI or physical-key validation; practice only observes a steady wait.",
+    "op22 reports the root note, not all chord members or score RAM contents.",
+    "Keep the new score in ESP/FPGA; previous score and WAV remain in host archives.",
+    "REC_START replaces the single ESP recording slot only after archive verification.",
+    "The demo may end before 30 seconds; the remaining recorded PCM can be silence.",
+    "STATE parameters are bridge cache; this script sends no parameter or mapping writes."
+  ],
+  "backup_manifest": {
+    "success": true,
+    "phone_browser_tested": false,
+    "previous_wifi_profile": "HUST_WIRELESS",
+    "old_wav_backed_up": true,
+    "old_score_backed_up": false,
+    "requests": [
+      {
+        "path": "/api/state",
+        "method": "GET",
+        "status": 200,
+        "bytes": 2246
+      },
+      {
+        "path": "/extensions",
+        "method": "GET",
+        "status": 200,
+        "bytes": 22251
+      },
+      {
+        "path": "/api/scores/download",
+        "method": "GET",
+        "status": 404,
+        "error": "{\"error\":\"没有已上传曲谱\"}"
+      },
+      {
+        "path": "/api/mapping",
+        "method": "GET",
+        "status": 200,
+        "bytes": 523
+      },
+      {
+        "path": "/api/recordings/last.wav",
+        "method": "GET",
+        "status": 200,
+        "bytes": 468822
+      },
+      {
+        "path": "/api/scores",
+        "method": "POST",
+        "status": 202,
+        "bytes": 125
+      },
+      {
+        "path": "/api/extensions/job",
+        "method": "GET",
+        "status": 200,
+        "bytes": 127
+      },
+      {
+        "path": "/api/extensions/job",
+        "method": "GET",
+        "status": 200,
+        "bytes": 127
+      },
+      {
+        "path": "/api/scores/download",
+        "method": "GET",
+        "status": 200,
+        "bytes": 4452
+      },
+      {
+        "path": "/api/extensions/config",
+        "method": "GET",
+        "status": 200,
+        "bytes": 137
+      },
+      {
+        "path": "/api/mapping",
+        "method": "GET",
+        "status": 200,
+        "bytes": 523
+      },
+      {
+        "path": "/api/state",
+        "method": "GET",
+        "status": 200,
+        "bytes": 2246
+      }
+    ],
+    "initial_state": {
+      "firmware_version": "V047",
+      "boot_id": 3256472913,
+      "linked": true,
+      "synced": true,
+      "stale": false,
+      "ack_age_ms": 78,
+      "revision": 0,
+      "queued": 0,
+      "inflight": false,
+      "tx": 3794,
+      "rx": 3794,
+      "raw_uart_rx_bytes": 45528,
+      "retries": 0,
+      "ignored": 0,
+      "panic": {
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "params": {
+        "volume": {
+          "value": 160,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "timbre": {
+          "value": 0,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "input_mode": {
+          "value": 0,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "fx_mode": {
+          "value": 0,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "fx_wet": {
+          "value": 64,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "fx_time": {
+          "value": 96,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "fx_feedback": {
+          "value": 80,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "fx_modulation": {
+          "value": 48,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "attack": {
+          "value": 32,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "decay": {
+          "value": 96,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "sustain": {
+          "value": 192,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "release": {
+          "value": 128,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "hdmi_page": {
+          "value": 0,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "filter": {
+          "value": 1,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "digital_zero": {
+          "value": 0,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "status_flags": {
+          "value": 8,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        }
+      },
+      "telemetry": {
+        "enabled": true,
+        "status": "supported",
+        "supported": true,
+        "valid": true,
+        "stale": false,
+        "age_ms": 94,
+        "snapshot_id": 214,
+        "snapshot_valid": true,
+        "aborted_bursts": 0,
+        "fsr": [
+          {
+            "raw": 62400,
+            "level": 0,
+            "calibrated": true
+          },
+          {
+            "raw": 61792,
+            "level": 0,
+            "calibrated": true
+          }
+        ],
+        "adc": {
+          "fault": false,
+          "stale": false
+        },
+        "midi": {
+          "velocity": 0,
+          "bend": 0,
+          "modulation": 0,
+          "frame_error": false,
+          "overflow": false
+        },
+        "beams": {
+          "electrical_a": true,
+          "electrical_b": true,
+          "blocked_a": false,
+          "blocked_b": false,
+          "enabled": true,
+          "ready": true,
+          "busy": false
+        },
+        "voices": 0,
+        "test": {
+          "mode": false,
+          "owned": false,
+          "requested": 0,
+          "active": false,
+          "sweep": false,
+          "overrun": false,
+          "index": 0
+        }
+      }
+    },
+    "old_score_present": false,
+    "old_mapping_backed_up": true,
+    "old_wav_present": true,
+    "old_wav_sha256": "f4f706b045a7f8c77fdd7231cdbc9db1a649773fcc58a0e0567db8092b89b9e2",
+    "old_wav_bytes": 468822,
+    "score_upload_ack": {
+      "id": 1,
+      "running": true,
+      "ok": false,
+      "progress": 0,
+      "total": 138,
+      "error": 0,
+      "status": 0,
+      "reply": 0,
+      "message": "等待FPGA能力确认"
+    },
+    "score_upload_job": {
+      "id": 1,
+      "running": false,
+      "ok": true,
+      "progress": 138,
+      "total": 138,
+      "error": 0,
+      "status": 0,
+      "reply": 4220042603,
+      "message": "FPGA已确认"
+    },
+    "uploaded_score": "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\source\\examples\\V047\\霓虹阶梯_黑白键双音四音_V047.json",
+    "uploaded_score_sha256": "8624f55705c656aef73f396cb843ed384bd135d2caa6033269f3750ef6040f44",
+    "score_http_roundtrip": true,
+    "configuration": {
+      "score_active_confirmed": true,
+      "mapping_active_confirmed": false,
+      "baud": 1000000,
+      "max_events": 63,
+      "max_beats_with_countin": 63,
+      "fs_hz": 15625
+    },
+    "mapping_unchanged": true,
+    "final_state": {
+      "firmware_version": "V047",
+      "boot_id": 3256472913,
+      "linked": true,
+      "synced": true,
+      "stale": false,
+      "ack_age_ms": 11,
+      "revision": 0,
+      "queued": 0,
+      "inflight": false,
+      "tx": 4006,
+      "rx": 4006,
+      "raw_uart_rx_bytes": 49764,
+      "retries": 0,
+      "ignored": 0,
+      "panic": {
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "params": {
+        "volume": {
+          "value": 160,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "timbre": {
+          "value": 0,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "input_mode": {
+          "value": 0,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "fx_mode": {
+          "value": 0,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "fx_wet": {
+          "value": 64,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "fx_time": {
+          "value": 96,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "fx_feedback": {
+          "value": 80,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "fx_modulation": {
+          "value": 48,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "attack": {
+          "value": 32,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "decay": {
+          "value": 96,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "sustain": {
+          "value": 192,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "release": {
+          "value": 128,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "hdmi_page": {
+          "value": 0,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "filter": {
+          "value": 1,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "digital_zero": {
+          "value": 0,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        },
+        "status_flags": {
+          "value": 8,
+          "valid": true,
+          "requested": 0,
+          "applied": 0,
+          "failed": 0,
+          "error": 0
+        }
+      },
+      "telemetry": {
+        "enabled": true,
+        "status": "supported",
+        "supported": true,
+        "valid": true,
+        "stale": false,
+        "age_ms": 51,
+        "snapshot_id": 226,
+        "snapshot_valid": true,
+        "aborted_bursts": 0,
+        "fsr": [
+          {
+            "raw": 62396,
+            "level": 0,
+            "calibrated": true
+          },
+          {
+            "raw": 62554,
+            "level": 0,
+            "calibrated": true
+          }
+        ],
+        "adc": {
+          "fault": false,
+          "stale": false
+        },
+        "midi": {
+          "velocity": 0,
+          "bend": 0,
+          "modulation": 0,
+          "frame_error": false,
+          "overflow": false
+        },
+        "beams": {
+          "electrical_a": true,
+          "electrical_b": true,
+          "blocked_a": false,
+          "blocked_b": false,
+          "enabled": true,
+          "ready": true,
+          "busy": false
+        },
+        "voices": 0,
+        "test": {
+          "mode": false,
+          "owned": false,
+          "requested": 0,
+          "active": false,
+          "sweep": false,
+          "overrun": false,
+          "index": 0
+        }
+      }
+    },
+    "wifi_restore_requested": true,
+    "previous_wifi_restored": true,
+    "finished_beijing": "2026-10-31T21:05:41.671766+08:00"
+  },
+  "backup_source": "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\验证\\V047_HTTP_20261031_210527",
+  "verified_backups": {
+    "wav": {
+      "present": true,
+      "file": "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\验证\\V047_实机_20261031_210909_906564\\backup\\previous_recording.wav",
+      "bytes": 468822,
+      "samples": 234389,
+      "seconds": 15.000896,
+      "sha256": "f4f706b045a7f8c77fdd7231cdbc9db1a649773fcc58a0e0567db8092b89b9e2",
+      "pcm_crc32": "b871cc94",
+      "historical_fpga_crc_verified": false
+    },
+    "score": {
+      "present": false
+    }
+  },
+  "mapping_backup_sha256": "97a3d2819afd4d365e81ccc5d86bb58101993ff9e3575b81b8b84631e0c2d52c",
+  "score": {
+    "schema": "tang20k.score/2",
+    "source": "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\source\\examples\\V047\\霓虹阶梯_黑白键双音四音_V047.json",
+    "sha256": "8624f55705c656aef73f396cb843ed384bd135d2caa6033269f3750ef6040f44",
+    "groups": 59,
+    "total_quarters": 136,
+    "bpm": 116,
+    "config": 4220042603,
+    "nominal_seconds": 17.586206896551722,
+    "committed_via_http": true,
+    "usb_reupload": false,
+    "fpga_score_ram_readback_available": false,
+    "first_note": 53
+  },
+  "port": "COM3",
+  "initial_state": {
+    "firmware_version": "V047",
+    "boot_id": 3256472913,
+    "linked": true,
+    "synced": true,
+    "stale": false,
+    "ack_age_ms": 66,
+    "revision": 0,
+    "queued": 0,
+    "inflight": false,
+    "tx": 22804,
+    "rx": 22804,
+    "raw_uart_rx_bytes": 275352,
+    "retries": 0,
+    "ignored": 0,
+    "panic": {
+      "requested": 0,
+      "applied": 0,
+      "failed": 0,
+      "error": 0
+    },
+    "params": {
+      "volume": {
+        "value": 160,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "timbre": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "input_mode": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_mode": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_wet": {
+        "value": 64,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_time": {
+        "value": 96,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_feedback": {
+        "value": 80,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_modulation": {
+        "value": 48,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "attack": {
+        "value": 32,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "decay": {
+        "value": 96,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "sustain": {
+        "value": 192,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "release": {
+        "value": 128,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "hdmi_page": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "filter": {
+        "value": 1,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "digital_zero": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "status_flags": {
+        "value": 8,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      }
+    },
+    "telemetry": {
+      "enabled": true,
+      "status": "supported",
+      "supported": true,
+      "valid": true,
+      "stale": false,
+      "age_ms": 186,
+      "snapshot_id": 1290,
+      "snapshot_valid": true,
+      "aborted_bursts": 0,
+      "fsr": [
+        {
+          "raw": 62388,
+          "level": 0,
+          "calibrated": true
+        },
+        {
+          "raw": 62398,
+          "level": 0,
+          "calibrated": true
+        }
+      ],
+      "adc": {
+        "fault": false,
+        "stale": false
+      },
+      "midi": {
+        "velocity": 0,
+        "bend": 0,
+        "modulation": 0,
+        "frame_error": false,
+        "overflow": false
+      },
+      "beams": {
+        "electrical_a": true,
+        "electrical_b": true,
+        "blocked_a": false,
+        "blocked_b": false,
+        "enabled": true,
+        "ready": true,
+        "busy": false
+      },
+      "voices": 0,
+      "test": {
+        "mode": false,
+        "owned": false,
+        "requested": 0,
+        "active": false,
+        "sweep": false,
+        "overrun": false,
+        "index": 0
+      }
+    }
+  },
+  "capability": 65551,
+  "initial_extension_flags": 1,
+  "initial_telemetry": {
+    "enabled": true,
+    "status": "supported",
+    "supported": true,
+    "valid": true,
+    "stale": false,
+    "age_ms": 209,
+    "snapshot_id": 1291,
+    "snapshot_valid": true,
+    "aborted_bursts": 0,
+    "fsr": [
+      {
+        "raw": 62388,
+        "level": 0,
+        "calibrated": true
+      },
+      {
+        "raw": 62398,
+        "level": 0,
+        "calibrated": true
+      }
+    ],
+    "adc": {
+      "fault": false,
+      "stale": false
+    },
+    "midi": {
+      "velocity": 0,
+      "bend": 0,
+      "modulation": 0,
+      "frame_error": false,
+      "overflow": false
+    },
+    "beams": {
+      "electrical_a": true,
+      "electrical_b": true,
+      "blocked_a": false,
+      "blocked_b": false,
+      "enabled": true,
+      "ready": true,
+      "busy": false
+    },
+    "voices": 0,
+    "test": {
+      "mode": false,
+      "owned": false,
+      "requested": 0,
+      "active": false,
+      "sweep": false,
+      "overrun": false,
+      "index": 0
+    }
+  },
+  "initial_guide": {
+    "raw": 12583068,
+    "mode": 0,
+    "roll_song": 3,
+    "active": true,
+    "done": false,
+    "practice_hold": false,
+    "external_suspend": true,
+    "step": 0,
+    "expected_note": 0,
+    "expected_valid": false,
+    "selected_song": 3
+  },
+  "pre_capture_diagnostic": {
+    "fs_ready": true,
+    "saved_available": true,
+    "max_seconds": 30,
+    "state": "idle",
+    "valid": false,
+    "samples": 0,
+    "eof_count": 0,
+    "frames": 0,
+    "drops": 0,
+    "local_crc": 0,
+    "fpga_crc": 0,
+    "seconds": 0.0,
+    "error": "",
+    "uart_rx_high": 12,
+    "ring_high": 0,
+    "max_flash_write_us": 0,
+    "rx_errors": 0,
+    "rx_budget": 1536
+  },
+  "practice_wait_without_key": true,
+  "fixed_bpm_advances": true,
+  "fixed_readback": {
+    "raw": 15597852,
+    "mode": 0,
+    "roll_song": 3,
+    "active": true,
+    "done": false,
+    "practice_hold": false,
+    "external_suspend": false,
+    "step": 1,
+    "expected_note": 56,
+    "expected_valid": true,
+    "selected_song": 3
+  },
+  "auto_start_readback": {
+    "raw": 12582941,
+    "mode": 1,
+    "roll_song": 3,
+    "active": true,
+    "done": false,
+    "practice_hold": false,
+    "external_suspend": false,
+    "step": 0,
+    "expected_note": 0,
+    "expected_valid": false,
+    "selected_song": 3
+  },
+  "capture_attempted": true,
+  "recording_progress": [
+    {
+      "elapsed": 3.0,
+      "diagnostic": {
+        "fs_ready": true,
+        "saved_available": false,
+        "max_seconds": 30,
+        "state": "recording",
+        "valid": false,
+        "samples": 48129,
+        "eof_count": 0,
+        "frames": 16044,
+        "drops": 0,
+        "local_crc": 1401723153,
+        "fpga_crc": 0,
+        "seconds": 3.0803,
+        "error": "",
+        "uart_rx_high": 1176,
+        "ring_high": 2088,
+        "max_flash_write_us": 46876,
+        "rx_errors": 0,
+        "rx_budget": 1536
+      }
+    },
+    {
+      "elapsed": 6.10899999999674,
+      "diagnostic": {
+        "fs_ready": true,
+        "saved_available": false,
+        "max_seconds": 30,
+        "state": "recording",
+        "valid": false,
+        "samples": 96300,
+        "eof_count": 0,
+        "frames": 32101,
+        "drops": 0,
+        "local_crc": 1529501551,
+        "fpga_crc": 0,
+        "seconds": 6.1632,
+        "error": "",
+        "uart_rx_high": 1200,
+        "ring_high": 2184,
+        "max_flash_write_us": 46876,
+        "rx_errors": 0,
+        "rx_budget": 1536
+      }
+    },
+    {
+      "elapsed": 9.21899999998277,
+      "diagnostic": {
+        "fs_ready": true,
+        "saved_available": false,
+        "max_seconds": 30,
+        "state": "recording",
+        "valid": false,
+        "samples": 144957,
+        "eof_count": 0,
+        "frames": 48320,
+        "drops": 0,
+        "local_crc": 547669223,
+        "fpga_crc": 0,
+        "seconds": 9.2772,
+        "error": "",
+        "uart_rx_high": 1224,
+        "ring_high": 2184,
+        "max_flash_write_us": 46876,
+        "rx_errors": 0,
+        "rx_budget": 1536
+      }
+    },
+    {
+      "elapsed": 12.312999999994645,
+      "diagnostic": {
+        "fs_ready": true,
+        "saved_available": false,
+        "max_seconds": 30,
+        "state": "recording",
+        "valid": false,
+        "samples": 193317,
+        "eof_count": 0,
+        "frames": 64440,
+        "drops": 0,
+        "local_crc": 4177969390,
+        "fpga_crc": 0,
+        "seconds": 12.3723,
+        "error": "",
+        "uart_rx_high": 1272,
+        "ring_high": 2184,
+        "max_flash_write_us": 46876,
+        "rx_errors": 0,
+        "rx_budget": 1536
+      }
+    },
+    {
+      "elapsed": 15.421999999991385,
+      "diagnostic": {
+        "fs_ready": true,
+        "saved_available": false,
+        "max_seconds": 28,
+        "state": "recording",
+        "valid": false,
+        "samples": 242220,
+        "eof_count": 0,
+        "frames": 80741,
+        "drops": 0,
+        "local_crc": 721117439,
+        "fpga_crc": 0,
+        "seconds": 15.5021,
+        "error": "",
+        "uart_rx_high": 1284,
+        "ring_high": 2184,
+        "max_flash_write_us": 46876,
+        "rx_errors": 0,
+        "rx_budget": 1536
+      }
+    },
+    {
+      "elapsed": 18.562999999994645,
+      "diagnostic": {
+        "fs_ready": true,
+        "saved_available": false,
+        "max_seconds": 24,
+        "state": "recording",
+        "valid": false,
+        "samples": 291222,
+        "eof_count": 0,
+        "frames": 97075,
+        "drops": 0,
+        "local_crc": 1390191799,
+        "fpga_crc": 0,
+        "seconds": 18.6382,
+        "error": "",
+        "uart_rx_high": 1308,
+        "ring_high": 2280,
+        "max_flash_write_us": 46876,
+        "rx_errors": 0,
+        "rx_budget": 1536
+      }
+    },
+    {
+      "elapsed": 21.687999999994645,
+      "diagnostic": {
+        "fs_ready": true,
+        "saved_available": false,
+        "max_seconds": 21,
+        "state": "recording",
+        "valid": false,
+        "samples": 340254,
+        "eof_count": 0,
+        "frames": 113419,
+        "drops": 0,
+        "local_crc": 1127595251,
+        "fpga_crc": 0,
+        "seconds": 21.7763,
+        "error": "",
+        "uart_rx_high": 1308,
+        "ring_high": 2472,
+        "max_flash_write_us": 46876,
+        "rx_errors": 0,
+        "rx_budget": 1536
+      }
+    },
+    {
+      "elapsed": 24.828000000008615,
+      "diagnostic": {
+        "fs_ready": true,
+        "saved_available": false,
+        "max_seconds": 18,
+        "state": "recording",
+        "valid": false,
+        "samples": 389361,
+        "eof_count": 0,
+        "frames": 129788,
+        "drops": 0,
+        "local_crc": 1255840168,
+        "fpga_crc": 0,
+        "seconds": 24.9191,
+        "error": "",
+        "uart_rx_high": 1308,
+        "ring_high": 2658,
+        "max_flash_write_us": 46876,
+        "rx_errors": 0,
+        "rx_budget": 1536
+      }
+    },
+    {
+      "elapsed": 27.96899999998277,
+      "diagnostic": {
+        "fs_ready": true,
+        "saved_available": false,
+        "max_seconds": 15,
+        "state": "recording",
+        "valid": false,
+        "samples": 438516,
+        "eof_count": 0,
+        "frames": 146173,
+        "drops": 0,
+        "local_crc": 1981216785,
+        "fpga_crc": 0,
+        "seconds": 28.065,
+        "error": "",
+        "uart_rx_high": 1308,
+        "ring_high": 2844,
+        "max_flash_write_us": 46876,
+        "rx_errors": 0,
+        "rx_budget": 1536
+      }
+    }
+  ],
+  "recording": {
+    "seconds": 30.0,
+    "samples": 468750,
+    "bytes": 937544,
+    "crc32": "a5efac56",
+    "file_sha256": "64b2bc1b180d00441847cbefabd988a9090853d4bdbbf96b4fa741ee0caab586",
+    "independently_downloaded_crc_matches": true,
+    "fpga_drop": false,
+    "peak": 1346,
+    "nonzero_samples": 258245,
+    "format": "15625Hz PCM16LE mono",
+    "file": "D:\\Gowin_project\\乐器版本\\2026-10-31_195353_V047_鼓垫增益_四音和弦曲谱_映射与演示指南_20261031\\验证\\V047_实机_20261031_210909_906564\\fpga_pcm.wav",
+    "source": "FPGA final PCM via actual FPGA UART and ESP32 LittleFS",
+    "phone_browser_tested": false,
+    "analog_recording": false
+  },
+  "esp_recording_diagnostic": {
+    "fs_ready": true,
+    "saved_available": true,
+    "max_seconds": 30,
+    "state": "complete",
+    "valid": true,
+    "samples": 468750,
+    "eof_count": 468750,
+    "frames": 156250,
+    "drops": 0,
+    "local_crc": 2783947862,
+    "fpga_crc": 2783947862,
+    "seconds": 30.0,
+    "error": "",
+    "uart_rx_high": 1308,
+    "ring_high": 2940,
+    "max_flash_write_us": 46876,
+    "rx_errors": 0,
+    "rx_budget": 1536
+  },
+  "auto_demo_nonzero_pcm": true,
+  "long_recording_passed": true,
+  "auto_end_readback": {
+    "raw": 12597805,
+    "mode": 1,
+    "roll_song": 3,
+    "active": false,
+    "done": true,
+    "practice_hold": false,
+    "external_suspend": false,
+    "step": 58,
+    "expected_note": 0,
+    "expected_valid": false,
+    "selected_song": 3
+  },
+  "cleanup_acknowledged": [
+    "stop_recording",
+    "pause_custom",
+    "fixed_mode"
+  ],
+  "final_guide": {
+    "raw": 12583068,
+    "mode": 0,
+    "roll_song": 3,
+    "active": true,
+    "done": false,
+    "practice_hold": false,
+    "external_suspend": true,
+    "step": 0,
+    "expected_note": 0,
+    "expected_valid": false,
+    "selected_song": 3
+  },
+  "final_recording_state": 468750,
+  "final_recording_diagnostic": {
+    "fs_ready": true,
+    "saved_available": true,
+    "max_seconds": 30,
+    "state": "complete",
+    "valid": true,
+    "samples": 468750,
+    "eof_count": 468750,
+    "frames": 156250,
+    "drops": 0,
+    "local_crc": 2783947862,
+    "fpga_crc": 2783947862,
+    "seconds": 30.0,
+    "error": "",
+    "uart_rx_high": 1308,
+    "ring_high": 2940,
+    "max_flash_write_us": 46876,
+    "rx_errors": 0,
+    "rx_budget": 1536
+  },
+  "final_state": {
+    "firmware_version": "V047",
+    "boot_id": 3256472913,
+    "linked": true,
+    "synced": true,
+    "stale": false,
+    "ack_age_ms": 63,
+    "revision": 0,
+    "queued": 0,
+    "inflight": false,
+    "tx": 45845,
+    "rx": 45845,
+    "raw_uart_rx_bytes": 2427432,
+    "retries": 0,
+    "ignored": 0,
+    "panic": {
+      "requested": 0,
+      "applied": 0,
+      "failed": 0,
+      "error": 0
+    },
+    "params": {
+      "volume": {
+        "value": 160,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "timbre": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "input_mode": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_mode": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_wet": {
+        "value": 64,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_time": {
+        "value": 96,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_feedback": {
+        "value": 80,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "fx_modulation": {
+        "value": 48,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "attack": {
+        "value": 32,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "decay": {
+        "value": 96,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "sustain": {
+        "value": 192,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "release": {
+        "value": 128,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "hdmi_page": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "filter": {
+        "value": 1,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "digital_zero": {
+        "value": 0,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "status_flags": {
+        "value": 8,
+        "valid": true,
+        "requested": 0,
+        "applied": 0,
+        "failed": 0,
+        "error": 0
+      }
+    },
+    "telemetry": {
+      "enabled": true,
+      "status": "supported",
+      "supported": true,
+      "valid": true,
+      "stale": false,
+      "age_ms": 79,
+      "snapshot_id": 2595,
+      "snapshot_valid": true,
+      "aborted_bursts": 0,
+      "fsr": [
+        {
+          "raw": 62389,
+          "level": 0,
+          "calibrated": true
+        },
+        {
+          "raw": 62389,
+          "level": 0,
+          "calibrated": true
+        }
+      ],
+      "adc": {
+        "fault": false,
+        "stale": false
+      },
+      "midi": {
+        "velocity": 0,
+        "bend": 0,
+        "modulation": 0,
+        "frame_error": false,
+        "overflow": false
+      },
+      "beams": {
+        "electrical_a": true,
+        "electrical_b": true,
+        "blocked_a": false,
+        "blocked_b": false,
+        "enabled": true,
+        "ready": true,
+        "busy": false
+      },
+      "voices": 0,
+      "test": {
+        "mode": false,
+        "owned": false,
+        "requested": 0,
+        "active": false,
+        "sweep": false,
+        "overrun": false,
+        "index": 0
+      }
+    }
+  },
+  "final_extension_flags": 1,
+  "parameter_cache_differences": {},
+  "cleanup_verified": true,
+  "transactions": [
+    {
+      "op": 0,
+      "payload": "0000000000",
+      "reply": {
+        "op": 0,
+        "result": 32,
+        "status": 0,
+        "reply": 65551
+      }
+    },
+    {
+      "op": 1,
+      "payload": "0000000000",
+      "reply": {
+        "op": 1,
+        "result": 32,
+        "status": 0,
+        "reply": 1
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12583068
+      }
+    },
+    {
+      "op": 20,
+      "payload": "0000010300",
+      "reply": {
+        "op": 20,
+        "result": 32,
+        "status": 0,
+        "reply": 66304
+      }
+    },
+    {
+      "op": 21,
+      "payload": "0000000002",
+      "reply": {
+        "op": 21,
+        "result": 32,
+        "status": 0,
+        "reply": 2
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12583070
+      }
+    },
+    {
+      "op": 20,
+      "payload": "0000010301",
+      "reply": {
+        "op": 20,
+        "result": 32,
+        "status": 0,
+        "reply": 66305
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12583070
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582942
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582942
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582942
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582942
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582942
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 15548510
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 15548510
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 15548510
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 15548510
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 15548510
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 15548510
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 15548510
+      }
+    },
+    {
+      "op": 21,
+      "payload": "0000000000",
+      "reply": {
+        "op": 21,
+        "result": 32,
+        "status": 0,
+        "reply": 0
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12583068
+      }
+    },
+    {
+      "op": 20,
+      "payload": "0000010301",
+      "reply": {
+        "op": 20,
+        "result": 32,
+        "status": 0,
+        "reply": 66305
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12583068
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582940
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582940
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582940
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582940
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582940
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582940
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 15548444
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 15597852
+      }
+    },
+    {
+      "op": 21,
+      "payload": "0000000001",
+      "reply": {
+        "op": 21,
+        "result": 32,
+        "status": 0,
+        "reply": 1
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12583069
+      }
+    },
+    {
+      "op": 20,
+      "payload": "0000010301",
+      "reply": {
+        "op": 20,
+        "result": 32,
+        "status": 0,
+        "reply": 66305
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12583069
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12582941
+      }
+    },
+    {
+      "op": 48,
+      "payload": "0000000000",
+      "reply": {
+        "op": 48,
+        "result": 32,
+        "status": 0,
+        "reply": 0
+      }
+    },
+    {
+      "op": 51,
+      "payload": "0000000000",
+      "reply": {
+        "op": 51,
+        "result": 32,
+        "status": 0,
+        "reply": 468750
+      }
+    },
+    {
+      "op": 50,
+      "payload": "0000000000",
+      "reply": {
+        "op": 50,
+        "result": 32,
+        "status": 0,
+        "reply": 2783947862
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12597805
+      }
+    },
+    {
+      "op": 49,
+      "payload": "0000000000",
+      "reply": {
+        "op": 49,
+        "result": 32,
+        "status": 0,
+        "reply": 0
+      }
+    },
+    {
+      "op": 20,
+      "payload": "0000010300",
+      "reply": {
+        "op": 20,
+        "result": 32,
+        "status": 0,
+        "reply": 66304
+      }
+    },
+    {
+      "op": 21,
+      "payload": "0000000000",
+      "reply": {
+        "op": 21,
+        "result": 32,
+        "status": 0,
+        "reply": 0
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12583068
+      }
+    },
+    {
+      "op": 22,
+      "payload": "0000000000",
+      "reply": {
+        "op": 22,
+        "result": 32,
+        "status": 0,
+        "reply": 12583068
+      }
+    },
+    {
+      "op": 51,
+      "payload": "0000000000",
+      "reply": {
+        "op": 51,
+        "result": 32,
+        "status": 0,
+        "reply": 468750
+      }
+    },
+    {
+      "op": 1,
+      "payload": "0000000000",
+      "reply": {
+        "op": 1,
+        "result": 32,
+        "status": 0,
+        "reply": 1
+      }
+    }
+  ],
+  "raw_usb_nonjson_lines": [],
+  "cleanup_errors": [],
+  "finished_beijing": "2026-10-31T21:13:31.198085+08:00"
+}

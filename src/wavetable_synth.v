@@ -36,7 +36,9 @@ module wavetable_synth #(
     parameter NUM_TIMBRES=(1<<TIMBRE_BITS),
     parameter DUAL_PROFILE=0,
     parameter PHASE_RAM=0, // 1: synchronous block RAM; 0: legacy observable phases[].
-    parameter LIVE_ADSR_ENABLE=0 // 默认保持历史逐拍行为；生产实例显式设为1。
+    parameter STATE_RAM=0, // 1: packed synchronous envelope/note state, same slot timing.
+    parameter LIVE_ADSR_ENABLE=0, // 默认保持历史逐拍行为；生产实例显式设为1。
+    parameter VISUAL_MONITOR_ENABLE=0 // 只读声部0/1，供李萨如；默认不增加观察寄存器。
 )(
     input clk,input rst_n,input fs_tick,input test_mode,
     input [NUM_VOICES-1:0] gate,input [NUM_VOICES-1:0] retrigger,
@@ -48,7 +50,8 @@ module wavetable_synth #(
     output [NUM_VOICES-1:0] voice_busy,
     output [NUM_VOICES-1:0] voice_audible,
     input [7:0] attack_ctrl,input [7:0] decay_ctrl,
-    input [7:0] sustain_ctrl,input [7:0] release_ctrl,input [7:0] damping
+    input [7:0] sustain_ctrl,input [7:0] release_ctrl,input [7:0] damping,
+    output wire signed [15:0] monitor_voice0,monitor_voice1
 );
     localparam IW=$clog2(NUM_VOICES);
     // 每 8 clk 最多注入一个样本，4 级流水线在 fs_tick 时最多残留一个。
@@ -180,9 +183,9 @@ module wavetable_synth #(
         end
         assign current_phase=phases[voice_index];
     end endgenerate
-    wire [7:0] current_env=envelopes[voice_index];
-    wire [2:0] current_state=states[voice_index];
-    wire [7:0] sub=subdivisions[voice_index];
+    wire [7:0] current_env,sub;
+    wire [2:0] current_state;
+    wire [6:0] current_previous_note;
     wire [7:0] sustain=(velocity>>1)+(velocity>>2); // 约为力度的 3/4。
     // 重编号不能顺带改变ADSR：长笛1码/采样、拨弦8码/采样。
     // 历史默认分支供16音色独立回归使用，生产常量参数会消除该分支。
@@ -264,7 +267,7 @@ module wavetable_synth #(
     wire [16:0] live_fall_rate={1'b0,live_release_rate}+
                              (live_damping_active?{6'd0,damping_frame,3'b0}:17'd0);
     wire note_start=selected_gate && (!previous_gates[voice_index] ||
-                    selected_note!=previous_notes[voice_index] || pending_triggers[voice_index]);
+                    selected_note!=current_previous_note || pending_triggers[voice_index]);
 
     // 持续音 ADSR：按下进入 attack，按住时 decay 到 sustain，松开才 release。
     // 复触发、门控从 0→1 或声部音符被替换，都会重新开始 attack。
@@ -272,7 +275,7 @@ module wavetable_synth #(
         env_next=current_env;state_next=current_state;
         live_level_next=live_level;
         if(selected_gate && (!previous_gates[voice_index] ||
-           selected_note!=previous_notes[voice_index] || pending_triggers[voice_index])) begin
+           selected_note!=current_previous_note || pending_triggers[voice_index])) begin
             env_next=0;state_next=ATTACK;
         end else case(current_state)
             IDLE:env_next=0;
@@ -345,12 +348,59 @@ module wavetable_synth #(
     always @(posedge clk or negedge rst_n)
         if(!rst_n) pending_triggers<=0;
         else pending_triggers<=(pending_triggers & ~consumed)|retrigger;
-    genvar g;
-    generate for(g=0;g<NUM_VOICES;g=g+1) begin:busy_flags
-        // 松键后包络仍可能有尾音，不能立即把声部当作完全空闲。
-        assign voice_busy[g]=(states[g]!=IDLE || envelopes[g]!=0);
-        // 数字活跃表示该路包络非零，不等同于经过声卡实测的可闻谱峰。
-        assign voice_audible[g]=(envelopes[g]!=0);
+    // V041: 26 bits per voice share one synchronous BSRAM. Prefetch at frame
+    // start / preceding slot7 makes the old value ready BEFORE slot0. No extra
+    // stage is inserted into the eight-slot audio schedule, including early ticks.
+    // Layout [25:18]=envelope, [17:10]=divider, [9:7]=state, [6:0]=last note.
+    // RAM itself has no reset. A valid mask hides stale/uninitialised storage;
+    // parallel 32-bit busy/audible mirrors preserve immediate per-voice observability.
+    generate if(STATE_RAM) begin:packed_state_ram
+        reg [25:0] ram[0:NUM_VOICES-1] /* synthesis syn_ramstyle="block_ram" */;
+        reg [25:0] read_q;
+        reg [NUM_VOICES-1:0] valid,busy_mirror,audible_mirror;
+        reg read_valid_q;
+        wire [IW-1:0] next_voice=(voice_index==NUM_VOICES-1)?{IW{1'b0}}:(voice_index+1'b1);
+        wire [IW-1:0] read_address=fs_tick?{IW{1'b0}}:
+            ((running && slot==7)?next_voice:voice_index);
+        wire write_enable=rst_n && !fs_tick && running && slot==0;
+        wire [7:0] next_sub=sub+8'd1;
+        always @(posedge clk) begin
+            read_q<=ram[read_address];
+            if(write_enable)ram[voice_index]<={env_next,next_sub,state_next,selected_note};
+        end
+        always @(posedge clk or negedge rst_n) begin
+            if(!rst_n)begin valid<=0;read_valid_q<=0;busy_mirror<=0;audible_mirror<=0;end
+            else begin
+                read_valid_q<=valid[read_address];
+                if(write_enable)begin
+                    valid[voice_index]<=1;
+                    busy_mirror[voice_index]<=(state_next!=IDLE || env_next!=0);
+                    audible_mirror[voice_index]<=(env_next!=0);
+                end
+            end
+        end
+        assign {current_env,sub,current_state,current_previous_note}=read_valid_q?read_q:26'd0;
+        assign voice_busy=busy_mirror;
+        assign voice_audible=audible_mirror;
+    end else begin:legacy_state_registers
+        integer state_i;
+        always @(posedge clk or negedge rst_n) begin
+            if(!rst_n)begin
+                for(state_i=0;state_i<NUM_VOICES;state_i=state_i+1)begin
+                    envelopes[state_i]<=0;subdivisions[state_i]<=0;
+                    states[state_i]<=IDLE;previous_notes[state_i]<=0;
+                end
+            end else if(!fs_tick && running && slot==0)begin
+                envelopes[voice_index]<=env_next;states[voice_index]<=state_next;
+                subdivisions[voice_index]<=sub+1'b1;previous_notes[voice_index]<=selected_note;
+            end
+        end
+        assign current_env=envelopes[voice_index];assign sub=subdivisions[voice_index];
+        assign current_state=states[voice_index];assign current_previous_note=previous_notes[voice_index];
+        for(genvar g=0;g<NUM_VOICES;g=g+1)begin:busy_flags
+            assign voice_busy[g]=(states[g]!=IDLE || envelopes[g]!=0);
+            assign voice_audible[g]=(envelopes[g]!=0);
+        end
     end endgenerate
 
     // 线性插值：A + ((B-A)*frac >> 8)，frac 为 0..255 的小数权重。
@@ -364,6 +414,31 @@ module wavetable_synth #(
     wire signed [24:0] amplitude_product=$signed(interp2)*$signed({1'b0,env2});
     wire signed [MIX_BITS-1:0] final_sum=accumulator+sample3;
 
+    // V036只读观察：沿有效流水线传递声部0/1标签，锁存对应的包络后单路样本。
+    // sample_tick读这两个保持值时，两路都已完成同一帧计算；它们位于混音/FX前。
+    // 不复用最终左右声道（目前复制同一PCM），也不反向控制声音运算或帧调度。
+    generate if(VISUAL_MONITOR_ENABLE)begin:visual_taps
+        reg [1:0] tag0,tag1,tag2,tag3;
+        reg signed [15:0] tap0,tap1;
+        always @(posedge clk or negedge rst_n)begin
+            if(!rst_n)begin tag0<=0;tag1<=0;tag2<=0;tag3<=0;tap0<=0;tap1<=0;end
+            else begin
+                tag1<=tag0;tag2<=tag1;tag3<=tag2;
+                if(running && slot==7 && !fs_tick)
+                    tag0<={(voice_index==1),(voice_index==0)};
+                if(v3)begin
+                    if(tag3[0])tap0<=sample3;
+                    if(tag3[1])tap1<=sample3;
+                end
+            end
+        end
+        assign monitor_voice0=tap0;
+        assign monitor_voice1=tap1;
+    end else begin:no_visual_taps
+        assign monitor_voice0=16'sd0;
+        assign monitor_voice1=16'sd0;
+    end endgenerate
+
     // 多声部先以较宽有符号数求和，避免 16 位相加直接溢出。
     // 沿用原版增益和软拐点：超过 16000 的幅度只增长 1/4，最终再限幅。
     // 这是幅度压缩，不是低通滤波，也不能消除 DAC 之后的模拟噪声。
@@ -376,7 +451,6 @@ module wavetable_synth #(
     wire [SCALE_BITS-1:0] compressed=(magnitude>COMPRESS_KNEE)?
         (COMPRESS_KNEE+((magnitude-COMPRESS_KNEE)>>2)):magnitude;
     wire [15:0] bounded=compressed>PCM_LIMIT?16'd32767:compressed[15:0];
-    integer i;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             running<=0;slot<=0;voice_index<=0;sample<=0;frame_done<=0;overrun<=0;
@@ -386,10 +460,6 @@ module wavetable_synth #(
             soft_a<=0;soft_b<=0;soft_base<=0;soft_interp<=0;soft_product<=0;
             v0<=0;v1<=0;v2<=0;v3<=0;last0<=0;last1<=0;last2<=0;last3<=0;
             soft0<=0;soft1<=0;interp2<=0;sample3<=0;env0<=0;env1<=0;env2<=0;
-            for(i=0;i<NUM_VOICES;i=i+1) begin
-                envelopes[i]<=0;subdivisions[i]<=0;
-                states[i]<=IDLE;previous_notes[i]<=0;
-            end
         end else begin
             // valid/last 和对应数据一同传递，最后一个声部落地才发布 PCM。
             frame_done<=0;v0<=0;v1<=v0;v2<=v1;v3<=v2;
@@ -421,10 +491,7 @@ module wavetable_synth #(
                         rom_address<={timbre,current_phase[23:24-TABLE_BITS]};
                         tone_address<={timbre,current_phase[23:24-TABLE_BITS]};
                         frac<=current_phase[23-TABLE_BITS:16-TABLE_BITS];env_slot<=env_next;
-                        envelopes[voice_index]<=env_next;states[voice_index]<=state_next;
-                        subdivisions[voice_index]<=sub+1'b1;
                         previous_gates[voice_index]<=selected_gate;
-                        previous_notes[voice_index]<=selected_note;
                     end
                     1:rom_address<={tone_address[TABLE_BITS+TIMBRE_BITS-1:TABLE_BITS],tone_address[TABLE_BITS-1:0]+1'b1};
                     2:soft_a<=$signed(waveform_q);

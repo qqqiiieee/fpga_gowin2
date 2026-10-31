@@ -1,0 +1,5 @@
+{
+  "passed": true,
+  "runtime_sha256": "e6b2d758ad4e42873510b83600ab4d276f95bd5956063a401b29ab788f6f7c8e",
+  "scope": "Actual scheduler functions extracted verbatim; modeled legacy heartbeat and FPGA command reply, no hardware."
+}

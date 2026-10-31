@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "hardware_accessed": false,
+  "source_sha256": {
+    "esp32_phone\\v041_core.h": "a4253a0eb5356b31f2ba42638aaeaa36336086fe53f310fa54715969070b6f9c",
+    "tests\\score_codec_v047\\js.json": "b72c2a81305c052085890669b457e15073469420f7baa88b3c0e3721a0ea7dcd",
+    "tests\\score_codec_v047\\native.cpp": "7ead08c32de7a86c4aabd20bb32a865be864b73ca3319c9bd067697c02e1e8fe"
+  },
+  "exit_code": 0
+}

@@ -1,0 +1,133 @@
+{
+  "rtl_simulation_passed": true,
+  "simulation_cases": 23,
+  "simulation_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\custom_score\\artifacts\\20261031T091010_685775Z\\summary.json",
+  "extended_guide_and_renderer_miter": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\custom_score\\artifacts\\20261031T091335_754940Z\\summary.json",
+  "resource_report": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\custom_score\\artifacts\\20261031T091434_816925Z\\summary.json",
+  "owned_sha256": {
+    "src/piano_roll_guide.v": "e46369602b333c68066c6e4f47fffa8ef62cd09e83145753ece1da304a4a8fb9",
+    "src/piano_roll_renderer.v": "e70c83500be53d786afc42b3d040769862e7f969704b2a0f765abe90d5269ebc",
+    "src/hdmi_compact_dashboard.v": "5f588dfb583c10cbdd65edda000e2036a4d840b1d2aba413c84a3e95e1331560",
+    "src/hdmi_live_display.v": "e6ca137d2b83a86c18ecc1ab94317abd5118c036723ecd9bb43539d572708ff3",
+    "src/custom_score_ram.v": "8b465e5f27891d0ef276f0bb59faeb63b8069a24d6d9c5225954de5d437707e6"
+  },
+  "all_reports_match_current_owned_source_hashes": true,
+  "original_src_and_gprj_unchanged_live": true,
+  "renderer_stages": 2,
+  "wrapper_stages": 4,
+  "status_bits_custom_hybrid_expression": 398,
+  "status_bits_previous_hybrid_expression": 397,
+  "custom_pixels_compared": 5875200,
+  "async_pixel_initial_phase_ns": [
+    0,
+    3,
+    11,
+    19
+  ],
+  "full_raster_rows_compared": 7344,
+  "atomic_commits_checked_in_pixel_benches": 60,
+  "numeric_timing": [
+    {
+      "samples_per_beat": 23437,
+      "two_beat_countin_samples": 46874,
+      "five_beat_total_samples": 117185
+    },
+    {
+      "samples_per_beat": 46875,
+      "two_beat_countin_samples": 93750,
+      "five_beat_total_samples": 234375
+    },
+    {
+      "samples_per_beat": 93750,
+      "two_beat_countin_samples": 187500,
+      "five_beat_total_samples": 468750
+    },
+    {
+      "samples_per_beat": 187500,
+      "two_beat_countin_samples": 375000,
+      "five_beat_total_samples": 937500
+    }
+  ],
+  "experimental_gowin_mapping": {
+    "experimental": true,
+    "scope": "isolated guide+renderer only; excludes dashboard/wrapper and production packing",
+    "off_on": {
+      "0": {
+        "lut1_to_4": 495,
+        "flip_flops": 105,
+        "alu_cells": 330,
+        "block_ram_cells": 1,
+        "cell_types": {
+          "GND": 1,
+          "DFFPE": 1,
+          "LUT3": 150,
+          "LUT1": 15,
+          "LUT2": 132,
+          "VCC": 1,
+          "DFFC": 73,
+          "LUT4": 198,
+          "ALU": 330,
+          "DFFCE": 31,
+          "$scopeinfo": 5,
+          "SPX9": 1
+        }
+      },
+      "1": {
+        "lut1_to_4": 771,
+        "flip_flops": 265,
+        "alu_cells": 441,
+        "block_ram_cells": 3,
+        "cell_types": {
+          "DFFCE": 133,
+          "LUT2": 251,
+          "LUT4": 304,
+          "LUT3": 202,
+          "DFFC": 131,
+          "DFFPE": 1,
+          "ALU": 441,
+          "LUT1": 14,
+          "$scopeinfo": 7,
+          "SDPX9B": 2,
+          "SPX9": 1,
+          "GND": 1,
+          "VCC": 1
+        }
+      }
+    },
+    "delta": {
+      "lut1_to_4": 276,
+      "flip_flops": 160,
+      "alu_cells": 111,
+      "block_ram_cells": 2
+    },
+    "custom_ram_cell_type": "SDPX9B",
+    "runtime_div_mod_cells": 0,
+    "geometry_init": "1024 original RTL geometry words dumped by Icarus then readmemh only in synthesis snapshot"
+  },
+  "vendor_synthesis_completed": false,
+  "vendor_blocker": "License verification failed: Server not responding",
+  "production_pnr_completed": false,
+  "hardware_tested": false,
+  "flashed": false,
+  "owned_rtl_files": [
+    "src/piano_roll_guide.v",
+    "src/piano_roll_renderer.v",
+    "src/hdmi_compact_dashboard.v",
+    "src/hdmi_live_display.v",
+    "src/custom_score_ram.v"
+  ],
+  "observed_other_agent_changes": [
+    "src/four_button_display_control.v",
+    "src/hdmi_ui_lookup.vh",
+    "src/hdmi_ui_text.vh",
+    "src/instrument_audio_top.v",
+    "src/instrument_inputs.v",
+    "src/midi_keyboard.v",
+    "src/performance_input_hub.v",
+    "src/phone_extended_link.v",
+    "src/phone_extension_state.v",
+    "src/phone_record_tap.v",
+    "src/top.v",
+    "instrument_handoff.gprj"
+  ]
+}

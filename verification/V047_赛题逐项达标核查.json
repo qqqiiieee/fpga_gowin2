@@ -1,0 +1,207 @@
+{
+  "audit_beijing": "2026-10-31T22:00:59.500182+08:00",
+  "version": "V047",
+  "usercode": "0x00003608",
+  "fpga_sha256": "d7fa4bbe937d33c69dd5b025d68b557c9088ab918d9c4c70d41f276862fc303f",
+  "official_url": "https://www.gowinsemi.com.cn/university/match2026",
+  "official_live_read": true,
+  "qq_faq_live_read": false,
+  "qq_faq_historical_local": "规划与核查/2026-10-24_Primer20K全要求核查/Primer20K_赛题核查与可行路线.html",
+  "hardware_accessed_during_audit": false,
+  "firmware_modified": false,
+  "result": "功能主体具备，但基础延迟/拓展确定延迟未验收且单束有超限；32峰、脱机和手机部分现场证据需补。不能宣布所有基础和拓展全部达标。",
+  "board_note": "官网适配列表未列Primer20K；历史答疑A1允许其他高云主芯片板卡。本次答疑无法在线刷新，不把名单差异直接判为禁用或资格已重新核准。",
+  "items": [
+    {
+      "id": "设计总述：I²S",
+      "requirement_summary": "以FPGA合成，经I²S接DAC发声",
+      "status": "已实现／用户确认",
+      "current": "PCM5102A标准I²S，93.75kHz、16bit，单声道复制左右；用户此前确认I²S正常。",
+      "next_step": "拍摄真实DAC接线及发声；延迟另外测。",
+      "evidence": "src/pcm5102a_i2s.v"
+    },
+    {
+      "id": "基础1a",
+      "requirement_summary": "至少两个独立演奏控制维度",
+      "status": "已实现，补联合演示",
+      "current": "MIDI选音/和弦/力度/弯音；双FSR、双光电接入。用户确认两片FSR恢复正常，本轮存档遥测ADS无故障。",
+      "next_step": "同一镜头演示选音+压力或选音+摇杆，显示参数和听感分别变化。",
+      "evidence": "src/performance_input_hub.v"
+    },
+    {
+      "id": "基础1b",
+      "requirement_summary": "选音、触发、拨弦、力度等动作",
+      "status": "实现存在，光电闭环待补",
+      "current": "MIDI正常发声已有用户确认；双光电电平/ready已有记录，代码按先后方向及间隔生成扫弦事件。",
+      "next_step": "拍A→B、B→A、快慢扫与持和弦发声，确认光电从动作到声音完整闭环。",
+      "evidence": "src/optical_strum.v"
+    },
+    {
+      "id": "基础2a",
+      "requirement_summary": "逐样本HDL音频合成",
+      "status": "实现与数字链路证据具备",
+      "current": "FPGA内完成声部分配、波表、包络、混音、滤波及FX；ESP32负责协议、文件、界面，不承担合成。",
+      "next_step": "展示RTL数据通路和实际演奏。",
+      "evidence": "src/instrument_audio.v"
+    },
+    {
+      "id": "基础2b",
+      "requirement_summary": "控制至音频总延迟≤10ms",
+      "status": "未能判达标；存在超限路径",
+      "current": "V047无整机模拟延迟测量。单束兜底须等150ms；若从首次遮挡计时，该路径明显超过10ms。",
+      "next_step": "先明确各输入路径起止点，优化单束等待，再用同步采集测最大值。",
+      "evidence": "src/optical_strum.v"
+    },
+    {
+      "id": "基础3a",
+      "requirement_summary": "至少4个独立并发声部",
+      "status": "结构达标，补实弹证据",
+      "current": "32声部状态与分配器已实现；V047和弦自动演奏产生非零数字PCM，尚无本版真实四键独立松键验收记录。",
+      "next_step": "按住4音以上，逐键松开/重触发，录下声音和状态；不能只展示计数。",
+      "evidence": "src/voice_allocator.v"
+    },
+    {
+      "id": "基础3b",
+      "requirement_summary": "实时变调、ADSR及多声部混音",
+      "status": "已实现，补参数演示",
+      "current": "逐声部独立相位/频率与包络状态；ADSR控制、Pitch Bend、力度和混音均有实际信号路径。ADSR参数可共享，但各声部状态独立推进。",
+      "next_step": "同音改变Attack/Release；按住音符操作弯音，展示声部独立性。",
+      "evidence": "src/wavetable_synth.v"
+    },
+    {
+      "id": "基础3c",
+      "requirement_summary": "实时生成，禁止用整段录音充当合成",
+      "status": "当前结构符合",
+      "current": "音色ROM为周期波形；曲谱仅传音高/时值事件，再由同一合成器发声。WAV是输出录音回传，没有回灌为FPGA整曲播放源。",
+      "next_step": "用RTL及任意实时变调、松键证明；手机回听WAV应标明是录音回听。",
+      "evidence": "src/guide_chord_events.v"
+    },
+    {
+      "id": "拓展1",
+      "requirement_summary": "至少32复音或其他同等级规模路线",
+      "status": "32声部已实现，现场证据缺",
+      "current": "采用32声部分时共享流水线，独立相位/频率/包络状态。测试可全32路，也可逐路检查。",
+      "next_step": "真实输出捕获32个目标谱峰，并逐路开关观察对应峰变化。",
+      "evidence": "src/wavetable_synth.v"
+    },
+    {
+      "id": "拓展2a",
+      "requirement_summary": "至少三维表情控制",
+      "status": "接口及作用具备，补独立演示",
+      "current": "Velocity、Pitch Bend、CC1颤音；FSR0控制明亮度、FSR1控制Pluck阻尼。FSR不是鼓。",
+      "next_step": "分别再联合演示至少三维；确认键盘摇杆/控制器实际发出的消息，FSR显示不是公斤读数。",
+      "evidence": "src/instrument_audio_top.v"
+    },
+    {
+      "id": "拓展2b",
+      "requirement_summary": "至少两种乐器音色",
+      "status": "已实现",
+      "current": "两种主音色Flute、Pluck可由面板/手机选择；四Pad打击音另算，不拿它们替代两种主音色。",
+      "next_step": "同一音高、同一音量切两种主音色听比较。",
+      "evidence": "src/top.v"
+    },
+    {
+      "id": "拓展2c",
+      "requirement_summary": "FPGA内部数字效果器",
+      "status": "已实现／用户反馈有效",
+      "current": "Delay、Chorus、Reverb三种可切换；三个旋钮选对应FX强度，第四个总音量。共用一个引擎，一次一种。",
+      "next_step": "先干声，再逐一对比三个FX；避免说三种同时串联。",
+      "evidence": "src/audio_effects.v"
+    },
+    {
+      "id": "拓展3a",
+      "requirement_summary": "≤5ms且确定性无抖动",
+      "status": "尚未达标验收",
+      "current": "无V047模拟端到端最大值及抖动证据；单束150ms等待不符合该目标。旧V040仿真约1.04–1.06ms仅是指定数字链路。",
+      "next_step": "优化等待/调度，覆盖输入相位、负载、音色、包络、效果条件，记录最大值及变化范围。",
+      "evidence": "src/optical_strum.v"
+    },
+    {
+      "id": "拓展3b",
+      "requirement_summary": "FPGA实时可视化",
+      "status": "已实现，补当前实屏对照",
+      "current": "HDMI波形、512点FFT、两独立声部XY李萨如和自适应幅度均在HDL。FFT取最终数字PCM，XY取FX前声部0/1。",
+      "next_step": "用已知单音/双音/多音演示，不将XY称为外部左右声道测量，不用数字FFT冒充DAC噪声测试。",
+      "evidence": "src/audio_fft512.v"
+    },
+    {
+      "id": "拓展3c／4a",
+      "requirement_summary": "LED节奏与曲目辅助",
+      "status": "已有板载LED辅助，完整演示待补",
+      "current": "并非完全没有LED：top中有节拍保持与错键灯，配合屏幕下落谱。没有逐键灯带，原文也没有明确强制灯带或每键一灯。",
+      "next_step": "拍屏幕提示、板载节拍/错键灯与演奏；屏幕及辅助LED是否满足该专项口径保留赛方解释。",
+      "evidence": "src/top.v:315"
+    },
+    {
+      "id": "拓展4a：脱机",
+      "requirement_summary": "脱离电脑完成曲目指引",
+      "status": "功能具备，冷启动证据缺",
+      "current": "三首内置曲、四键菜单及三模式已部署Flash；重载校验通过。本轮没有完全断开电脑后的独立供电录像。",
+      "next_step": "FPGA、键盘、显示器独立供电，选曲/开始/暂停/重播；手机可不连接。",
+      "evidence": "验证/Flash固化结果.json"
+    },
+    {
+      "id": "拓展4b：联动",
+      "requirement_summary": "手机无线联动",
+      "status": "Wi-Fi链路实测通过",
+      "current": "ESP32热点+网页控制及遥测；真实Wi-Fi HTTP→ESP32→实际FPGA UART已通过。不是BLE或原生App。历史答疑124允许Wi-Fi，本次无法刷新答疑。",
+      "next_step": "手机现场录下调参和回读；不需要为了实现同一功能另买蓝牙。",
+      "evidence": "验证/V047_HTTP结果.json"
+    },
+    {
+      "id": "拓展4b：曲谱",
+      "requirement_summary": "在线取谱及传入新谱",
+      "status": "本地上传已实测；URL取谱待验",
+      "current": "JSON上传、FPGA提交、ESP保存及下载一致已实测；URL读取代码存在，但依赖联网与CORS，未做互联网URL端到端验收。",
+      "next_step": "先拍用户本地JSON上传；若宣称在线下载，再用可访问且允许CORS的实际URL做完整演示。",
+      "evidence": "esp32_phone/v041_ui.h"
+    },
+    {
+      "id": "拓展4b：映射",
+      "requirement_summary": "演奏键位自定义",
+      "status": "已实现，实弹映射演示待补",
+      "current": "128 Note置换、4Pad及4CC来源映射，支持提交/保存/恢复。现成八度交换JSON已准备，未替用户应用。HDMI高亮保留原始输入。",
+      "next_step": "现场同一实体键提交前后比较音高，再恢复默认；展示FPGA确认而非只改编辑框。",
+      "evidence": "src/midi_keyboard.v"
+    },
+    {
+      "id": "拓展4b：录音",
+      "requirement_summary": "演奏录音回传",
+      "status": "实际数字录音与回传通过",
+      "current": "FPGA最终PCM→UART→ESP32 LittleFS，15625Hz/16bit/单声道，30秒468750采样；下载CRC32=a5efac56，无掉样。",
+      "next_step": "用手机实际录、播、下载作现场演示；不称为93.75kHz原采样全带宽无损录音或DAC模拟录音。",
+      "evidence": "验证/V047实机结果.json"
+    },
+    {
+      "id": "评分1",
+      "requirement_summary": "独立振荡器统计",
+      "status": "结构与RTL依据具备",
+      "current": "32份独立相位/频率/包络状态，计算链分时共享。周期波表里的多个谐波没有算作额外振荡器。",
+      "next_step": "展示每路状态和开关；硬件复用口径另有历史答疑支持，本次未刷新该表。",
+      "evidence": "src/wavetable_synth.v:66"
+    },
+    {
+      "id": "评分2",
+      "requirement_summary": "活跃可闻振荡器数×真实采样率",
+      "status": "采样率明确，满载现场证据待补",
+      "current": "真实I²S Fs=93750Hz；若32路全部活跃，可计算设计值300万声部·采样/秒。不能把菜单请求数直接当实际活跃数。",
+      "next_step": "用gate/busy/overrun与真实音频相互核对，说明理论设计值和实测值。",
+      "evidence": "src/pcm5102a_i2s.v"
+    },
+    {
+      "id": "评分3",
+      "requirement_summary": "多频测试模式与对应独立谱峰",
+      "status": "测试模式已做，缺真实32峰记录",
+      "current": "同一引擎测试频率400+97×index Hz，index0..31；可逐路/全路。数字仿真历史检出目标峰，尚无本版真实输出32峰正式记录。",
+      "next_step": "捕获实际输出频谱，标32个目标频率；谐波峰不算额外独立振荡器。",
+      "evidence": "src/oscillator_test_frequencies.v"
+    }
+  ],
+  "priority": [
+    "定义并优化光电单束150ms等待；同步测量整机延迟",
+    "真实32路谱峰与逐路开关",
+    "至少三维表情/四音以上和弦完整演示",
+    "脱机冷启动与板载LED/屏幕指引",
+    "手机URL取谱、Note映射实弹及手机录音下载演示"
+  ]
+}

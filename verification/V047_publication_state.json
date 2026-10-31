@@ -1,0 +1,13 @@
+{
+  "version": "V047",
+  "firmware_unchanged": true,
+  "custom_score_preloaded": false,
+  "custom_library_empty_after_validation": true,
+  "original_examples_require_manual_phone_upload": true,
+  "recording_crc32": "a5efac56",
+  "recording_samples": 468750,
+  "recording_bytes": 937544,
+  "hardware_32_peaks_captured": false,
+  "analog_latency_measured": false,
+  "cold_power_cycle_verified": false
+}

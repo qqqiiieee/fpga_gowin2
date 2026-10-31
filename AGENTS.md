@@ -1,12 +1,14 @@
-# 当前工程工作约定
+# 当前工程工作约定 · V047
 
-- 先读 `manifest.json`、`docs/AI快速上手.md`、`docs/项目架构与模块说明.md` 和 `docs/V015到V034更新说明.md`。生产入口为根目录 `instrument_handoff.gprj` / `src/top.v`。
-- 当前发布V034；已编译/仿真，不是已烧录/实机验收。不要沿用V015或某个历史bench的配置判断当前行为。
-- 生产两音色/32声部；KEY0、STRUM1、HYBRID2；四键菜单与MIDI演奏分离；FSR为明亮度/拨弦阻尼，滑杆/电容菜单停用。
-- 引脚以 `src/multi_tone.cst` 为准：PMOD1避让，手机L9/N8，面板A11/B11/N6/D11。网页旧帮助是已知欠账，不是接线依据。
-- 当前待办：32路验证没有生产启动入口；手机帮助引脚需配套重编译修正；PCM5102A模拟无声；V034实物联调待验收。
-- 修改音频必须保护Note Off、来源标签、Panic、采样帧预算与测试所有权；显示修改必须保持整包CDC与流水/消隐对齐。
-- 默认离线验证：`python scripts/verify_release.py` 与 `python scripts/run_release_checks.py`；UI/网页加 `--ui --web`。这些检查不连接硬件。不要自动烧录或打开串口做“离线测试”。
-- 生产源码、资产、FPGA/ESP32二进制与manifest必须对应。改固件代码后重新构建、检查资源/时序并更新身份，不能只改文件名或沿用旧哈希。
-- 主机工具从 `IVERILOG_BIN`/PATH、`GOWIN_HOME` 等配置定位，勿写入开发者私人路径。工具链缓存、生成日志、账号/许可证、对话与历史发布目录不提交。
-- 本地每个新固件版本放独立带北京时间日期/编号/摘要目录；保留源码、固件、说明、哈希和验证/烧录状态，不覆盖旧固件。同一固件的文档/记录可以更新。Git主分支维护当前一版，Git历史提供旧版追溯。
+- 先读manifest.json、README、docs/AI快速上手.md、docs/项目架构与模块说明.md、docs/V034到V047更新说明.md。入口instrument_handoff.gprj / src/top.v。
+- 当前V047两端已固化并校验；WiFi上传与30秒数字录音实测通过；模拟延迟、32峰频谱、冷启动等尚未全部验收。保持事实边界。
+- 32独立相位/包络状态、2音色、4鼓、KEY/STRUM/HYBRID、FSR明亮度/阻尼、单条互斥FX。旧矩阵/电容菜单/滑杆/MCP停用。
+- CST为准：MIDI T8；光电P8/P9；ADS N9/N7；I2S B12/C12/B13；四键A11/B11/N6/D11；手机L9/N8、1Mbps。受损前两组T6/P6/R8/T7、T11/P11/T12/R11、D14/E15/B14/A15停用。
+- use_sspi_as_gpio=1不可丢；生产源、生成资产、构建选项、FPGA/ESP二进制必须与manifest同源。
+- 音频改动保护NoteOff/来源/Panic、phase/envelope RAM流水和288clk预算；显示保护整包CDC、双bank、帧边界与消隐/像素对齐。
+- score/2、能力字、ACK两端配套；教学来源3先Off后On。原始物理held与映射音符分离；手机202不等于已应用。
+- 不自动把示例JSON预载到设备，用户要手机现场上传。录音虚拟头readWavRange不可改回seek(0)写头。
+- 默认离线scripts/verify_release.py与scripts/run_release_checks.py不访问硬件。其他历史测试先核对适用参数，不能全部当本版入口。
+- 不提交工具链/缓存/安装包、账户/许可、对话、个人录音或Flash数据备份。主分支只维护当前一版，旧版由Git历史追溯。
+- 本地新固件放D:/Gowin_project/乐器版本/YYYY-MM-DD_HHMMSS_Vnnn_改动摘要（北京时间），带源码、固件、版本说明/JSON、验证与烧录记录；不覆盖旧版，不散放桌面。同一固件的文档和记录可同目录更新。
+- CLS余15，任何RTL改动必须完整PnR与时序检查。不能把0时序违例等价于端到端低延迟合格。

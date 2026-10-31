@@ -10,7 +10,6 @@ module tb_v024_system;
  reg[11:0]centers[0:15];
  top dut(.clk(clk),.phone_uart_rx(phone_rx),.phone_uart_tx(phone_tx),
   .uart_rx(debug_rx),.uart_tx(debug_tx),.midi_rx(midi_rx),.optical_beams(beams),
-  .touch_miso(miso),.touch_cs_n(cs),.touch_sclk(sck),.touch_mosi(mosi),
   .adc_scl(scl),.adc_sda(sda),.hp_bck(),.hp_ws(),.hp_din(),.pa_en(),
   .amp_bck(),.amp_lrc(),.amp_din(),.timbre_led_n(),
   .tmds_clk_p(),.tmds_clk_n(),.tmds_data_p(),.tmds_data_n());

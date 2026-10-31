@@ -1,0 +1,27 @@
+{
+  "unchanged_files": {
+    "esp32_phone/.gitignore": "79bd25368ea1885111b5fa5777a302b9bcd5cb8659b796c91035f92aa172df75",
+    "esp32_phone/bootstrap_toolchain.py": "9b73c35748709b04dfa5bb8ed785a278a5c1fdec8734680a6575bd10a413ef7e",
+    "esp32_phone/bridge_core.h": "e5979ca9ad45208999fd3881fd06eabdf5e12ade585880af372ff7a9b4c2b3e0",
+    "esp32_phone/build.ps1": "6ad8aa53913c56a676e187921034e7ef6b7b38abac6292ffa862bca85b0c7cbd",
+    "esp32_phone/preset.example.json": "d46926836e9e4aec3bbc3f0b3fcef4a971e73c9a91edc8e0d931e285c52acf45",
+    "esp32_phone/README.md": "c76dc403fbd92b660a117ba93f2e2debd3e34ddfb1e4430bb8419ef1b676dc66",
+    "esp32_phone/recording_uart.h": "89533a0b7cc28e06796ec78745d9a3f4aa0a05b81ad969d7c4c1d284b77f7942",
+    "esp32_phone/v041_core.h": "5215a9d051ae219773179d004e744281bc728317692bde7845d5a3d90331c854",
+    "esp32_phone/v041_json.h": "c9b32da0cc6ab1594bbf2de05a1ccab01a80bf8b05aa7fa484356cb51bd4b96f",
+    "esp32_phone/web_ui.h": "2c1b4512d49877365280830c48d7bc3f3614712e64bf4093358e28e08adb3aff"
+  },
+  "recording_functions": {
+    "sink": "6a0fb39b642923639d239011fd938332640d1738436f16d4e401bcd8da7ed9ae",
+    "ringCount": "42a4b35b823d86fb74451980f8a116168e2eda7469b0e7573c7e3f948beea289",
+    "recording": "0c65b420803157030a2e08f0ceb4783c571ee5a51cbdbfeb4d402a327fcccf5a",
+    "uartTask": "9549b98977d7ad4dfb5fdc9ade23884c74ba793ac826770bc31274bfbb492a07",
+    "maxSeconds": "3175346e06fee1d5650a872a308b78cb1ce336fd46b314efda41b91caf0037f9",
+    "recordingJson": "d98b26f5a51b0a3b1025a3df9e70aebf71cb89e15c5a0236c1254e0de0b64a6e",
+    "prepareRecording": "0ac74a5aa8fe63d2d8f945857348ba3984cb3323fdd421c59d04b241465adb05",
+    "startRecording": "ea87f0be84685439f46ef1c92d72036ea7411419a4715acd414b12522b67ede8",
+    "fileService": "0ecdef9b071a8ed564005e3ab317d6c7932ddce08a3d280654d2a58470b8e178",
+    "mountStorage": "d70ec32802b89ca13f6356bc82a8da06a0b9321af353a59b25db45f1b233d77c"
+  },
+  "ino_except_version": "92ff73885005a2158abf80474ad2134ae4cf31e146d314b61631c9cc1fb94b4c"
+}

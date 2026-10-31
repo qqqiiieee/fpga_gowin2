@@ -1,0 +1,19 @@
+{
+  "version": "V047",
+  "generated_beijing": "2026-10-31T22:10:29.516659+08:00",
+  "declared_independent_voices": 32,
+  "i2s_design_sample_rate_hz": 93750,
+  "design_voice_samples_per_second": 3000000,
+  "stereo_duplicate_not_counted_twice": true,
+  "digital_recording_sample_rate_hz": 15625,
+  "hardware_32_peak_measurement_completed": false,
+  "hardware_accessed_this_run": false,
+  "source": "current RTL and existing compile/deployment records",
+  "classification": "design declaration, not a new measured result",
+  "required_evidence": [
+    "independent phase/frequency/envelope state in production RTL",
+    "32 target peaks in actual board output",
+    "individual gate removal/restoration",
+    "I2S LRCK rate and overrun check"
+  ]
+}

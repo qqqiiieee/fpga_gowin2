@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "scope": "Unmodified real phone_extension_state + midi_keyboard + midi_uart_rx.27MHz rational1ps clock,31250baud UART864clocks/bit. Commands enter the executor request ports directly, not phone framed RPC/ESP/audio output. Ready/ack are NOT stubbed. No force, no hardware, no production RTL edits.",
+  "metrics": {
+    "checks": 3171,
+    "writes": 640,
+    "init_batches": 3,
+    "upload_batches": 2,
+    "accepts": 3,
+    "registered_acks": 3,
+    "panics": 3,
+    "commit_high_clocks": 43140,
+    "pending_no_ack_clocks": 43134,
+    "accepts_while_new_note_held": 1,
+    "ons": 5,
+    "offs": 4
+  },
+  "policy_findings": [
+    {
+      "priority": "P2",
+      "file": "src/phone_extension_state.v",
+      "line": 71,
+      "finding": "MAP_COMMIT holds the request until decoder ack but does not recheck performance_idle. A new valid MIDI NoteOn arriving after the initial ready/idle precheck can become held while ready is low; once the UART quiet guard expires, commit accepts and panic cuts that new held note. This is not an early ACK or duplicate commit.",
+      "reproduced": true
+    }
+  ],
+  "source_sha256_before": {
+    "src/phone_extension_state.v": "cd056c99968bde8d114736fef574886422a80519fcd3e80916fe27784d87a97a",
+    "src/midi_keyboard.v": "5e3702db46d5df4997a4ab730579980aee287488c5a4e9c1a99942e5fc9f0253",
+    "src/midi_uart_rx.v": "3b7a51e848f26dd21caff5808978c03e2d50a4b5548e7dcde19aad114938bab9",
+    "tests/phone_extensions/tb_state_midi_real.v": "27a9489a1771e69957c09d892ff5fade6cc832fa8c96088566df21c0d49a4025"
+  },
+  "source_sha256_after": {
+    "src/phone_extension_state.v": "cd056c99968bde8d114736fef574886422a80519fcd3e80916fe27784d87a97a",
+    "src/midi_keyboard.v": "5e3702db46d5df4997a4ab730579980aee287488c5a4e9c1a99942e5fc9f0253",
+    "src/midi_uart_rx.v": "3b7a51e848f26dd21caff5808978c03e2d50a4b5548e7dcde19aad114938bab9",
+    "tests/phone_extensions/tb_state_midi_real.v": "27a9489a1771e69957c09d892ff5fade6cc832fa8c96088566df21c0d49a4025"
+  },
+  "production_files_unchanged": true,
+  "command": [
+    "D:\\Gowin_project\\instrument_expression_20261024\\tools\\vendor\\iverilog-v12\\app\\bin\\iverilog.exe",
+    "-g2012",
+    "-s",
+    "tb_state_midi_real",
+    "-o",
+    "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\phone_extensions\\state_midi_results\\20261031T092134_478803Z\\test.vvp",
+    "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\phone_extensions\\state_midi_results\\20261031T092134_478803Z\\snapshot\\src\\phone_extension_state.v",
+    "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\phone_extensions\\state_midi_results\\20261031T092134_478803Z\\snapshot\\src\\midi_keyboard.v",
+    "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\phone_extensions\\state_midi_results\\20261031T092134_478803Z\\snapshot\\src\\midi_uart_rx.v",
+    "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\phone_extensions\\state_midi_results\\20261031T092134_478803Z\\snapshot\\tests\\phone_extensions\\tb_state_midi_real.v"
+  ],
+  "returncode": 0,
+  "wall_seconds": 2.767179012298584,
+  "run_log": "D:\\Gowin_project\\instrument_phone_extensions_20261031\\tests\\phone_extensions\\state_midi_results\\20261031T092134_478803Z\\run.log"
+}
